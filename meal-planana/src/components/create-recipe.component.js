@@ -110,8 +110,8 @@ export default class CreateRecipe extends Component {
                 id="priorityMedium"
                 value="Medium"
                 checked={
-									this.state.recipe_priority === 'Medium'
-								}
+                  this.state.recipe_priority === 'Medium'
+                }
                 onChange={this.onChangeRecipePriority}
               />
               <label className="form-check-label">Medium</label>

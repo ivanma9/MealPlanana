@@ -38,7 +38,7 @@ export default class RecipesList extends Component {
 
   componentDidUpdate() {
     axios
-      .get('http://localhost:4000/todos/')
+      .get('http://localhost:4000/recipes/')
       .then((response) => {
         this.setState({ recipes: response.data });
       })
