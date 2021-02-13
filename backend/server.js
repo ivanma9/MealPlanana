@@ -5,24 +5,26 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 
-const recipeRoutes = express.Router();
+const router = express.Router();
 const PORT = 4000;
 
-const Recipe = require('./recipe.model');
+const Recipe = require('./recipe.model'); // for recipes
+const User = require('./user.model');  // for users
 
 app.use(cors());
 app.use(bodyParser.json());
 
-mongoose.connect('mongodb://127.0.0.1:27017/recipes', {
+mongoose.connect('mongodb://127.0.0.1:27017/recipes', {   // will need to change name of db 
   useNewUrlParser: true,
 });
+
 const { connection } = mongoose;
 
 connection.once('open', () => {
   console.log('MongoDB database connection established successfully');
 });
 
-recipeRoutes.route('/').get((req, res) => {
+router.route('/recipes/').get((req, res) => {
   Recipe.find((err, recipes) => {
     if (err) {
       console.log(err);
@@ -32,14 +34,24 @@ recipeRoutes.route('/').get((req, res) => {
   });
 });
 
-recipeRoutes.route('/:id').get((req, res) => {
+router.route('/user/').get((req, res) => {
+  User.find((err, recipes) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.json(recipes);
+    }
+  });
+});
+
+router.route('/recipes/:id').get((req, res) => {
   const { id } = req.params;
   Recipe.findById(id, (err, recipe) => {
     res.json(recipe);
   });
 });
 
-recipeRoutes.route('/add').post((req, res) => {
+router.route('/recipes/add').post((req, res) => {
   const recipe = new Recipe(req.body);
   recipe
     .save()
@@ -51,7 +63,7 @@ recipeRoutes.route('/add').post((req, res) => {
     });
 });
 
-recipeRoutes.route('/update/:id').post((req, res) => {
+router.route('/recipes/update/:id').post((req, res) => {
   Recipe.findById(req.params.id, (err, recipe) => {
     if (!recipe) res.status(404).send('data is not found');
     else {
@@ -72,7 +84,7 @@ recipeRoutes.route('/update/:id').post((req, res) => {
   });
 });
 
-app.use('/recipes', recipeRoutes);
+app.use('/', router);
 
 app.listen(PORT, () => {
   console.log(`Server is running on Port: ${PORT}`);
