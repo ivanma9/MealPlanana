@@ -51,14 +51,19 @@ recipeRoutes.route('/add').post((req, res) => {
     });
 });
 
+//! Commit just for testing
 recipeRoutes.route('/update/:id').post((req, res) => {
   Recipe.findById(req.params.id, (err, recipe) => {
     if (!recipe) res.status(404).send('data is not found');
     else {
+      recipe.recipe_title = req.body.recipe_title;
       recipe.recipe_description = req.body.recipe_description;
-      recipe.recipe_responsible = req.body.recipe_responsible;
-      recipe.recipe_priority = req.body.recipe_priority;
-      recipe.recipe_completed = req.body.recipe_completed;
+      recipe.recipe_ingredients = req.body.recipe_ingredients;
+      recipe.recipe_directions = req.body.recipe_directions;
+      recipe.recipe_tags = req.body.recipe_tags;
+      recipe.recipe_image = req.body.recipe_image;
+      recipe.recipe_rating = req.body.recipe_rating;
+      recipe.recipe_author = req.body.recipe_author;
 
       recipe
         .save()
