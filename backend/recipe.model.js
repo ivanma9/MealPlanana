@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const Recipe = new Schema({
-  recipe_name: {    // 
+  recipe_title: {    // 
     type: String,
     required: true,
   },
@@ -23,6 +23,9 @@ const Recipe = new Schema({
   recipe_date: {
     type: Date,
     min: '2000-01-01',  // can use the Date type to format this
+  },
+  recipe_ingredients: {
+    type: [String],
   },
   recipe_directions: {  // at least 1 step in the recipe
     type: [String],
