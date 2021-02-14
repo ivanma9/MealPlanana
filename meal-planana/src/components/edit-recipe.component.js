@@ -160,6 +160,7 @@ export default class EditRecipe extends Component {
         <Form>
 
           {/* Title */}
+          {/* TODO: Implement check to make sure something is entered in the field */}
           <Form.Group controlID="formGroupRecipeTitle">
             <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}>Title</Typography>
             <TextField
@@ -206,6 +207,7 @@ export default class EditRecipe extends Component {
           <br />
 
           {/* Directions */}
+          {/* TODO: Implement check to make sure something is entered in the field */}
           <Form.Group controlID="formGroupRecipeDirections">
             <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}>Directions</Typography>
             <TextField
