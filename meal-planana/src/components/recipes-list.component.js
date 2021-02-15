@@ -1,10 +1,23 @@
-import { Badge, Card, CardDeck } from 'react-bootstrap';
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  Grid,
+  Typography,
+} from '@material-ui/core';
 import React, { Component } from 'react';
 
+import { Badge } from 'react-bootstrap';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { Link } from 'react-router-dom';
 import Rating from '@material-ui/lab/Rating';
 import axios from 'axios';
+
+let activeCardID = '';
+
+const onMouseOver = (currentCardID) => { activeCardID = currentCardID; };
+const onMouseOut = () => { activeCardID = ''; };
+const checkIfCurrentCard = (currentID) => activeCardID === currentID;
 
 const Recipe = (props) => (
   <Link
@@ -12,20 +25,29 @@ const Recipe = (props) => (
     style={{ color: 'black', textDecoration: 'none' }}
   >
     <Card
-      className="shadow p-3 mb-5 bg-white"
-      style={{ width: '18rem', borderRadius: '10px' }}
-      // hoverable
+      className="p-3 mb-5 bg-white"
+      raised={checkIfCurrentCard(props.recipe._id)}
+      onMouseOver={() => onMouseOver(props.recipe._id)}
+      onMouseOut={onMouseOut}
+      style={{
+        width: '18rem', borderRadius: '10px',
+      }}
     >
-      <Card.Img
-        src={props.recipe.recipe_image}
-        // className="mt-5"
+      <CardMedia
+        component="img"
+        image={props.recipe.recipe_image}
       />
-      <Card.Title as="h3" className="text-center mt-2">
-        {props.recipe.recipe_title}
-      </Card.Title>
-      <Card.Text fontSize={0}>
-        {props.recipe.recipe_description}
-      </Card.Text>
+      <CardContent>
+        <Typography variant="h5" className="text-center">{props.recipe.recipe_title}</Typography>
+        <Typography
+          variant="body1"
+          style={{
+            overflow: 'hidden', textOverflow: 'ellipsis', wordBreak: 'break-word', hyphens: 'auto',
+          }}
+        >
+          {props.recipe.recipe_description}
+        </Typography>
+      </CardContent>
       <div
         className="row"
         style={{ justifyContent: 'center' }}
@@ -83,7 +105,15 @@ export default class RecipesList extends Component {
     return (
       <div>
         <h3>Recipes List</h3>
-        <CardDeck>{this.recipeList()}</CardDeck>
+        <Grid
+          container
+          alignItems="flex-start"
+          justify="space-evenly"
+          // spacing={3}
+        >
+          {this.recipeList()}
+
+        </Grid>
       </div>
     );
   }
