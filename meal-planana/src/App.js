@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
-
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+import { Link, Route, BrowserRouter as Router } from 'react-router-dom';
+import React, { Component } from 'react';
 
 import CreateRecipe from './components/create-recipe.component';
 import EditRecipe from './components/edit-recipe.component';
 import RecipesList from './components/recipes-list.component';
+import ViewRecipe from './components/view-recipe.component';
 
 // import logo from "./logo.png";
 
@@ -49,6 +50,7 @@ class App extends Component {
           <Route path="/" exact component={RecipesList} />
           <Route path="/edit/:id" component={EditRecipe} />
           <Route path="/create" component={CreateRecipe} />
+          <Route path="/view/:id" component={ViewRecipe} />
         </div>
       </Router>
     );

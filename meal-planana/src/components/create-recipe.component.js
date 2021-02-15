@@ -188,7 +188,7 @@ export default class CreateRecipe extends Component {
 
           {/* Title */}
           {/* TODO: Implement check to make sure something is entered in the field */}
-          <Form.Group controlID="formGroupRecipeTitle">
+          <Form.Group controlid="formGroupRecipeTitle">
             <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}>Title</Typography>
             <TextField
               required
@@ -205,7 +205,7 @@ export default class CreateRecipe extends Component {
           <br />
 
           {/* Description */}
-          <Form.Group controlID="formGroupRecipeDescription">
+          <Form.Group controlid="formGroupRecipeDescription">
             <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}>Description</Typography>
             <TextField
               multiline
@@ -222,7 +222,7 @@ export default class CreateRecipe extends Component {
           <br />
 
           {/* Ingredients */}
-          <Form.Group controlID="formGroupRecipeIngredients">
+          <Form.Group controlid="formGroupRecipeIngredients">
             <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}>Ingredients</Typography>
             <ChipInput
               allowDuplicates={false}
@@ -238,7 +238,7 @@ export default class CreateRecipe extends Component {
 
           {/* Directions */}
           {/* TODO: Implement check to make sure something is entered in the field */}
-          <Form.Group controlID="formGroupRecipeDirections">
+          <Form.Group controlid="formGroupRecipeDirections">
             <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}>Directions</Typography>
             <TextField
               multiline
@@ -258,7 +258,7 @@ export default class CreateRecipe extends Component {
           <br />
 
           {/* Tags */}
-          <Form.Group controlID="formGroupRecipeTags">
+          <Form.Group controlid="formGroupRecipeTags">
             <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}>Tags</Typography>
             <ChipInput
               allowDuplicates={false}
@@ -274,7 +274,7 @@ export default class CreateRecipe extends Component {
           <br />
 
           {/* Rating */}
-          <Form.Group controlID="formGroupRecipeRating">
+          <Form.Group controlid="formGroupRecipeRating">
             <Box component="fieldset" mb={3} borderColor="transparent">
               <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}>Rating</Typography>
               <Rating

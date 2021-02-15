@@ -21,7 +21,7 @@ const checkIfCurrentCard = (currentID) => activeCardID === currentID;
 
 const Recipe = (props) => (
   <Link
-    to={`/edit/${props.recipe._id}`}
+    to={`/view/${props.recipe._id}`}
     style={{ color: 'black', textDecoration: 'none' }}
   >
     <Card
