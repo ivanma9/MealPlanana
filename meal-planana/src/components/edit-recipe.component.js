@@ -38,6 +38,9 @@ export default class EditRecipe extends Component {
       recipe_image: '',
       recipe_rating: 0,
       recipe_author: '',
+
+      titleIsEmpty: false,
+      directionsIsEmpty: false,
     };
   }
 
@@ -61,10 +64,35 @@ export default class EditRecipe extends Component {
       });
   }
 
+  handleValidation() {
+    let formIsValid = true;
+
+    const title = this.state.recipe_title;
+    const directions = this.state.recipe_directions;
+
+    if (title.length === 0) {
+      this.setState({ titleIsEmpty: true });
+      formIsValid = false;
+    } else this.setState({ titleIsEmpty: false });
+
+    if (directions.length === 0) {
+      this.setState({ directionsIsEmpty: true });
+      formIsValid = false;
+    } else this.setState({ directionsIsEmpty: false });
+
+    return formIsValid;
+  }
+
   onChangeRecipeTitle(e) {
     this.setState({
       recipe_title: e.target.value,
     });
+
+    if (e.target.value.length === 0) {
+      this.setState({ titleIsEmpty: true });
+    } else {
+      this.setState({ titleIsEmpty: false });
+    }
   }
 
   onChangeRecipeDescription(e) {
@@ -89,6 +117,12 @@ export default class EditRecipe extends Component {
     this.setState({
       recipe_directions: e.target.value,
     });
+
+    if (e.target.value.length === 0) {
+      this.setState({ directionsIsEmpty: true });
+    } else {
+      this.setState({ directionsIsEmpty: false });
+    }
   }
 
   onAddRecipeTag(chip) {
@@ -129,6 +163,11 @@ export default class EditRecipe extends Component {
   }
 
   onSubmit(e) {
+    if (!this.handleValidation()) {
+      console.log('Form invalid');
+      return;
+    }
+
     const obj = {
       recipe_title: this.state.recipe_title,
       recipe_description: this.state.recipe_description,
@@ -164,6 +203,9 @@ export default class EditRecipe extends Component {
           <Form.Group controlID="formGroupRecipeTitle">
             <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}>Title</Typography>
             <TextField
+              required
+              error={this.state.titleIsEmpty}
+              helperText={this.state.titleIsEmpty ? 'required' : ''}
               variant="outlined"
               placeholder="Title"
               value={this.state.recipe_title}
@@ -212,6 +254,9 @@ export default class EditRecipe extends Component {
             <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}>Directions</Typography>
             <TextField
               multiline
+              required
+              error={this.state.directionsIsEmpty}
+              helperText={this.state.directionsIsEmpty ? 'required' : ''}
               variant="outlined"
               placeholder="Directions"
               value={this.state.recipe_directions}
@@ -288,7 +333,14 @@ export default class EditRecipe extends Component {
 
           <br />
 
-          <ButtonMUI variant="contained" color="primary" onClick={this.onSubmit}>Update Recipe</ButtonMUI>
+          <div style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            display: 'flex',
+          }}
+          >
+            <ButtonMUI variant="contained" color="primary" onClick={this.onSubmit}>Update Recipe</ButtonMUI>
+          </div>
         </Form>
       </div>
     );

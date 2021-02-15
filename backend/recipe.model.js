@@ -31,7 +31,7 @@ const Recipe = new Schema({
     type: [String],
   },
   recipe_directions: { // at least 1 step in the recipe
-    type: [String],
+    type: String,
     required: true,
   },
   recipe_descriptions: {

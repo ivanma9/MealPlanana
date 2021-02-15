@@ -23,7 +23,11 @@ export default class CreateRecipe extends Component {
       // recipe_image: '',
       recipe_rating: 0,
       // recipe_author: '',
+
+      titleIsEmpty: false,
+      directionsIsEmpty: false,
     };
+
     this.onChangeRecipeTitle = this.onChangeRecipeTitle.bind(this);
     this.onChangeRecipeDescription = this.onChangeRecipeDescription.bind(this);
     this.onAddRecipeIngredient = this.onAddRecipeIngredient.bind(this);
@@ -37,10 +41,35 @@ export default class CreateRecipe extends Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
+  handleValidation() {
+    let formIsValid = true;
+
+    const title = this.state.recipe_title;
+    const directions = this.state.recipe_directions;
+
+    if (title.length === 0) {
+      this.setState({ titleIsEmpty: true });
+      formIsValid = false;
+    } else this.setState({ titleIsEmpty: false });
+
+    if (directions.length === 0) {
+      this.setState({ directionsIsEmpty: true });
+      formIsValid = false;
+    } else this.setState({ directionsIsEmpty: false });
+
+    return formIsValid;
+  }
+
   onChangeRecipeTitle(e) {
     this.setState({
       recipe_title: e.target.value,
     });
+
+    if (e.target.value.length === 0) {
+      this.setState({ titleIsEmpty: true });
+    } else {
+      this.setState({ titleIsEmpty: false });
+    }
   }
 
   onChangeRecipeDescription(e) {
@@ -65,6 +94,12 @@ export default class CreateRecipe extends Component {
     this.setState({
       recipe_directions: e.target.value,
     });
+
+    if (e.target.value.length === 0) {
+      this.setState({ directionsIsEmpty: true });
+    } else {
+      this.setState({ directionsIsEmpty: false });
+    }
   }
 
   onAddRecipeTag(chip) {
@@ -98,7 +133,11 @@ export default class CreateRecipe extends Component {
   // }
 
   onSubmit(e) {
-    e.preventDefault();
+    if (!this.handleValidation()) {
+      console.log('Form invalid');
+      return;
+    }
+
     console.log('Form submitted:');
     console.log(`Recipe Title: ${this.state.recipe_title}`);
     console.log(`Recipe Description: ${this.state.recipe_description}`);
@@ -136,6 +175,8 @@ export default class CreateRecipe extends Component {
       recipe_rating: 0,
       // recipe_author: '',
     });
+
+    this.props.history.push('/');
   }
 
   render() {
@@ -150,6 +191,9 @@ export default class CreateRecipe extends Component {
           <Form.Group controlID="formGroupRecipeTitle">
             <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}>Title</Typography>
             <TextField
+              required
+              error={this.state.titleIsEmpty}
+              helperText={this.state.titleIsEmpty ? 'required' : ''}
               variant="outlined"
               placeholder="Title"
               value={this.state.recipe_title}
@@ -198,6 +242,9 @@ export default class CreateRecipe extends Component {
             <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}>Directions</Typography>
             <TextField
               multiline
+              required
+              error={this.state.directionsIsEmpty}
+              helperText={this.state.directionsIsEmpty ? 'required' : ''}
               variant="outlined"
               placeholder="Directions"
               value={this.state.recipe_directions}
