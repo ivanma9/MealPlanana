@@ -13,6 +13,8 @@ import { Link } from 'react-router-dom';
 import Rating from '@material-ui/lab/Rating';
 import axios from 'axios';
 
+// TODO: only 3 tags showing
+
 let activeCardID = '';
 
 const onMouseOver = (currentCardID) => { activeCardID = currentCardID; };
@@ -52,7 +54,17 @@ const Recipe = (props) => (
         className="row"
         style={{ justifyContent: 'center' }}
       >
-        {props.recipe.recipe_tags.map((tag, i) => <Badge pill style={{ backgroundColor: 'lawngreen', marginLeft: '1%', marginRight: '1%' }} key={i}>{tag}</Badge>)}
+        {props.recipe.recipe_tags.map((tag, i) => (
+          <Badge
+            pill
+            style={{
+              backgroundColor: 'lawngreen', marginLeft: '1%', marginRight: '1%', marginBottom: '2%',
+            }}
+            key={i}
+          >
+            {tag}
+          </Badge>
+        ))}
       </div>
       <Rating
         name="hearts"

@@ -55,6 +55,29 @@ export default class ViewRecipe extends Component {
       });
   }
 
+  componentDidUpdate() {
+    axios
+      .get(`http://localhost:4000/recipes/${this.props.match.params.id}`)
+      .then((response) => {
+        this.setState({
+          recipe_title: response.data.recipe_title,
+          recipe_description: response.data.recipe_description,
+          recipe_ingredients: response.data.recipe_ingredients,
+          recipe_directions: response.data.recipe_directions,
+          recipe_tags: response.data.recipe_tags,
+          recipe_image: response.data.recipe_image,
+          recipe_rating: response.data.recipe_rating,
+          recipe_author: response.data.recipe_author,
+
+          recipe_id: response.data._id,
+        });
+        console.log(this.state);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
   render() {
     return (
       <div>
