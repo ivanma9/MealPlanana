@@ -3,6 +3,6 @@ import errors from './errors/errors';
 import session from './session/session';
 
 export default combineReducers({
-  session: session,
-  errors: errors
+  session,
+  errors,
 });
