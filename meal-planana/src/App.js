@@ -6,6 +6,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import CreateRecipe from "./components/create-recipe.component";
 import EditRecipe from "./components/edit-recipe.component";
 import RecipesList from "./components/recipes-list.component";
+import CalendarMonthView from "./components/calendar-view.component";
+
 
 // import logo from "./logo.png";
 
@@ -42,6 +44,11 @@ class App extends Component {
 										Create Recipe
 									</Link>
 								</li>
+								<li className="navbar-item">
+									<Link to="/monthview" className="nav-link">
+										Calendar Month View
+									</Link>									
+								</li>
 							</ul>
 						</div>
 					</nav>
@@ -49,6 +56,7 @@ class App extends Component {
 					<Route path="/" exact component={RecipesList} />
 					<Route path="/edit/:id" component={EditRecipe} />
 					<Route path="/create" component={CreateRecipe} />
+					<Route path="/monthview" component={CalendarMonthView}/>
 				</div>
 			</Router>
 		);
