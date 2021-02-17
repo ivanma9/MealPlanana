@@ -177,3 +177,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# Config file with private info
+backend/src/config.js
