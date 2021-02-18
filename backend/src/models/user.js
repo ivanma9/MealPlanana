@@ -18,7 +18,7 @@ const UserSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
+    // required: true,
   },
   name: {
     type: String,
@@ -27,17 +27,25 @@ const UserSchema = new mongoose.Schema({
     type: [{
       recipe: mongoose.SchemaTypes.ObjectId,
       date: Date,
-      length: Number,
+      duration: Number,
       color: String,
-      // recurring: [String],
-      // start_date: Date,
-      // start_date: Date,
+      recurring: [String],
+      end_date: Date,
     }],
   },
-  // users_recipes: {
-  //   type: [mongoose.Schema.Types.ObjectId],
-  //   ref: 'RecipeSchema',
-  // },
+  recipes: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Recipe',
+  },
+  ratings: {
+    type: [{
+      recipeID: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Recipe',
+      },
+      rating: Number,
+    }],
+  },
   // favorite_recipes: {
   //   type: [mongoose.Schema.Types.ObjectId],
   //   ref: 'RecipeSchema'

@@ -1,41 +1,44 @@
 import mongoose from 'mongoose';
 
 const RecipeSchema = new mongoose.Schema({
-  recipe_title: {
+  title: {
     type: String,
     // required: true,
   },
-  recipe_author: { // either Default, User-created, or Unknown
+  author: { // either Default, User-created, or Unknown
   //   type: String,
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'UserSchema',
+    ref: 'User',
   },
-  recipe_rating: { // out of 5 stars
+  ratingTotal: { // total score of rating
     type: Number,
   },
-  recipe_tags: {
+  numRating: { // number of ratings
+    type: Number,
+  },
+  tags: {
     type: [String],
   },
-  recipe_date: {
-    type: Date,
-    default: Date.now,
-    // min: '2000-01-01', // can use the Date type to format this
-  },
-  recipe_ingredients: {
+  // date: {
+  //   type: Date,
+  //   default: Date.now,
+  //   // min: '2000-01-01', // can use the Date type to format this
+  // },
+  ingredients: {
     type: [String],
   },
-  recipe_directions: {
+  directions: {
     // type: [String],
     type: String,
     // required: true,
   },
-  recipe_descriptions: {
+  descriptions: {
     type: String,
   },
-  // recipe_images: {
+  // images: {
   //   type: [String], // probably just an array of URLs or file paths
   // },
-  // recipe_comments: {
+  // comments: {
   //   type: [{
   //     user: {
   //       type: mongoose.Schema.Types.ObjectId,
@@ -44,7 +47,7 @@ const RecipeSchema = new mongoose.Schema({
   //     comment: String,
   //   }],
   // },
-  // recipe_comments: {
+  // comments: {
   //   type: Number,
   // },
 }, { timestamps: true });
