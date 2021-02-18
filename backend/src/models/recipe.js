@@ -32,7 +32,7 @@ const RecipeSchema = new mongoose.Schema({
     type: String,
     // required: true,
   },
-  descriptions: {
+  description: {
     type: String,
   },
   // images: {
@@ -46,9 +46,6 @@ const RecipeSchema = new mongoose.Schema({
   //     },
   //     comment: String,
   //   }],
-  // },
-  // comments: {
-  //   type: Number,
   // },
 }, { timestamps: true });
 
