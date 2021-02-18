@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect, Route, withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const mapStateToProps = ({ session: { userId } }) => ({
   loggedIn: Boolean(userId),
@@ -15,6 +16,12 @@ const Auth = ({ loggedIn, path, component: Component }) => (
   />
 );
 
+Auth.propTypes = {
+  loggedIn: PropTypes.bool.isRequired,
+  path: PropTypes.string.isRequired,
+  component: PropTypes.elementType.isRequired,
+};
+
 const Protected = ({ loggedIn, path, component: Component }) => (
   <Route
     path={path}
@@ -23,6 +30,12 @@ const Protected = ({ loggedIn, path, component: Component }) => (
     )}
   />
 );
+
+Protected.propTypes = {
+  loggedIn: PropTypes.bool.isRequired,
+  path: PropTypes.string.isRequired,
+  component: PropTypes.elementType.isRequired,
+};
 
 export const AuthRoute = withRouter(
   connect(mapStateToProps)(Auth),

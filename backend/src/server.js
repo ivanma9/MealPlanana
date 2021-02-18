@@ -27,12 +27,12 @@ import {
       store: new MongoStore({
         mongooseConnection: mongoose.connection,
         collection: 'session',
-        ttl: parseInt(SESS_LIFETIME) / 1000,
+        ttl: parseInt(SESS_LIFETIME, 10) / 1000,
       }),
       cookie: {
         sameSite: true,
         secure: NODE_ENV === 'production',
-        maxAge: parseInt(SESS_LIFETIME),
+        maxAge: parseInt(SESS_LIFETIME, 10),
       },
     }));
 
@@ -41,7 +41,7 @@ import {
     apiRouter.use('/users', userRoutes);
     apiRouter.use('/session', sessionRoutes);
 
-    app.listen(PORT, () => console.log('Listening on port ${PORT}'));
+    app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
   } catch (err) {
     console.log(err);
   }

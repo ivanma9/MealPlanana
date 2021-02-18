@@ -25,11 +25,11 @@ export const logout = () => (
 export const checkLoggedIn = async (preloadedState) => {
   const response = await fetch('/api/session');
   const { user } = await response.json();
-  preloadedState = {};
+  let initialState = preloadedState;
   if (user) {
-    preloadedState = {
+    initialState = {
       session: user,
     };
   }
-  return preloadedState;
+  return initialState;
 };
