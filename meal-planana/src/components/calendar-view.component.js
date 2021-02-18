@@ -5,7 +5,7 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from "@fullcalendar/interaction";
-import {Button, Container} from 'react-bootstrap'
+import { Button, Container } from 'react-bootstrap'
 import moment from 'moment';
 
 import axios from 'axios';
@@ -36,31 +36,31 @@ import axios from 'axios';
 export default class CalendarMonthView extends Component {
   constructor(props) {
     super(props);
-    this.state = { 
+    this.state = {
       meals: [
-        { 
-          title: 'Snack on Bananas', 
-          date: '2021-02-01' ,
+        {
+          title: 'Snack on Bananas',
+          date: '2021-02-01',
           startTime: '14:30:00',
           endTime: '16:00:00',
           daysOfWeek: ['2', '5']
         },
-        { 
+        {
           groupID: 'smoothieEvents',
           daysOfWeek: ['4'],
-          title: 'drink nana smoothie', 
-          date: '2021-02-02' ,
+          title: 'drink nana smoothie',
+          date: '2021-02-02',
           color: "red",
           startTime: '9:30:00',
           endTime: '10:00:00'
         },
-        { 
-          title: 'fresh plantana', 
-          date: '2021-02-06' 
+        {
+          title: 'fresh plantana',
+          date: '2021-02-06'
         },
-        { 
-          title: 'moonki meeting meal', 
-          date: '2021-02-16' 
+        {
+          title: 'moonki meeting meal',
+          date: '2021-02-16'
         }
       ],
       dateState: new Date(), // Can just Use state in Component
@@ -99,12 +99,12 @@ export default class CalendarMonthView extends Component {
   }
 
 
-  changeDate(e){
+  changeDate(e) {
     console.log(e);
-    this.setState({ dateState: e})
+    this.setState({ dateState: e })
   }
 
-  renderEventContent (eventInfo) {
+  renderEventContent(eventInfo) {
     return (
       <>
         <b>{eventInfo.timeText}</b>
@@ -113,52 +113,52 @@ export default class CalendarMonthView extends Component {
     )
   }
 
-  handleChangeViewMonth(){ 
+  handleChangeViewMonth() {
     let calendarApi = this.calendarRef.current.getApi();
     calendarApi.changeView("dayGridMonth");
     console.log(calendarApi);
-   }
-   handleChangeViewWeek(){ 
+  }
+  handleChangeViewWeek() {
     let calendarApi = this.calendarRef.current.getApi();
     calendarApi.changeView("dayGridWeek");
     console.log(calendarApi);
-   }
-   handleChangeView4Day(){ 
+  }
+  handleChangeView4Day() {
     let calendarApi = this.calendarRef.current.getApi();
     calendarApi.changeView("timeGridFourDay");
     console.log(calendarApi);
-   }
-   handleChangeViewDay(){ 
+  }
+  handleChangeViewDay() {
     let calendarApi = this.calendarRef.current.getApi();
     calendarApi.changeView("timeGridDay");
     console.log(calendarApi);
-   }
+  }
 
 
   render() {
     return (
       <div>
         <h3>Monkeys Schedule 🙉</h3>
-        <Container className ="text-center">
-          <Button className = "mr-4 p-2" onClick={this.handleChangeViewMonth}>
+        <Container className="text-center">
+          <Button className="mr-4 p-2" onClick={this.handleChangeViewMonth}>
             Month View
           </Button>
-          <Button className = "m-4 p-2" onClick={this.handleChangeViewWeek}>
+          <Button className="m-4 p-2" onClick={this.handleChangeViewWeek}>
             Week View
           </Button>
-          <Button className = "m-4 p-2" onClick={this.handleChangeView4Day}>
+          <Button className="m-4 p-2" onClick={this.handleChangeView4Day}>
             4 Day View
           </Button>
-          <Button className = "m-4 p-2" onClick={this.handleChangeViewDay}>
+          <Button className="m-4 p-2" onClick={this.handleChangeViewDay}>
             Day View
           </Button>
         </Container>
-        
+
 
 
         <FullCalendar
           ref={this.calendarRef}
-          plugins={[ dayGridPlugin, interactionPlugin, timeGridPlugin ]}
+          plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
           initialView="timeGridFourDay"
           events={this.state.meals}
           views={{
@@ -177,7 +177,7 @@ export default class CalendarMonthView extends Component {
         />
 
         <p>Current selected date is <b>{moment(this.state.dateState.dateStr).format('MMMM Do YYYY')}</b></p>
-        
+
         {/* <table
           className="table table-striped"
           style={{ marginTop: 20 }}
