@@ -41,7 +41,7 @@ import {
     apiRouter.use('/users', userRoutes);
     apiRouter.use('/session', sessionRoutes);
 
-    app.listen(PORT, () => console.log('Listening on port ${PORT}'));
+    app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
   } catch (err) {
     console.log(err);
   }

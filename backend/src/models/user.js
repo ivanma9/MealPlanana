@@ -20,6 +20,37 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  name: {
+    type: String,
+  },
+  meals: {
+    type: [{
+      recipe: mongoose.SchemaTypes.ObjectId,
+      date: Date,
+      length: Number,
+      color: String,
+      // recurring: [String],
+      // start_date: Date,
+      // start_date: Date,
+    }],
+  },
+  // users_recipes: {
+  //   type: [mongoose.Schema.Types.ObjectId],
+  //   ref: 'RecipeSchema',
+  // },
+  // favorite_recipes: {
+  //   type: [mongoose.Schema.Types.ObjectId],
+  //   ref: 'RecipeSchema'
+  // },
+  // followers: {
+  //   type: [mongoose.Schema.Types.ObjectId],
+  //   ref: 'UserSchema'
+  // },
+  // following: {
+  //   type: [mongoose.Schema.Types.ObjectId],
+  //   ref: 'UserSchema'
+  // },
+
 }, { timestamps: true });
 
 UserSchema.pre('save', function () {
