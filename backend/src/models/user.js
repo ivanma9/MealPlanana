@@ -18,8 +18,47 @@ const UserSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
+    // required: true,
   },
+  name: {
+    type: String,
+  },
+  meals: {
+    type: [{
+      recipe: mongoose.SchemaTypes.ObjectId,
+      date: Date,
+      duration: Number,
+      color: String,
+      recurring: [String],
+      end_date: Date,
+    }],
+  },
+  recipes: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Recipe',
+  },
+  ratings: {
+    type: [{
+      recipeID: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Recipe',
+      },
+      rating: Number,
+    }],
+  },
+  // favorite_recipes: {
+  //   type: [mongoose.Schema.Types.ObjectId],
+  //   ref: 'RecipeSchema'
+  // },
+  // followers: {
+  //   type: [mongoose.Schema.Types.ObjectId],
+  //   ref: 'UserSchema'
+  // },
+  // following: {
+  //   type: [mongoose.Schema.Types.ObjectId],
+  //   ref: 'UserSchema'
+  // },
+
 }, { timestamps: true });
 
 UserSchema.pre('save', () => {
