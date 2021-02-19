@@ -22,7 +22,6 @@ export const fetchRecipes = () => async (dispatch) => {
   dispatch(fetchRecipesBegin()); // unneeded?
   const response = await apiUtil.fetchRecipes();
   const data = await response.json();
-  console.log('actions>recipes>fetchRecipes');
   if (response.ok) {
     return dispatch(fetchRecipesSuccess(data));
   }
