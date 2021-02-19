@@ -17,6 +17,9 @@ const renderApp = (preloadedState) => {
     </Provider>,
     document.getElementById('root'),
   );
+
+  // FOR TESTING, remove before production
+  window.getState = store.getState;
 };
 
 (async () => renderApp(await checkLoggedIn()))();

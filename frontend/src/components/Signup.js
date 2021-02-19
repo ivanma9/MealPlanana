@@ -26,7 +26,10 @@ const Signup = ({ errors, signup }) => {
   return (
     <>
       <h1>Signup</h1>
-      <p>{errors}</p>
+      <p>
+        Errors:
+        {errors}
+      </p>
       <form onSubmit={handleSubmit}>
         <label>
           Username:

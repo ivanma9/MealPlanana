@@ -4,33 +4,28 @@ import { compareSync, hashSync } from 'bcryptjs';
 const UserSchema = new mongoose.Schema({
   username: {
     type: String,
-    validate: {
-      validator: (username) => User.doesNotExist({ username }),
-      message: 'Username already exists',
-    },
+    reuired: true,
   },
   email: {
     type: String,
-    validate: {
-      validator: (email) => User.doesNotExist({ email }),
-      message: 'Email already exists',
-    },
+    required: true,
   },
   password: {
     type: String,
-    // required: true,
+    required: true,
   },
-  name: {
-    type: String,
-  },
+  //   name: {
+  //     type: String,
+  //   },
   meals: {
     type: [{
+      title: String,
       recipe: mongoose.SchemaTypes.ObjectId,
-      date: Date,
+      start_date: Date,
+      end_date: Date,
+      days: [Boolean],
       duration: Number,
       color: String,
-      recurring: [String],
-      end_date: Date,
     }],
   },
   recipes: {
@@ -39,7 +34,7 @@ const UserSchema = new mongoose.Schema({
   },
   ratings: {
     type: [{
-      recipeID: {
+      recipe: {
         type: [mongoose.Schema.Types.ObjectId],
         ref: 'Recipe',
       },
@@ -61,15 +56,23 @@ const UserSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-UserSchema.pre('save', () => {
+UserSchema.pre('save', function () {
   if (this.isModified('password')) {
     this.password = hashSync(this.password, 10);
   }
 });
 
-UserSchema.statics.doesNotExist = async (field) => await this.where(field).countDocuments() === 0;
+// UserSchema.statics.doesNotExist = async function (field) {
+//   if (this.isNew) {
+//     return await this.where(field).countDocuments() === 0;
+//   }
 
-UserSchema.methods.comparePasswords = (password) => compareSync(password, this.password);
+//   return true;
+// };
+
+UserSchema.methods.comparePasswords = function (password) {
+  return compareSync(password, this.password);
+};
 
 const User = mongoose.model('User', UserSchema);
 export default User;
