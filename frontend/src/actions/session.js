@@ -18,7 +18,6 @@ export const login = (user) => async (dispatch) => {
   const response = await apiUtil.login(user);
   const data = await response.json();
 
-  console.log('actions>session>login');
   if (response.ok) {
     return dispatch(receiveCurrentUser(data));
   }
@@ -38,7 +37,6 @@ export const signup = (user) => async (dispatch) => {
 export const logout = () => async (dispatch) => {
   const response = await apiUtil.logout();
   const data = await response.json();
-  console.log('actions>session>logout');
   if (response.ok) {
     return dispatch(logoutCurrentUser());
   }

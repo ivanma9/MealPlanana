@@ -1,17 +1,3 @@
-// import { RECEIVE_RECIPES } from '../actions/recipes';
-
-// const nullSession = { recipes: null };
-
-// export default (state = nullSession, { type, recipes }) => {
-//   Object.freeze(state);
-//   switch (type) {
-//     case RECEIVE_RECIPES:
-//       return recipes;
-//     default:
-//       return state;
-//   }
-// };
-
 import { FETCH_RECIPES_BEGIN, FETCH_RECIPES_FAILURE, FETCH_RECIPES_SUCCESS } from '../actions/recipes';
 
 const initialState = {
@@ -20,8 +6,9 @@ const initialState = {
   error: null,
 };
 
-export default function recipeReducer(state = initialState, action) {
-  switch (action.type) {
+export default (state = initialState, { type, recipes, error }) => {
+  Object.freeze(state);
+  switch (type) {
     case FETCH_RECIPES_BEGIN:
       return {
         ...state,
@@ -32,16 +19,16 @@ export default function recipeReducer(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        items: action.payload.recipes,
+        items: recipes,
       };
     case FETCH_RECIPES_FAILURE:
       return {
         ...state,
         loading: false,
-        error: action.payload.error,
+        error,
         items: [],
       };
     default:
       return state;
   }
-}
+};

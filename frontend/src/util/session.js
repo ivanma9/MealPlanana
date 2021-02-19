@@ -25,7 +25,6 @@ export const logout = () => (
 export const checkLoggedIn = async (preloadedState) => {
   const response = await fetch('/api/session');
   const { user } = await response.json();
-  // console.log(response); // works
   let initialState = preloadedState;
   if (user) {
     initialState = {

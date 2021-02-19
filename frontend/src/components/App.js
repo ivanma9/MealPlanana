@@ -1,9 +1,9 @@
+import React from 'react';
+import { Route } from 'react-router-dom';
 import { AuthRoute, ProtectedRoute } from '../util/route';
-import { Link, Route, BrowserRouter as Router } from 'react-router-dom';
 
 import Dashboard from './Dashboard';
 import Login from './Login';
-import React from 'react';
 import RecipesList from './recipes/RecipesList';
 import Signup from './Signup';
 import Welcome from './Welcome';

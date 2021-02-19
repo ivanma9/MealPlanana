@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
 
 import { connect } from 'react-redux';
-// import { getRecipes } from '../../actions/recipes';
-import fetchRecipes from '../../actions/recipes';
-
-// const mapStateToProps = ({ recipes }) => ({
-//   recipes,
-// });
+import { fetchRecipes } from '../../actions/recipes';
 
 const mapStateToProps = (state) => ({
   recipes: state.recipes.items,
@@ -15,17 +10,17 @@ const mapStateToProps = (state) => ({
 });
 
 // const mapDispatchToProps = (dispatch) => ({
-//   getRecipes: () => dispatch(getRecipes()),
+//   fetchRecipes: dispatch(fetchRecipes()),
 // });
 
-// const mapDispatchToProps = (dispatch) => ({
-//   fetchRecipes: () => dispatch(fetchRecipes()),
-// });
+// const RecipesList = ({ error, loading, recipes }) => (
+//   <>
+//     {recipes.map((recipe) => <li key={recipe._id}>{recipe.title}</li>)}
+//   </>
+// );
 
 class RecipesList extends Component {
   componentDidMount() {
-    // getRecipes();
-    console.log('component did mount');
     this.props.dispatch(fetchRecipes());
   }
 
@@ -49,10 +44,6 @@ class RecipesList extends Component {
     }
 
     return (
-      // <div>
-      //   <h1>Recipes</h1>
-      //   <p>{recipes}</p>
-      // </div>
       <ul>
         {recipes.map((recipe) => <li key={recipe._id}>{recipe.title}</li>)}
       </ul>
