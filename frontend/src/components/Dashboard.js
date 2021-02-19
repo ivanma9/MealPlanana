@@ -17,7 +17,7 @@ const Dashboard = ({ logout, session }) => (
       {session.username}
     </h1>
     <p>You are now logged in!</p>
-    <p>{session.meals[0].title}</p>
+    {/* <p>{session.meals[0].title}</p> */}
     <button onClick={logout}>Logout</button>
   </>
 );
