@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import Modal from './modal/stdModal.component.js';
 
 export default class CreateRecipe extends Component {
   constructor(props) {
@@ -20,6 +21,8 @@ export default class CreateRecipe extends Component {
     this.onChangeRecipePriority = this.onChangeRecipePriority.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
+
+  addModalRef = React.createRef();
 
   onChangeRecipeDescription(e) {
     this.setState({
@@ -64,11 +67,13 @@ export default class CreateRecipe extends Component {
       recipe_priority: '',
       recipe_completed: false,
     });
+    this.addModalRef.current.open();
   }
 
   render() {
     return (
       <div style={{ marginTop: 10 }}>
+        <Modal ref={this.addModalRef} children={<div>hello!</div>} />
         <h3>Create New Recipe</h3>
         <form onSubmit={this.onSubmit}>
           <div className="form-group">
