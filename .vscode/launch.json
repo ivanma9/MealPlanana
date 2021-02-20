@@ -1,0 +1,45 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"type": "pwa-node",
+			"request": "launch",
+			"name": "Launch Frontend",
+			"runtimeExecutable": "npm",
+			"runtimeArgs": [
+				"start"
+			],
+			"console": "internalConsole",
+			"localRoot": "${workspaceRoot}/frontend"
+		},
+		{
+			"type": "pwa-node",
+			"request": "launch",
+			"name": "Launch Backend",
+			"runtimeExecutable": "npm",
+			"runtimeArgs": [
+				"run",
+				"dev"
+			],
+			"console": "internalConsole",
+			"localRoot": "${workspaceRoot}/backend"
+		},
+		{
+			"type": "pwa-chrome",
+			"request": "launch",
+			"name": "Launch Chrome",
+			"url": "http://localhost:3000",
+			"webRoot": "${workspaceRoot}/frontend"
+		}
+	],
+	"compounds": [
+		{
+			"name": "Launch All",
+			"configurations": [
+				"Launch Backend",
+				"Launch Frontend",
+				"Launch Chrome"
+			]
+		}
+	]
+}

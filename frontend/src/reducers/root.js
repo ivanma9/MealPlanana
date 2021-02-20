@@ -1,10 +1,12 @@
 import { combineReducers } from 'redux';
 import errors from './errors/errors';
-import recipes from './recipes';
+import recipe from './recipes/recipeReducer';
+import recipeList from './recipes/recipeListReducer';
 import session from './session/session';
 
 export default combineReducers({
   session,
   errors,
-  recipes,
+  recipeList,
+  recipe,
 });

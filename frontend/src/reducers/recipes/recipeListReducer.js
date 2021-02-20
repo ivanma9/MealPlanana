@@ -1,14 +1,18 @@
-import { FETCH_RECIPES_BEGIN, FETCH_RECIPES_FAILURE, FETCH_RECIPES_SUCCESS } from '../actions/recipes';
+import {
+  FETCH_RECIPES_BEGIN,
+  FETCH_RECIPES_FAILURE,
+  FETCH_RECIPES_SUCCESS,
+} from '../../actions/recipes';
 
-const initialState = {
+const initialListState = {
   items: [],
   loading: false,
   error: null,
 };
 
-export default (state = initialState, { type, recipes, error }) => {
+export default function recipeListReducer(state = initialListState, action) {
   Object.freeze(state);
-  switch (type) {
+  switch (action.type) {
     case FETCH_RECIPES_BEGIN:
       return {
         ...state,
@@ -19,16 +23,16 @@ export default (state = initialState, { type, recipes, error }) => {
       return {
         ...state,
         loading: false,
-        items: recipes,
+        items: action.payload.recipes,
       };
     case FETCH_RECIPES_FAILURE:
       return {
         ...state,
         loading: false,
-        error,
+        error: action.payload.error,
         items: [],
       };
     default:
       return state;
   }
-};
+}

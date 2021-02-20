@@ -15,23 +15,19 @@ import { connect } from 'react-redux';
 import { fetchRecipes } from '../../actions/recipes';
 
 const mapStateToProps = (state) => ({
-  recipes: state.recipes.items,
-  loading: state.recipes.loading,
-  error: state.recipes.error,
+  // * recipeList comes from the root reducer definition
+  recipes: state.recipeList.items,
+  loading: state.recipeList.loading,
+  error: state.recipeList.error,
 });
 
-// const mapDispatchToProps = (dispatch) => ({
-//   fetchRecipes: () => dispatch(fetchRecipes()),
-// });
+const mapDispatchToProps = (dispatch) => ({
+  fetchRecipes: () => dispatch(fetchRecipes()),
+});
+// * or comment this out and add { fetchRecipes } to the connect function.
 
-// const RecipesList = ({ error, loading, recipes }) => (
-//   <>
-//     {recipes.map((recipe) => <li key={recipe._id}>{recipe.title}</li>)}
-//   </>
-// );
-// const state = {
-//   raised: false,
-// };
+// FIXME: Card raised property not working.
+//        Only being called once per card on initial load, and prints false.
 
 let activeCardID = '';
 const onMouseOver = (currentCardID) => { activeCardID = currentCardID; console.log('over'); };
@@ -143,6 +139,9 @@ class RecipesList extends Component {
           // spacing={3}
         >
           {this.recipeList()}
+          {/* {recipes.map(
+            (currentRecipe, i) => <Recipe recipe={currentRecipe} key={i} raised={false} />,
+          )} */}
         </Grid>
       </div>
     );
@@ -151,6 +150,6 @@ class RecipesList extends Component {
 
 export default connect(
   mapStateToProps,
-  { fetchRecipes },
-  // mapDispatchToProps,
+  mapDispatchToProps,
+  // { fetchRecipes },
 )(RecipesList);

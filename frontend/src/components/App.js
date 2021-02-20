@@ -1,11 +1,12 @@
-import React from 'react';
-import { Route } from 'react-router-dom';
 import { AuthRoute, ProtectedRoute } from '../util/route';
 
 import Dashboard from './Dashboard';
 import Login from './Login';
+import React from 'react';
 import RecipesList from './recipes/RecipesList';
+import { Route } from 'react-router-dom';
 import Signup from './Signup';
+import ViewRecipe from './recipes/ViewRecipe';
 import Welcome from './Welcome';
 
 export default () => (
@@ -15,39 +16,6 @@ export default () => (
     <AuthRoute path="/signup" component={Signup} />
     <ProtectedRoute path="/dashboard" component={Dashboard} />
     <ProtectedRoute path="/recipes" component={RecipesList} />
+    <ProtectedRoute path="/view/:id" component={ViewRecipe} />
   </>
-
-  // {/* <Router>
-  // <div className="container">
-  //   <nav className="navbar navbar-expand-lg navbar-light bg-light">
-  //     <a
-  //       className="navbar-brand"
-  //       href="https://codingthesmartway.com"
-  //       target="_blank"
-  //     />
-  //     <Link to="/" className="navbar-brand">
-  //       Meal Planana
-  //     </Link>
-  //     <div className="collpase navbar-collapse">
-  //       <ul className="navbar-nav mr-auto">
-  //         <li className="navbar-item">
-  //           <Link to="/" className="nav-link">
-  //             Recipes
-  //           </Link>
-  //         </li>
-  //         <li className="navbar-item">
-  //           <Link to="/create" className="nav-link">
-  //             Create Recipe
-  //           </Link>
-  //         </li>
-  //       </ul>
-  //     </div>
-  //   </nav>
-  //   <br />
-  //   <Route path="/" exact component={RecipesList} />
-  // {/* <Route path="/edit/:id" component={EditRecipe} /> */}
-  // {/* <Route path="/create" component={CreateRecipe} /> */}
-  // {/* <Route path="/view/:id" component={ViewRecipe} /> */}
-  //   </div>
-  // </Router> */}
 );
