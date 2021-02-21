@@ -26,6 +26,8 @@ const UserSchema = new mongoose.Schema({
       days: [Boolean],
       duration: Number,
       color: String,
+      freqType: String,
+      interval: Number,
     }],
   },
   recipes: {
