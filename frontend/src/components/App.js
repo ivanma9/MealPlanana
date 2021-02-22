@@ -5,6 +5,7 @@ import { AuthRoute, ProtectedRoute } from '../util/route';
 import Dashboard from './Dashboard';
 import Login from './Login';
 import RecipesList from './recipes/RecipesList';
+import CreateRecipe from './recipes/CreateRecipe';
 import Signup from './Signup';
 import ViewRecipe from './recipes/ViewRecipe';
 import Welcome from './Welcome';
@@ -21,6 +22,7 @@ export default () => (
         <>
           <ProtectedRoute path={`${url}/`} component={RecipesList} exact />
           <ProtectedRoute path={`${url}/view/:id`} component={ViewRecipe} />
+          <ProtectedRoute path={`${url}/create`} component={CreateRecipe} />
         </>
       )}
     />

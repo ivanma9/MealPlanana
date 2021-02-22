@@ -5,6 +5,7 @@ import {
   Chip,
   Grid,
   Typography,
+  Snackbar,
 } from '@material-ui/core';
 import React, { Component } from 'react';
 
@@ -12,6 +13,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import { Link } from 'react-router-dom';
 import Rating from '@material-ui/lab/Rating';
 import { connect } from 'react-redux';
+import MuiAlert from '@material-ui/lab/Alert';
 import { fetchRecipes } from '../../actions/recipes';
 
 const mapStateToProps = (state) => ({
@@ -30,14 +32,18 @@ const mapDispatchToProps = (dispatch) => ({
 //        Only being called once per card on initial load, and prints false.
 
 let activeCardID = '';
-const onMouseOver = (currentCardID) => { activeCardID = currentCardID; console.log('over'); };
-const onMouseOut = () => { activeCardID = ''; console.log('out'); };
+const onMouseOver = (currentCardID) => { activeCardID = currentCardID; };
+const onMouseOut = () => { activeCardID = ''; };
 
 // const checkIfCurrentCard = (currentID) => activeCardID === currentID;
 function checkIfCurrentCard(currentID) {
   const x = activeCardID === currentID;
-  console.log(x);
+  // console.log(x);
   return x;
+}
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 function Recipe(props) {
@@ -99,9 +105,35 @@ function Recipe(props) {
 }
 
 class RecipesList extends Component {
+  constructor(props) {
+    super(props);
+    if (this.props.location.appState !== undefined) {
+      this.state = {
+        open: this.props.location.appState.open,
+      };
+    } else {
+      this.state = {
+        open: false,
+      };
+    }
+  }
+
   componentDidMount() {
     this.props.fetchRecipes();
+    // this.setState({
+    //   open: this.props.location.appState.open,
+    // });
   }
+
+  // componentDidUpdate(prevProps) {
+  //   console.log('didupdate');
+  //   if (this.state.open !== this.props.location.appState.open) {
+  //     console.log('if');
+  //     this.setState({
+  //       open: this.props.location.appState.open,
+  //     });
+  //   }
+  // }
 
   recipeList() {
     return this.props.recipes.map(
@@ -111,9 +143,6 @@ class RecipesList extends Component {
 
   render() {
     const { error, loading, recipes } = this.props;
-    // console.log(error);
-    // console.log(loading);
-    // console.log(recipes);
 
     if (error) {
       return (
@@ -128,8 +157,28 @@ class RecipesList extends Component {
       return <Typography variant="h1" align="center">Loading...</Typography>;
     }
 
+    // if (this.props.location.state.open) {
+    //   console.log('succ');
+    //   // open = true;
+    // }
+
+    // const handleClose = () => { open = false; };
+
     return (
       <div>
+        {/* {console.log(this.props.location.state.createSuccessful)} */}
+        {/* {this.props.location.state.createSuccessful
+          && ( */}
+        <Snackbar
+          autoHideDuration={6000}
+          open={this.state.open}
+          // open={this.props.location.appState.open}
+          onClose={() => { this.setState({ open: false }); console.log(this.state.open); }}
+          // onClose={() => { this.props.location.appState.open = false; console.log(this.state.open); }}
+        >
+          <Alert severity="success" onClose={() => { this.setState({ open: false }); console.log(this.state.open); }}>Recipe successfully created!</Alert>
+        </Snackbar>
+        {/* )} */}
         <Typography variant="h1" align="center">Recipes List</Typography>
         <Grid
           container

@@ -3,10 +3,12 @@ import errors from './errors/errors';
 import recipe from './recipes/recipeReducer';
 import recipeList from './recipes/recipeListReducer';
 import session from './session/session';
+import createRecipe from './recipes/createRecipeReducer';
 
 export default combineReducers({
   session,
   errors,
   recipeList,
   recipe,
+  createRecipe,
 });
