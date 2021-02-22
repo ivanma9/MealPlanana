@@ -3,17 +3,19 @@ import {
   CardContent,
   CardMedia,
   Chip,
+  Fab,
   Grid,
-  Typography,
   Snackbar,
+  Typography,
 } from '@material-ui/core';
 import React, { Component } from 'react';
 
+import AddIcon from '@material-ui/icons/Add';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { Link } from 'react-router-dom';
+import MuiAlert from '@material-ui/lab/Alert';
 import Rating from '@material-ui/lab/Rating';
 import { connect } from 'react-redux';
-import MuiAlert from '@material-ui/lab/Alert';
 import { fetchRecipes } from '../../actions/recipes';
 
 const mapStateToProps = (state) => ({
@@ -120,20 +122,7 @@ class RecipesList extends Component {
 
   componentDidMount() {
     this.props.fetchRecipes();
-    // this.setState({
-    //   open: this.props.location.appState.open,
-    // });
   }
-
-  // componentDidUpdate(prevProps) {
-  //   console.log('didupdate');
-  //   if (this.state.open !== this.props.location.appState.open) {
-  //     console.log('if');
-  //     this.setState({
-  //       open: this.props.location.appState.open,
-  //     });
-  //   }
-  // }
 
   recipeList() {
     return this.props.recipes.map(
@@ -157,26 +146,28 @@ class RecipesList extends Component {
       return <Typography variant="h1" align="center">Loading...</Typography>;
     }
 
-    // if (this.props.location.state.open) {
-    //   console.log('succ');
-    //   // open = true;
-    // }
-
-    // const handleClose = () => { open = false; };
-
     return (
       <div>
-        {/* {console.log(this.props.location.state.createSuccessful)} */}
-        {/* {this.props.location.state.createSuccessful
-          && ( */}
+        <Link
+          to="/recipes/create"
+          style={{ color: 'black', textDecoration: 'none' }}
+        >
+          <Fab
+            variant="extended"
+            style={{
+              position: 'fixed', bottom: '2rem', right: '2rem', backgroundColor: 'orange',
+            }}
+          >
+            <AddIcon />
+            New
+          </Fab>
+        </Link>
         <Snackbar
           autoHideDuration={6000}
           open={this.state.open}
-          // open={this.props.location.appState.open}
-          onClose={() => { this.setState({ open: false }); console.log(this.state.open); }}
-          // onClose={() => { this.props.location.appState.open = false; console.log(this.state.open); }}
+          onClose={() => { this.setState({ open: false }); }}
         >
-          <Alert severity="success" onClose={() => { this.setState({ open: false }); console.log(this.state.open); }}>Recipe successfully created!</Alert>
+          <Alert severity="success" onClose={() => { this.setState({ open: false }); }}>Recipe successfully created!</Alert>
         </Snackbar>
         {/* )} */}
         <Typography variant="h1" align="center">Recipes List</Typography>

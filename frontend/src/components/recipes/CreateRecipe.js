@@ -18,19 +18,9 @@ const mapStateToProps = (state) => ({
   error: state.createRecipe.error,
 });
 
-// const mapDispatchToProps = (dispatch) => ({
-//   createRecipe: () => dispatch(createRecipe()),
-// });
-
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
-
-// function createSuccessful() {
-//   return (
-//     <Alert severity="success">Recipe successfully created!</Alert>
-//   );
-// }
 
 let createSuccessful = false;
 
@@ -50,7 +40,6 @@ class CreateRecipe extends Component {
 
       titleIsEmpty: false,
       // directionsIsEmpty: false,
-      // createSuccessful: false,
     };
 
     this.onChangeRecipeTitle = this.onChangeRecipeTitle.bind(this);
@@ -65,10 +54,6 @@ class CreateRecipe extends Component {
     // this.onChangeRecipeAuthor = this.onChangeRecipeAuthor.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
-
-  // componentDidMount() {
-  //   this.props.createRecipe();
-  // }
 
   handleValidation() {
     let formIsValid = true;
@@ -204,26 +189,18 @@ class CreateRecipe extends Component {
       // recipe_image: '',
       ratingTotal: 0,
       // recipe_author: '',
-
-      // createSuccessful: true,
     });
 
-    // createSuccessful();
-    // console.log(this.state.createSuccessful);
-
-    // this.props.history.push('/recipes');
     this.props.history.push({
       pathname: '/recipes',
       appState: {
         open: createSuccessful,
-        // createSuccessful,
       },
     });
   }
 
   render() {
     const { error, loading } = this.props;
-    // console.log(success);
 
     if (error) {
       return (
@@ -237,17 +214,10 @@ class CreateRecipe extends Component {
     if (loading) {
       return <Typography variant="h1" align="center">Loading...</Typography>;
     }
-    // if (this.state.createSuccessful) {
-    //   console.log('hi');
-    //   return <Alert severity="success">Recipe successfully created!</Alert>;
-    // }
 
     return (
       <div style={{ marginTop: 10 }}>
         <h3>Create New Recipe</h3>
-
-        {/* {createSuccessful && <Alert severity="success">Recipe successfully created!</Alert>} */}
-        {/* {console.log(createSuccessful)} */}
 
         <Form>
 
@@ -372,6 +342,5 @@ class CreateRecipe extends Component {
 
 export default connect(
   mapStateToProps,
-  // mapDispatchToProps,
   { createRecipe },
 )(CreateRecipe);
