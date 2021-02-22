@@ -43,16 +43,15 @@ function checkIfCurrentCard(currentID) {
 function Recipe(props) {
   return (
     <Link
-      to={`/view/${props.recipe._id}`}
+      to={`/recipes/view/${props.recipe._id}`}
       style={{ color: 'black', textDecoration: 'none' }}
     >
       <Card
-        className="p-3 mb-5 bg-white"
         raised={checkIfCurrentCard(props.recipe._id)}
         onMouseOver={() => onMouseOver(props.recipe._id)}
         onMouseLeave={() => onMouseOut()}
         style={{
-          width: '18rem', borderRadius: '10px',
+          width: '18rem', borderRadius: '10px', padding: '1rem', margin: '2rem',
         }}
       >
         {/* <CardMedia

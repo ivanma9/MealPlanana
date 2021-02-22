@@ -22,9 +22,12 @@ Auth.propTypes = {
   component: PropTypes.elementType.isRequired,
 };
 
-const Protected = ({ loggedIn, path, component: Component }) => (
+const Protected = ({
+  loggedIn, path, component: Component, ...rest
+}) => (
   <Route
     path={path}
+    {...rest}
     render={(props) => (
       loggedIn ? <Component {...props} /> : <Redirect to="/login" />
     )}
