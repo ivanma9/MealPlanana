@@ -49,6 +49,9 @@ const RecipeSchema = new mongoose.Schema({
   //   fileLink: { type: String },
   //   s3_key: { type: String },
   // },
+  images: {
+    type: [String],
+  },
   image: {
     type: String,
   },

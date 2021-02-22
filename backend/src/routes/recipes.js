@@ -1,10 +1,6 @@
-// const Recipe = require('../models/recipe.js');
 import express from 'express';
 import multer from 'multer';
 import multerS3 from 'multer-s3';
-// const express = require('express');
-// const multer = require('multer');
-// const multerS3 = require('multer-s3');
 import path from 'path';
 import fs from 'fs';
 import AWS from 'aws-sdk';
@@ -16,16 +12,12 @@ import {
   AWS_Uploaded_File_URL_LINK,
 } from '../config';
 import Recipe from '../models/recipe';
-// const path = require('path');
-// const fs = require('fs');
-// const AWS = require('aws-sdk');
 
 // S3 upload method returns error and data in a callback, where data contains
 // location, bucket, and key of the uploaded file.
 const recipeRoutes = express.Router();
 
 const storage = multer.memoryStorage();
-// const upload = multer({ storage });
 
 // const storage = multer.diskStorage({
 //   destination(req, file, cb) {
@@ -36,17 +28,6 @@ const storage = multer.memoryStorage();
 //     cb(null, `${file.fieldname}-${Date.now()}`);
 //   },
 // });
-
-// const fileFilter = (req, file, cb) => {
-//   const allowedFileTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-//   if (allowedFileTypes.includes(file.mimetype)) {
-//     cb(null, true);
-//   } else {
-//     cb(null, false);
-//   }
-// };
-
-// const upload = multer({ storage, fileFilter });
 
 // recipeRoutes.post('/upload', upload.single('file'), async (req, res) => {
 //   const { file } = req;
@@ -150,7 +131,7 @@ const upload = multer({
 });
 
 const singleUpload = upload.single('image');
-const multipleUpload = upload.array('image');
+const multipleUpload = upload.array('image', 5);
 
 recipeRoutes.post('/add-pic', async (req, res) => {
   // const newRecipe = new Recipe(req.body);  // at this point, req.body has nothing!
@@ -185,7 +166,43 @@ recipeRoutes.post('/add-pic', async (req, res) => {
   }
 });
 
-recipeRoutes.patch('/add-pic/:id', async (req, res) => {
+recipeRoutes.put('/add-pics/:id', async (req, res) => {
+  const uid = req.params.id;
+  try {
+    await multipleUpload(req, res, (err) => {
+      if (err) {
+        return res.json({
+          success: false,
+          errors: {
+            title: 'Image uploads error',
+            detail: err.message,
+            error: err,
+          },
+        });
+      }
+
+      try {
+        const img_urls = req.files
+          .map((item) => item.location);
+        const update = req.body;
+        update.images = img_urls;
+        Recipe.updateOne(
+          { _id: uid },
+          update,
+        )
+          .then(() => res.status(200).json({ message: 'Successfully added image!' }))
+          .catch((e) => res.status(400).json({ success: false, error: e }));
+        console.log('Successfully added image!');
+      } catch (error) {
+        res.status(500).json({ message: error });
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ message: err });
+  }
+});
+
+recipeRoutes.put('/add-pic/:id', async (req, res) => {
   const uid = req.params.id;
   try {
     await singleUpload(req, res, (err) => {
@@ -199,7 +216,8 @@ recipeRoutes.patch('/add-pic/:id', async (req, res) => {
           },
         });
       }
-      const update = { image: req.file.location };
+      const update = req.body;
+      update.image = req.file.location;
       const updatedRecipe = Recipe.updateOne(
         { _id: uid },
         update,
@@ -276,7 +294,26 @@ recipeRoutes.post('/add', async (req, res) => {
 
 // https://stackoverflow.com/questions/22071434/mongodb-update-collection-field-if-new-value-is-not-null
 // https://wanago.io/2020/04/27/typescript-express-put-vs-patch-mongodb-mongoose/
-recipeRoutes.patch('/update/:id', async (req, res) => {
+// typically, patch only updates new fields while put updates the entire document
+// however, the $set operator allows us to specify which fields to update
+recipeRoutes.put('/update/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedRecipe = await Recipe.updateOne(
+      { _id: id },
+      {
+        $set: req.body,
+      },
+    );
+    console.log(req.body);
+    res.status(200).json({ message: 'Successfully updated recipe!' });
+    console.log('Successfully updated recipe!');
+  } catch (err) {
+    res.status(500).json({ message: err });
+  }
+});
+
+recipeRoutes.put('/update1/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const updatedRecipe = await Recipe.updateOne(
