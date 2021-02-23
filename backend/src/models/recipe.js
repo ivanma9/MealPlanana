@@ -39,21 +39,17 @@ const RecipeSchema = new mongoose.Schema({
   description: {
     type: String,
   },
-  // images: { // just get 1 to work for now
-  //   data: Buffer, // probably just an array of URLs or file paths
-  //   contentType: String,
-  // },
-  // images: {
-  //   document_id: { type: Number, default: 0 },
-  //   description: { type: String },
-  //   fileLink: { type: String },
-  //   s3_key: { type: String },
-  // },
   images: {
-    type: [String],
+    type: [{
+      key: String,
+      location: String,
+    }],
   },
-  image: {
-    type: String,
+  preview: {
+    type: {
+      key: String,
+      location: String,
+    },
   },
   // comments: {  // maybe call this 'reviews'
   //   type: [{
