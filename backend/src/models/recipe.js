@@ -23,11 +23,6 @@ const RecipeSchema = new mongoose.Schema({
   tags: {
     type: [String],
   },
-  // date: {
-  //   type: Date,
-  //   default: Date.now,
-  //   // min: '2000-01-01', // can use the Date type to format this
-  // },
   ingredients: {
     type: [String],
   },
@@ -51,19 +46,16 @@ const RecipeSchema = new mongoose.Schema({
       location: String,
     },
   },
-  // comments: {  // maybe call this 'reviews'
+  // reviews: {
   //   type: [{
   //     user: {
   //       type: mongoose.Schema.Types.ObjectId,
-  //       ref: 'UserSchema',
+  //       ref: 'User',
   //     },
   //     comment: String,
   //   }],
   // },
 }, { timestamps: true });
 
-// module.exports = mongoose.model('Recipe', RecipeSchema);
 const Recipe = mongoose.model('Recipe', RecipeSchema);
 export default Recipe;
-// const User = mongoose.model('User', UserSchema);
-// export default User;
