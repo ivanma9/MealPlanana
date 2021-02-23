@@ -10,6 +10,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { connect } from 'react-redux';
 import MuiAlert from '@material-ui/lab/Alert';
+import { Editor } from '@tinymce/tinymce-react';
 import { createRecipe } from '../../actions/recipes';
 
 const mapStateToProps = (state) => ({
@@ -87,8 +88,9 @@ class CreateRecipe extends Component {
   }
 
   onChangeRecipeDescription(e) {
+    const content = e.target.getContent();
     this.setState({
-      description: e.target.value,
+      description: content,
     });
   }
 
@@ -105,11 +107,12 @@ class CreateRecipe extends Component {
   }
 
   onChangeRecipeDirections(e) {
+    const content = e.target.getContent();
     this.setState({
-      directions: e.target.value,
+      directions: content,
     });
 
-    if (e.target.value.length === 0) {
+    if (content.length === 0) {
       this.setState({ directionsIsEmpty: true });
     } else {
       this.setState({ directionsIsEmpty: false });
@@ -242,18 +245,26 @@ class CreateRecipe extends Component {
           {/* Description */}
           <Form.Group controlid="formGroupRecipeDescription">
             <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}>Description</Typography>
-            <TextField
-              multiline
-              variant="outlined"
-              placeholder="Description"
-              value={this.state.description}
+            <Editor
+              initialValue=""
+              init={{
+                height: 500,
+                menubar: false,
+                plugins: [
+                  'advlist autolink lists link image',
+                  'charmap print preview anchor help',
+                  'searchreplace visualblocks code',
+                  'insertdatetime media table paste wordcount',
+                ],
+                toolbar:
+            'undo redo | formatselect | bold italic | \
+            alignleft aligncenter alignright | \
+            bullist numlist outdent indent | help',
+              }}
               onChange={this.onChangeRecipeDescription}
-              style={{ width: '100%' }}
-              rows={3}
-              rowsMax={15}
+              apiKey="mqyujdmrjuid1rkbt26rbvqf8ga7ne6l23noy9kfvmg3q1x3"
             />
           </Form.Group>
-
           <br />
 
           {/* Ingredients */}
@@ -275,18 +286,24 @@ class CreateRecipe extends Component {
           {/* TODO: Implement check to make sure something is entered in the field */}
           <Form.Group controlid="formGroupRecipeDirections">
             <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}>Directions</Typography>
-            <TextField
-              multiline
-              required
-              error={this.state.directionsIsEmpty}
-              helperText={this.state.directionsIsEmpty ? 'required' : ''}
-              variant="outlined"
-              placeholder="Directions"
-              value={this.state.directions}
+            <Editor
+              initialValue=""
+              init={{
+                height: 500,
+                menubar: false,
+                plugins: [
+                  'advlist autolink lists link image',
+                  'charmap print preview anchor help',
+                  'searchreplace visualblocks code',
+                  'insertdatetime media table paste wordcount',
+                ],
+                toolbar:
+            'undo redo | formatselect | bold italic | \
+            alignleft aligncenter alignright | \
+            bullist numlist outdent indent | help',
+              }}
               onChange={this.onChangeRecipeDirections}
-              style={{ width: '100%' }}
-              rows={3}
-              rowsMax={15}
+              apiKey="mqyujdmrjuid1rkbt26rbvqf8ga7ne6l23noy9kfvmg3q1x3"
             />
           </Form.Group>
 
