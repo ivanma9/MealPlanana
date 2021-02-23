@@ -23,7 +23,7 @@ function Navbar() {
         <ul className="navbar-nav mr-auto">
           <li className="navbar-item">
             <Link to="/dashboard" className="nav-link">
-              <GiBananaBunch color="burlywood" size="2.3em" />
+              <GiBananaBunch color="#edc80c" size="2.3em" />
             </Link>
           </li>
           <li className="navbar-item">

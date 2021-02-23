@@ -64,7 +64,7 @@ class ViewRecipe extends Component {
 
         <CardMedia
           component="img"
-          image={recipe.image}
+          image={recipe.preview && recipe.preview.location}
           style={{
             height: '20rem', marginBottom: '1rem', width: '100%',
           }}

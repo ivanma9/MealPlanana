@@ -62,10 +62,10 @@ function Recipe(props) {
           width: '18rem', borderRadius: '10px', padding: '1rem', margin: '2rem',
         }}
       >
-        {/* <CardMedia
-        component="img"
-        image={props.recipe.image}
-      /> */}
+        <CardMedia
+          component="img"
+          image={props.recipe.preview && props.recipe.preview.location}
+        />
         <CardContent>
           <Typography variant="h5" align="center">{props.recipe.title}</Typography>
           <Typography
