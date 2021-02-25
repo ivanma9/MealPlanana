@@ -47,7 +47,7 @@ export const upload = multer({
   }),
 });
 
-export const uploader = upload.fields(
+export const recipeUploader = upload.fields(
   [
     {
       name: 'preview',
@@ -59,3 +59,5 @@ export const uploader = upload.fields(
     },
   ],
 );
+
+export const userUploader = upload.single('profile');
