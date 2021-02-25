@@ -15,33 +15,6 @@ import { parseError, sessionizeUser } from '../util/helpers';
 
 const userRoutes = express.Router();
 
-// get all users
-userRoutes.get('/', async (req, res) => {
-  try {
-    const users = await User.find();
-    res.status(200).json(users);
-    console.log('Successfully retrieved users!');
-  } catch (err) {
-    res.status(500).json({ message: err });
-  }
-});
-
-// get one user (specific ID)
-userRoutes.get('/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const user = await User.findById(id);
-    if (user) {
-      res.status(200).json(user);
-      console.log(`Successfully retrieved user ${id}!`);
-    } else {
-      res.status(404).json({ message: 'No valid entry found!' });
-    }
-  } catch (err) {
-    res.status(500).json({ message: err });
-  }
-});
-
 // create user
 userRoutes.post('/', userUploader, async (req, res) => {
   try {
