@@ -35,146 +35,150 @@ import { connect } from 'react-redux';
 // );
 
 class CalendarView extends Component {
-	calendarRef = React.createRef();
+  calendarRef = React.createRef();
 
-	constructor(props) {
-		super(props);
-		this.state = {
-			//   meals: [
-			//     {
-			//       title: 'Snack on Bananas',
-			//       date: '2021-02-01',
-			//       startTime: '14:30:00',
-			//       endTime: '16:00:00',
-			//       daysOfWeek: ['2', '5'],
-			//     },
-			//     {
-			//       groupID: 'smoothieEvents',
-			//       daysOfWeek: ['4'],
-			//       title: 'drink nana smoothie',
-			//       date: '2021-02-02',
-			//       color: 'red',
-			//       startTime: '9:30:00',
-			//       endTime: '10:00:00',
-			//     },
-			//     {
-			//       title: 'fresh plantana',
-			//       date: '2021-02-06',
-			//     },
-			//     {
-			//       title: 'moonki meeting meal',
-			//       date: '2021-02-16',
-			//     },
-			//     {
-			//       groupId: 'blueEvents', // recurrent events in this group move together
-			//       daysOfWeek: ['4'],
-			//       startTime: '10:45:00',
-			//       endTime: '12:45:00',
-			//     },
-			//     {
-			//       daysOfWeek: ['3'], // these recurrent events move separately
-			//       startTime: '11:00:00',
-			//       endTime: '11:30:00',
-			//       color: 'red',
-			//     },
-			//     {
-			//       title: 'rrule event bananamamam',
-			//       rrule: {
-			//         dtstart: '2021-02-11T13:00:00',
-			//         freq: 'weekly',
-			//       },
-			//       duration: '02:00',
-			//     },
-			//   ],
-			dateState: new Date(), // Can just Use state in Component
-		};
-		// this.handleChangeViewMonth = this.handleChangeViewMonth.bind(this);
-		// this.handleChangeViewWeek = this.handleChangeViewWeek.bind(this);
-		// this.handleChangeView4Day = this.handleChangeView4Day.bind(this);
-		// this.handleChangeViewDay = this.handleChangeViewDay.bind(this);
-	}
+  constructor(props) {
+    super(props);
+    this.state = {
+	    //   meals: [
+	    //     {
+	    //       title: 'Snack on Bananas',
+	    //       date: '2021-02-01',
+	    //       startTime: '14:30:00',
+	    //       endTime: '16:00:00',
+	    //       daysOfWeek: ['2', '5'],
+	    //     },
+	    //     {
+	    //       groupID: 'smoothieEvents',
+	    //       daysOfWeek: ['4'],
+	    //       title: 'drink nana smoothie',
+	    //       date: '2021-02-02',
+	    //       color: 'red',
+	    //       startTime: '9:30:00',
+	    //       endTime: '10:00:00',
+	    //     },
+	    //     {
+	    //       title: 'fresh plantana',
+	    //       date: '2021-02-06',
+	    //     },
+	    //     {
+	    //       title: 'moonki meeting meal',
+	    //       date: '2021-02-16',
+	    //     },
+	    //     {
+	    //       groupId: 'blueEvents', // recurrent events in this group move together
+	    //       daysOfWeek: ['4'],
+	    //       startTime: '10:45:00',
+	    //       endTime: '12:45:00',
+	    //     },
+	    //     {
+	    //       daysOfWeek: ['3'], // these recurrent events move separately
+	    //       startTime: '11:00:00',
+	    //       endTime: '11:30:00',
+	    //       color: 'red',
+	    //     },
+	    //     {
+	    //       title: 'rrule event bananamamam',
+	    //       rrule: {
+	    //         dtstart: '2021-02-11T13:00:00',
+	    //         freq: 'weekly',
+	    //       },
+	    //       duration: '02:00',
+	    //     },
+	    //   ],
+      dateState: new Date(), // Can just Use state in Component
+    };
+    // this.handleChangeViewMonth = this.handleChangeViewMonth.bind(this);
+    // this.handleChangeViewWeek = this.handleChangeViewWeek.bind(this);
+    // this.handleChangeView4Day = this.handleChangeView4Day.bind(this);
+    // this.handleChangeViewDay = this.handleChangeViewDay.bind(this);
+  }
 
-	changeDate(e) {
-		console.log(e);
-		this.setState({ dateState: e });
-	}
+  changeDate(e) {
+    console.log(e);
+    this.setState({ dateState: e });
+  }
 
-	parseMeals() {
-		return this.props.meals.map((meal) => {
-			return (
-				<li key={meal.interval}> {meal.title} </li>
-			);
-		});
-	}
+  parseMeals() {
+    return this.props.meals.map((meal) => (
+      <li key={meal.interval}>
+        {' '}
+        {meal.title}
+        {' '}
+      </li>
+    ));
+  }
 
-	render() {
-		// const { username } = this.props;
+  render() {
+    // const { username } = this.props;
 
-		return (
-			<div>
-				<h2 className="text-center">
-					NANA {this.props.username}
-					{' '}
-            Monkeys Schedule 🙉
-          </h2>
+    return (
+      <div>
+        <h2 className="text-center">
+          NANA
+          {' '}
+          {this.props.username}
+          {' '}
+          Monkeys Schedule 🙉
+        </h2>
 
-				<ul>
-					{this.parseMeals()}
-				</ul>
+        <ul>
+          {this.parseMeals()}
+        </ul>
 
-				<Container className="text-center">
-					<Button className="mr-4 p-2" onClick={this.handleChangeViewMonth}>
-						Month View
-            </Button>
-					<Button className="m-4 p-2" onClick={this.handleChangeViewWeek}>
-						Week View
-            </Button>
-					<Button className="m-4 p-2" onClick={this.handleChangeView4Day}>
-						4 Day View
-            </Button>
-					<Button className="m-4 p-2" onClick={this.handleChangeViewDay}>
-						Day View
-            </Button>
-				</Container>
+        <Container className="text-center">
+          <Button className="mr-4 p-2" onClick={this.handleChangeViewMonth}>
+            Month View
+          </Button>
+          <Button className="m-4 p-2" onClick={this.handleChangeViewWeek}>
+            Week View
+          </Button>
+          <Button className="m-4 p-2" onClick={this.handleChangeView4Day}>
+            4 Day View
+          </Button>
+          <Button className="m-4 p-2" onClick={this.handleChangeViewDay}>
+            Day View
+          </Button>
+        </Container>
 
-				<FullCalendar
-					ref={this.calendarRef}
-					headerToolbar={{
-						center: 'dayGridMonth,dayGridWeek,timeGridFourDay,timeGridDay', // buttons for switching between views
-					}}
-					plugins={[rrulePlugin, dayGridPlugin, interactionPlugin, timeGridPlugin]}
-					initialView="timeGridDay"
-					//events={meals}
-					views={{
-						timeGridFourDay: {
-							type: 'timeGrid',
-							duration: { days: 4 },
-							buttonText: '4 day',
-						},
-						timeGridDay: {
+        <FullCalendar
+          ref={this.calendarRef}
+          headerToolbar={{
+            center: 'dayGridMonth,dayGridWeek,timeGridFourDay,timeGridDay', // buttons for switching between views
+          }}
+          plugins={[rrulePlugin, dayGridPlugin, interactionPlugin, timeGridPlugin]}
+          initialView="timeGridDay"
+      // events={meals}
+          views={{
+            timeGridFourDay: {
+              type: 'timeGrid',
+              duration: { days: 4 },
+              buttonText: '4 day',
+            },
+            timeGridDay: {
 
-						},
-					}}
-					fixedWeekCount={false}
-					dateClick={(e) => this.changeDate(e)}
-				/>
+            },
+          }}
+          fixedWeekCount={false}
+          dateClick={(e) => this.changeDate(e)}
+        />
 
-				<p>
-					Current selected date is
-            {' '}
-					<b>{moment(this.state.dateState.dateStr).format('MMMM Do YYYY')}</b>
-				</p>
+        <p>
+          Current selected date is
+          {' '}
+          <b>{moment(this.state.dateState.dateStr).format('MMMM Do YYYY')}</b>
+        </p>
 
-			</div>
-		);
-	}
+      </div>
+    );
+  }
 }
 
 const mapStateToProps = (state) => ({
-	username: state.session.username,
-	meals: state.session.meals,
+  username: state.session.username,
+  meals: state.session.meals,
 });
 
 export default connect(
-	mapStateToProps,
+  mapStateToProps,
 )(CalendarView);
