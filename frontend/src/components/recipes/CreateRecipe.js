@@ -257,9 +257,7 @@ class CreateRecipe extends Component {
                   'insertdatetime media table paste wordcount',
                 ],
                 toolbar:
-            'undo redo | formatselect | bold italic | \
-            alignleft aligncenter alignright | \
-            bullist numlist outdent indent | help',
+                  'undo redo | formatselect | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | help',
               }}
               onChange={this.onChangeRecipeDescription}
               apiKey="mqyujdmrjuid1rkbt26rbvqf8ga7ne6l23noy9kfvmg3q1x3"
@@ -298,9 +296,7 @@ class CreateRecipe extends Component {
                   'insertdatetime media table paste wordcount',
                 ],
                 toolbar:
-            'undo redo | formatselect | bold italic | \
-            alignleft aligncenter alignright | \
-            bullist numlist outdent indent | help',
+                  'undo redo | formatselect | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | help',
               }}
               onChange={this.onChangeRecipeDirections}
               apiKey="mqyujdmrjuid1rkbt26rbvqf8ga7ne6l23noy9kfvmg3q1x3"

@@ -13,6 +13,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import { Link } from 'react-router-dom';
 import Rating from '@material-ui/lab/Rating';
 import { connect } from 'react-redux';
+import ReactHtmlParser from 'react-html-parser';
 import { fetchRecipe } from '../../actions/recipes';
 
 const mapStateToProps = (state) => ({
@@ -91,7 +92,7 @@ class ViewRecipe extends Component {
               </Grid>
               <Grid item sm={12} md={10}>
                 <Typography variant="body1" style={{ paddingTop: '0.23em', whiteSpace: 'pre-line' }}>
-                  {recipe.description}
+                  {ReactHtmlParser(recipe.description)}
                 </Typography>
               </Grid>
             </Grid>
@@ -121,7 +122,7 @@ class ViewRecipe extends Component {
               </Grid>
               <Grid item sm={12} md={10}>
                 <Typography variant="body1" style={{ paddingTop: '0.23em', whiteSpace: 'pre-line' }}>
-                  {recipe.directions}
+                  {ReactHtmlParser(recipe.directions)}
                 </Typography>
               </Grid>
             </Grid>

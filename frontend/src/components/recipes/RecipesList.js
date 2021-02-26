@@ -16,6 +16,7 @@ import { Link } from 'react-router-dom';
 import MuiAlert from '@material-ui/lab/Alert';
 import Rating from '@material-ui/lab/Rating';
 import { connect } from 'react-redux';
+import ReactHtmlParser from 'react-html-parser';
 import { fetchRecipes } from '../../actions/recipes';
 
 const mapStateToProps = (state) => ({
@@ -74,7 +75,7 @@ function Recipe(props) {
               overflow: 'hidden', textOverflow: 'ellipsis', wordBreak: 'break-word', hyphens: 'auto',
             }}
           >
-            {props.recipe.description}
+            {ReactHtmlParser(props.recipe.description)}
           </Typography>
         </CardContent>
         <div
