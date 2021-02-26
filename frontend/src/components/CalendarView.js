@@ -10,6 +10,7 @@ import { Button, Container } from 'react-bootstrap';
 import moment from 'moment';
 
 import { connect } from 'react-redux';
+import { parseMeals } from './helpers/calendarHelper';
 
 // import axios from 'axios';
 
@@ -17,22 +18,22 @@ import { connect } from 'react-redux';
 // import "@fullcalendar/daygrid/main.css";
 // import "@fullcalendar/timegrid/main.css";
 
-// const Recipe = (props) => (
-//   <tr>
-//     <td className={props.recipe.recipe_description ? 'completed' : ''}>
-//       {props.recipe.recipe_description}
-//     </td>
-//     <td className={props.recipe.recipe_description ? 'completed' : ''}>
-//       {props.recipe.recipe_responsible}
-//     </td>
-//     <td className={props.recipe.recipe_description ? 'completed' : ''}>
-//       {props.recipe.recipe_priority}
-//     </td>
-//     <td>
-//       <Link to={`/editMeal/${props.recipe._id}`}>Edit Meal</Link>
-//     </td>
-//   </tr>
-// );
+const Meal = (props) => (
+  <tr>
+    <td className={props.recipe.recipe_description ? 'completed' : ''}>
+      {props.recipe.recipe_description}
+    </td>
+    <td className={props.recipe.recipe_description ? 'completed' : ''}>
+      {props.recipe.recipe_responsible}
+    </td>
+    <td className={props.recipe.recipe_description ? 'completed' : ''}>
+      {props.recipe.recipe_priority}
+    </td>
+    <td>
+      <Link to={`/editMeal/${props.recipe._id}`}>Edit Meal</Link>
+    </td>
+  </tr>
+);
 
 class CalendarView extends Component {
   calendarRef = React.createRef();
@@ -99,16 +100,6 @@ class CalendarView extends Component {
     this.setState({ dateState: e });
   }
 
-  parseMeals() {
-    return this.props.meals.map((meal) => (
-      <li key={meal.interval}>
-        {' '}
-        {meal.title}
-        {' '}
-      </li>
-    ));
-  }
-
   render() {
     // const { username } = this.props;
 
@@ -123,7 +114,7 @@ class CalendarView extends Component {
         </h2>
 
         <ul>
-          {this.parseMeals()}
+          {parseMeals(this.props.meals)}
         </ul>
 
         <Container className="text-center">
