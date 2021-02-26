@@ -31,6 +31,7 @@ userRoutes.post('/', userUploader, async (req, res) => {
       username, email, password,
     });
 
+    // only get req.file if image being added
     if (req.file) {
       const { location, key } = req.file;
       const profile = { location, key };
@@ -69,11 +70,14 @@ userRoutes.post('/update/', userUploader, async (req, res) => {
       user.recipes = req.body.recipes;
       user.meals = req.body.meals;
       user.ratings = req.body.ratings;
+
+      // check if req.file exists
       if (req.file) {
         const { location, key } = req.file;
         const profile = { location, key };
         user.profile = profile;
       }
+
       await user.save();
       res.send('Update success');
     } else {
@@ -117,6 +121,7 @@ userRoutes.delete('/delete/', userUploader, async (req, res) => {
         },
       );
     }
+
     await User.deleteOne({ _id: userId });
     res.status(200).json({ message: 'Successfully removed user!' });
     console.log('Successfully deleted all instances of user!');

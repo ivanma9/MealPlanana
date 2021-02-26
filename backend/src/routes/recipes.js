@@ -33,7 +33,7 @@ recipeRoutes.get('/:id', async (req, res) => {
       res.status(200).json(recipe);
       console.log(`Successfully retrieved recipe ${id}!`);
     } else {
-      res.status(404).json({ message: 'No valid entry found!' });
+      res.status(404).json({ message: 'Recipe not found!' });
     }
   } catch (err) {
     res.status(500).json({ message: err });
@@ -42,27 +42,33 @@ recipeRoutes.get('/:id', async (req, res) => {
 
 recipeRoutes.post('/add', recipeUploader, async (req, res) => {
   try {
-    console.log(req.files);
     const update = req.body;
-    const { preview, images } = req.files;
-    if (preview) {
-      update.preview = {
-        location: preview[0].location,
-        key: preview[0].key,
-      };
+
+    // only add files/pics if there are any
+    if (req.files) {
+      const { preview, images } = req.files;
+      if (preview) {
+        console.log('preview image being added');
+        update.preview = {
+          location: preview[0].location,
+          key: preview[0].key,
+        };
+      }
+      if (images) {
+        console.log('image(s) being added');
+        const imgUrls = images
+          .map((image) => ({
+            location: image.location,
+            key: image.key,
+          }));
+        update.images = imgUrls;
+      }
     }
-    if (images) {
-      const img_urls = images
-        .map((image) => ({
-          location: image.location,
-          key: image.key,
-        }));
-      update.images = img_urls;
-    }
+
     const newRecipe = new Recipe(update);
     await newRecipe.save();
-    res.status(200).json({ message: 'Successfully added image!' });
-    console.log('Successfully added image!');
+    res.status(200).json({ message: 'Successfully added recipe!' });
+    console.log('Successfully added recipe!');
   } catch (err) {
     if (err instanceof multer.MulterError) {
       console.log('multer oopsie in recipe creation');
@@ -87,20 +93,24 @@ recipeRoutes.put('/update/:id', recipeUploader, async (req, res) => {
   try {
     const { id } = req.params;
     const update = req.body;
-    const { preview, images } = req.files;
-    if (preview) {
-      update.preview = {
-        location: preview[0].location,
-        key: preview[0].key,
-      };
-    }
-    if (images) {
-      const img_urls = images
-        .map((image) => ({
-          location: image.location,
-          key: image.key,
-        }));
-      update.images = img_urls;
+
+    // only if files/images involved
+    if (req.files) {
+      const { preview, images } = req.files;
+      if (preview) {
+        update.preview = {
+          location: preview[0].location,
+          key: preview[0].key,
+        };
+      }
+      if (images) {
+        const imgUrls = images
+          .map((image) => ({
+            location: image.location,
+            key: image.key,
+          }));
+        update.images = imgUrls;
+      }
     }
     await Recipe.updateOne(
       { _id: id },
@@ -108,8 +118,8 @@ recipeRoutes.put('/update/:id', recipeUploader, async (req, res) => {
         $set: update,
       },
     );
-    res.status(200).json({ message: 'Successfully updated image!' });
-    console.log('Successfully added image!');
+    res.status(200).json({ message: 'Successfully updated recipe!' });
+    console.log('Successfully added recipe!');
   } catch (err) {
     if (err instanceof multer.MulterError) {
       console.log('multer oopie');
@@ -134,6 +144,7 @@ recipeRoutes.delete('/delete/:id', async (req, res) => {
       return res.status(404).json({ message: "Couldn't find the recipe" });
     }
     const { preview, images } = recipe;
+
     // delete preview from s3 if exists
     if (preview) {
       s3bucket.deleteObject(
@@ -171,32 +182,3 @@ recipeRoutes.delete('/delete/:id', async (req, res) => {
 });
 
 export default recipeRoutes;
-
-/*
-// good example for adding profile pic
-const upload = require("../services/ImageUpload");
-const singleUpload = upload.single("image");
-
-router.post("/:id/add-profile-picture", function (req, res) {
-  const uid = req.params.id;
-
-  singleUpload(req, res, function (err) {
-    if (err) {
-      return res.json({
-        success: false,
-        errors: {
-          title: "Image Upload Error",
-          detail: err.message,
-          error: err,
-        },
-      });
-    }
-
-    let update = { profilePicture: req.file.location };
-
-    User.findByIdAndUpdate(uid, update, { new: true })
-      .then((user) => res.status(200).json({ success: true, user: user }))
-      .catch((err) => res.status(400).json({ success: false, error: err }));
-  });
-});
-*/
