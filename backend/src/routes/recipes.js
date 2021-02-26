@@ -2,12 +2,13 @@ import express from 'express';
 import multer from 'multer';
 
 import {
-  s3bucket, uploader,
+  s3bucket, recipeUploader,
 } from '../util/aws-helpers';
 
 import {
   AWS_BUCKET_NAME,
 } from '../config';
+
 import Recipe from '../models/recipe';
 
 const recipeRoutes = express.Router();
@@ -39,7 +40,7 @@ recipeRoutes.get('/:id', async (req, res) => {
   }
 });
 
-recipeRoutes.post('/add', uploader, async (req, res) => {
+recipeRoutes.post('/add', recipeUploader, async (req, res) => {
   try {
     console.log(req.files);
     const update = req.body;
@@ -64,7 +65,7 @@ recipeRoutes.post('/add', uploader, async (req, res) => {
     console.log('Successfully added image!');
   } catch (err) {
     if (err instanceof multer.MulterError) {
-      console.log('multer oopie');
+      console.log('multer oopsie in recipe creation');
       return res.json({
         success: false,
         errors: {
@@ -82,7 +83,7 @@ recipeRoutes.post('/add', uploader, async (req, res) => {
 // https://wanago.io/2020/04/27/typescript-express-put-vs-patch-mongodb-mongoose/
 // typically, patch only updates new fields while put updates the entire document
 // however, the $set operator allows us to specify which fields to update
-recipeRoutes.put('/update/:id', uploader, async (req, res) => {
+recipeRoutes.put('/update/:id', recipeUploader, async (req, res) => {
   try {
     const { id } = req.params;
     const update = req.body;
@@ -130,7 +131,7 @@ recipeRoutes.delete('/delete/:id', async (req, res) => {
     const { id } = req.params;
     const recipe = await Recipe.findById(id);
     if (!recipe) {
-      res.status(500).json({ message: "Couldn't find the recipe" });
+      return res.status(404).json({ message: "Couldn't find the recipe" });
     }
     const { preview, images } = recipe;
     // delete preview from s3 if exists
@@ -139,10 +140,9 @@ recipeRoutes.delete('/delete/:id', async (req, res) => {
         { Bucket: AWS_BUCKET_NAME, Key: preview.key },
         (err, data) => {
           if (err) {
-            res.status(500).json({ message: err });
-          } else {
-            console.log('Successfully deleted an image');
+            return res.status(500).json({ message: err });
           }
+          console.log('Successfully deleted preview');
         },
       );
     }
@@ -154,10 +154,9 @@ recipeRoutes.delete('/delete/:id', async (req, res) => {
           { Bucket: AWS_BUCKET_NAME, Key: image.key },
           (err, data) => {
             if (err) {
-              res.status(500).json({ message: err });
-            } else {
-              console.log('Successfully deleted an image');
+              return res.status(500).json({ message: err });
             }
+            console.log('Successfully deleted an image');
           },
         );
       });

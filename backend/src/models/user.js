@@ -43,6 +43,12 @@ const UserSchema = new mongoose.Schema({
       rating: Number,
     }],
   },
+  profile: {
+    type: {
+      key: String,
+      location: String,
+    },
+  },
   // favorite_recipes: {
   //   type: [mongoose.Schema.Types.ObjectId],
   //   ref: 'RecipeSchema'

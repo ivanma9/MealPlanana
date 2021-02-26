@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { logout } from '../actions/session';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import CalendarMonthView from './CalendarView';
+import CalendarView from './CalendarView';
 
 const mapStateToProps = ({ session }) => ({
   session,
@@ -26,7 +26,7 @@ const Dashboard = ({ logout, session }) => (
         </div>
 
         <div className="container">
-          <Route path="/dashboard" exact component={CalendarMonthView} />
+          <Route path="/dashboard" exact component={CalendarView} />
         </div>
 
       </div>

@@ -10,4 +10,5 @@ export const sessionizeUser = (user) => ({
   meals: user.meals,
   ratings: user.ratings,
   recipes: user.recipes,
+  profile: user.profile,
 });
