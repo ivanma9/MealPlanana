@@ -9,19 +9,16 @@ import Rating from '@material-ui/lab/Rating';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { connect } from 'react-redux';
-import MuiAlert from '@material-ui/lab/Alert';
 import { Editor } from '@tinymce/tinymce-react';
 import { createRecipe } from '../../actions/recipes';
+
+const sanitizeHtml = require('sanitize-html');
 
 const mapStateToProps = (state) => ({
   loading: state.createRecipe.loading,
   success: state.createRecipe.success,
   error: state.createRecipe.error,
 });
-
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
 
 let createSuccessful = false;
 
@@ -112,11 +109,11 @@ class CreateRecipe extends Component {
       directions: content,
     });
 
-    if (content.length === 0) {
-      this.setState({ directionsIsEmpty: true });
-    } else {
-      this.setState({ directionsIsEmpty: false });
-    }
+    // if (content.length === 0) {
+    //   this.setState({ directionsIsEmpty: true });
+    // } else {
+    //   this.setState({ directionsIsEmpty: false });
+    // }
   }
 
   onAddRecipeTag(chip) {
@@ -168,14 +165,15 @@ class CreateRecipe extends Component {
     console.log(`Recipe Rating: ${this.state.ratingTotal}`);
     // console.log(`Recipe Author: ${this.state.recipe_author}`);
 
+    // TODO: more advanced sanitizing. Error if user trying to input bad data and don't post to db?
     const newRecipe = {
-      title: this.state.title,
+      title: sanitizeHtml(this.state.title),
       description: this.state.description,
-      ingredients: this.state.ingredients,
+      ingredients: sanitizeHtml(this.state.ingredients),
       directions: this.state.directions,
-      tags: this.state.tags,
+      tags: sanitizeHtml(this.state.tags),
       // recipe_image: this.state.recipe_image,
-      ratingTotal: this.state.ratingTotal,
+      ratingTotal: sanitizeHtml(this.state.ratingTotal),
       // recipe_author: this.state.recipe_author,
     };
 
