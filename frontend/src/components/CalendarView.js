@@ -10,7 +10,7 @@ import { Button, Container } from 'react-bootstrap';
 import moment from 'moment';
 
 import { connect } from 'react-redux';
-import { parseMeals } from './helpers/calendarHelper';
+import { parseMeals, jsony } from './helpers/calendarHelper';
 
 // import axios from 'axios';
 
@@ -113,9 +113,16 @@ class CalendarView extends Component {
           Monkeys Schedule 🙉
         </h2>
 
-        <ul>
-          {parseMeals(this.props.meals)}
-        </ul>
+        <div>
+          {console.log(parseMeals(this.props.meals))}
+        </div>
+        <div>
+          {jsony(this.props.meals)}
+        </div>
+        <div>
+          {/* {console.log(this.props.meals)} */}
+        </div>
+
 
         <Container className="text-center">
           <Button className="mr-4 p-2" onClick={this.handleChangeViewMonth}>
