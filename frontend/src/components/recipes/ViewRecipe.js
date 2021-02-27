@@ -5,11 +5,13 @@ import {
   Grid,
   Paper,
   Typography,
+  Snackbar,
 } from '@material-ui/core';
 import React, { Component } from 'react';
 
 import EditIcon from '@material-ui/icons/Edit';
 import FavoriteIcon from '@material-ui/icons/Favorite';
+import MuiAlert from '@material-ui/lab/Alert';
 import { Link } from 'react-router-dom';
 import Rating from '@material-ui/lab/Rating';
 import { connect } from 'react-redux';
@@ -27,6 +29,19 @@ const mapStateToProps = (state) => ({
 // });
 
 class ViewRecipe extends Component {
+  constructor(props) {
+    super(props);
+    if (this.props.location.appState !== undefined) {
+      this.state = {
+        open: this.props.location.appState.open,
+      };
+    } else {
+      this.state = {
+        open: false,
+      };
+    }
+  }
+
   componentDidMount() {
     const { id } = this.props.match.params;
     this.props.fetchRecipe(id);
@@ -54,7 +69,7 @@ class ViewRecipe extends Component {
     return (
       <div>
         <Link
-          to={`/edit/${recipe._id}`}
+          to={`/recipes/edit/${recipe._id}`}
           style={{ color: 'black', textDecoration: 'none' }}
         >
           <Fab color="primary" variant="extended" style={{ position: 'fixed', bottom: '2rem', right: '2rem' }}>
@@ -62,6 +77,14 @@ class ViewRecipe extends Component {
             Edit
           </Fab>
         </Link>
+
+        <Snackbar
+          autoHideDuration={6000}
+          open={this.state.open}
+          onClose={() => { this.setState({ open: false }); }}
+        >
+          <MuiAlert elevation={6} variant="filled" severity="success" onClose={() => { this.setState({ open: false }); }}>Recipe successfully edited!</MuiAlert>
+        </Snackbar>
 
         <CardMedia
           component="img"
@@ -91,7 +114,7 @@ class ViewRecipe extends Component {
                 </Typography>
               </Grid>
               <Grid item sm={12} md={10}>
-                <Typography variant="body1" style={{ paddingTop: '0.23em', whiteSpace: 'pre-line' }}>
+                <Typography variant="body1" component="span" style={{ paddingTop: '0.23em', whiteSpace: 'pre-line' }}>
                   {ReactHtmlParser(recipe.description)}
                 </Typography>
               </Grid>
@@ -121,7 +144,7 @@ class ViewRecipe extends Component {
                 <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}> Directions: </Typography>
               </Grid>
               <Grid item sm={12} md={10}>
-                <Typography variant="body1" style={{ paddingTop: '0.23em', whiteSpace: 'pre-line' }}>
+                <Typography variant="body1" component="span" style={{ paddingTop: '0.23em', whiteSpace: 'pre-line' }}>
                   {ReactHtmlParser(recipe.directions)}
                 </Typography>
               </Grid>
@@ -154,7 +177,7 @@ class ViewRecipe extends Component {
                 <Rating
                   name="hearts"
                   defaultValue={0}
-                  value={recipe.ratingTotal}
+                  value={Number(recipe.ratingTotal)}
                   precision={0.2}
                   icon={<FavoriteIcon fontSize="inherit" />}
                   readOnly

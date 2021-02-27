@@ -45,10 +45,6 @@ function checkIfCurrentCard(currentID) {
   return x;
 }
 
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
-
 function Recipe(props) {
   return (
     <Link
@@ -71,6 +67,7 @@ function Recipe(props) {
           <Typography variant="h5" align="center">{props.recipe.title}</Typography>
           <Typography
             variant="body1"
+            component="span"
             style={{
               overflow: 'hidden', textOverflow: 'ellipsis', wordBreak: 'break-word', hyphens: 'auto',
             }}
@@ -168,9 +165,8 @@ class RecipesList extends Component {
           open={this.state.open}
           onClose={() => { this.setState({ open: false }); }}
         >
-          <Alert severity="success" onClose={() => { this.setState({ open: false }); }}>Recipe successfully created!</Alert>
+          <MuiAlert elevation={6} variant="filled" severity="success" onClose={() => { this.setState({ open: false }); }}>Recipe successfully created!</MuiAlert>
         </Snackbar>
-        {/* )} */}
         <Typography variant="h1" align="center">Recipes List</Typography>
         <Grid
           container

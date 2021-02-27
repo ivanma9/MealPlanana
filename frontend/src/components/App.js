@@ -10,6 +10,7 @@ import RecipesList from './recipes/RecipesList';
 import Signup from './Signup';
 import ViewRecipe from './recipes/ViewRecipe';
 import Welcome from './Welcome';
+import EditRecipe from './recipes/EditRecipe';
 
 export default () => (
   <>
@@ -25,6 +26,7 @@ export default () => (
           <ProtectedRoute path={`${url}/`} component={RecipesList} exact />
           <ProtectedRoute path={`${url}/view/:id`} component={ViewRecipe} />
           <ProtectedRoute path={`${url}/create`} component={CreateRecipe} />
+          <ProtectedRoute path={`${url}/edit/:id`} component={EditRecipe} />
         </>
       )}
     />

@@ -10,21 +10,32 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { connect } from 'react-redux';
 import { Editor } from '@tinymce/tinymce-react';
-import { createRecipe } from '../../actions/recipes';
+import { fetchRecipe, updateRecipe } from '../../actions/recipes';
 
 const sanitizeHtml = require('sanitize-html');
 
 const mapStateToProps = (state) => ({
-  loading: state.createRecipe.loading,
-  success: state.createRecipe.success,
-  error: state.createRecipe.error,
+  recipe: state.recipe.item,
+  loading: state.recipe.loading,
+  error: state.recipe.error,
 });
 
-let createSuccessful = false;
+let editSuccessful = false;
 
-class CreateRecipe extends Component {
+class EditRecipe extends Component {
   constructor(props) {
     super(props);
+    this.onChangeRecipeTitle = this.onChangeRecipeTitle.bind(this);
+    this.onChangeRecipeDescription = this.onChangeRecipeDescription.bind(this);
+    this.onAddRecipeIngredient = this.onAddRecipeIngredient.bind(this);
+    this.onDeleteRecipeIngredient = this.onDeleteRecipeIngredient.bind(this);
+    this.onChangeRecipeDirections = this.onChangeRecipeDirections.bind(this);
+    this.onAddRecipeTag = this.onAddRecipeTag.bind(this);
+    this.onDeleteRecipeTag = this.onDeleteRecipeTag.bind(this);
+    // this.onChangeRecipeImage = this.onChangeRecipeImage.bind(this);
+    this.onChangeRecipeRating = this.onChangeRecipeRating.bind(this);
+    // this.onChangeRecipeAuthor = this.onChangeRecipeAuthor.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
 
     this.state = {
       title: '',
@@ -39,23 +50,27 @@ class CreateRecipe extends Component {
       titleIsEmpty: false,
       // directionsIsEmpty: false,
     };
+  }
 
-    this.onChangeRecipeTitle = this.onChangeRecipeTitle.bind(this);
-    this.onChangeRecipeDescription = this.onChangeRecipeDescription.bind(this);
-    this.onAddRecipeIngredient = this.onAddRecipeIngredient.bind(this);
-    this.onDeleteRecipeIngredient = this.onDeleteRecipeIngredient.bind(this);
-    this.onChangeRecipeDirections = this.onChangeRecipeDirections.bind(this);
-    this.onAddRecipeTag = this.onAddRecipeTag.bind(this);
-    this.onDeleteRecipeTag = this.onDeleteRecipeTag.bind(this);
-    // this.onChangeRecipeImage = this.onChangeRecipeImage.bind(this);
-    this.onChangeRecipeRating = this.onChangeRecipeRating.bind(this);
-    // this.onChangeRecipeAuthor = this.onChangeRecipeAuthor.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
+  componentDidMount() {
+    const { id } = this.props.match.params;
+    this.props.fetchRecipe(id);
+    this.setState({
+      title: this.props.recipe.title,
+      description: this.props.recipe.description,
+      ingredients: this.props.recipe.ingredients,
+      directions: this.props.recipe.directions,
+      tags: this.props.recipe.tags,
+      // image: this.props.recipe.image,
+      ratingTotal: Number(this.props.recipe.ratingTotal),
+      // author: this.props.recipe.author
+    });
   }
 
   handleValidation() {
     let formIsValid = true;
 
+    // const { title } = this.props.recipe;
     const { title } = this.state;
     // const { directions } = this.state;
 
@@ -76,6 +91,7 @@ class CreateRecipe extends Component {
     this.setState({
       title: e.target.value,
     });
+    // this.props.recipe.title = e.target.value;
 
     if (e.target.value.length === 0) {
       this.setState({ titleIsEmpty: true });
@@ -89,18 +105,21 @@ class CreateRecipe extends Component {
     this.setState({
       description: content,
     });
+    // this.props.recipe.description = content;
   }
 
   onAddRecipeIngredient(chip) {
     this.setState((prevState) => ({
       ingredients: [...prevState.ingredients, chip],
     }));
+    // this.props.recipe.ingredients = [...this.props.recipe.ingredients, chip];
   }
 
   onDeleteRecipeIngredient(chip, index) {
     this.setState((prevState) => ({
       ingredients: prevState.ingredients.filter((_, i) => i !== index),
     }));
+    // this.props.recipe.ingredients = this.props.recipe.ingredients.filter((_, i) => i !== index);
   }
 
   onChangeRecipeDirections(e) {
@@ -135,9 +154,17 @@ class CreateRecipe extends Component {
   // }
 
   onChangeRecipeRating(e) {
+    // TODO: instead of changing the direct value of the recipe, we want to add the user's rating
+    // TODO:   to the average rating of the item
+
+    // TODO: idea: have 2 rating fields, 1 that shows the average and updates it once user
+    // TODO:   submits their rating, and another field just for the user's input so they
+    // TODO:   know what rating they had given and can change it at any time. But would
+    // TODO:   have to handle this. Might be difficult.
     this.setState({
-      ratingTotal: e.target.value,
+      ratingTotal: Number(e.target.value),
     });
+    this.props.recipe.ratingTotal = e.target.value;
   }
 
   // onChangeRecipeAuthor(e) {
@@ -152,20 +179,9 @@ class CreateRecipe extends Component {
       return;
     }
 
-    createSuccessful = true;
+    editSuccessful = true;
 
-    console.log('Form submitted:');
-    console.log(`Recipe Title: ${this.state.title}`);
-    console.log(`Recipe Description: ${this.state.description}`);
-    console.log(`Recipe Ingredients: ${this.state.ingredients}`);
-    console.log(`Recipe Directions: ${this.state.directions}`);
-    console.log(`Recipe Tags: ${this.state.tags}`);
-    // console.log(`Recipe Image: ${this.state.recipe_image}`);
-    console.log(`Recipe Rating: ${this.state.ratingTotal}`);
-    // console.log(`Recipe Author: ${this.state.recipe_author}`);
-
-    // TODO: more advanced sanitizing. Error if user trying to input bad data and don't post to db?
-    const newRecipe = {
+    const recipe = {
       title: sanitizeHtml(this.state.title),
       description: this.state.description,
       ingredients: this.state.ingredients,
@@ -176,31 +192,18 @@ class CreateRecipe extends Component {
       // recipe_author: this.state.recipe_author,
     };
 
-    console.log(newRecipe);
-
-    this.props.createRecipe(newRecipe);
-
-    this.setState({
-      title: '',
-      description: '',
-      ingredients: [],
-      directions: '',
-      tags: [],
-      // recipe_image: '',
-      ratingTotal: 0,
-      // recipe_author: '',
-    });
+    this.props.updateRecipe(recipe, this.props.match.params.id);
 
     this.props.history.push({
-      pathname: '/recipes',
+      pathname: `/recipes/view/${this.props.match.params.id}`,
       appState: {
-        open: createSuccessful,
+        open: editSuccessful,
       },
     });
   }
 
   render() {
-    const { error, loading } = this.props;
+    const { error, loading, recipe } = this.props;
 
     if (error) {
       return (
@@ -217,10 +220,9 @@ class CreateRecipe extends Component {
 
     return (
       <div className="container" style={{ marginTop: 10 }}>
-        <h3>Create New Recipe</h3>
+        <h3>Update Recipe</h3>
 
         <Form>
-
           {/* Title */}
           {/* TODO: Implement check to make sure something is entered in the field */}
           <Form.Group controlid="formGroupRecipeTitle">
@@ -243,7 +245,7 @@ class CreateRecipe extends Component {
           <Form.Group controlid="formGroupRecipeDescription">
             <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}>Description</Typography>
             <Editor
-              initialValue=""
+              initialValue={this.state.description}
               init={{
                 height: 300,
                 menubar: false,
@@ -260,6 +262,7 @@ class CreateRecipe extends Component {
               apiKey="mqyujdmrjuid1rkbt26rbvqf8ga7ne6l23noy9kfvmg3q1x3"
             />
           </Form.Group>
+
           <br />
 
           {/* Ingredients */}
@@ -267,7 +270,7 @@ class CreateRecipe extends Component {
             <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}>Ingredients</Typography>
             <ChipInput
               allowDuplicates={false}
-              // TODO: add "dataSource" array for autocompletion
+							// TODO: add "dataSource" array for autocompletion
               fullWidth
               value={this.state.ingredients}
               onAdd={(chip) => this.onAddRecipeIngredient(chip)}
@@ -282,7 +285,7 @@ class CreateRecipe extends Component {
           <Form.Group controlid="formGroupRecipeDirections">
             <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}>Directions</Typography>
             <Editor
-              initialValue=""
+              initialValue={this.state.directions}
               init={{
                 height: 300,
                 menubar: false,
@@ -314,6 +317,7 @@ class CreateRecipe extends Component {
               onDelete={(chip, index) => this.onDeleteRecipeTag(chip, index)}
             />
           </Form.Group>
+
           {/* TODO: add image preview and upload ability */}
 
           <br />
@@ -342,7 +346,7 @@ class CreateRecipe extends Component {
             display: 'flex',
           }}
           >
-            <ButtonMUI variant="contained" color="primary" onClick={this.onSubmit}>Create Recipe</ButtonMUI>
+            <ButtonMUI variant="contained" color="primary" onClick={this.onSubmit}>Update Recipe</ButtonMUI>
           </div>
         </Form>
       </div>
@@ -352,5 +356,6 @@ class CreateRecipe extends Component {
 
 export default connect(
   mapStateToProps,
-  { createRecipe },
-)(CreateRecipe);
+  // mapDispatchToProps,
+  { fetchRecipe, updateRecipe },
+)(EditRecipe);

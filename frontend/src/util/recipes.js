@@ -15,3 +15,13 @@ export const createRecipe = (recipe) => (
     },
   })
 );
+
+export const updateRecipe = (recipe, id) => (
+  fetch(`/api/recipes/update/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(recipe),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+);

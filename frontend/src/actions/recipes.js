@@ -78,3 +78,28 @@ export const createRecipe = (recipe) => async (dispatch) => {
   }
   return dispatch(createRecipeFailure(data));
 };
+
+export const UPDATE_RECIPE_BEGIN = 'UPDATE_RECIPE_BEGIN';
+export const UPDATE_RECIPE_SUCCESS = 'UPDATE_RECIPE_SUCCESS';
+export const UPDATE_RECIPE_FAILURE = 'UPDATE_RECIPE_FAILURE';
+
+export const updateRecipeBegin = () => ({
+  type: UPDATE_RECIPE_BEGIN,
+});
+export const updateRecipeSuccess = () => ({
+  type: UPDATE_RECIPE_SUCCESS,
+});
+export const updateRecipeFailure = (error) => ({
+  type: UPDATE_RECIPE_FAILURE,
+  payload: { error },
+});
+
+export const updateRecipe = (recipe, id) => async (dispatch) => {
+  const response = await apiUtil.updateRecipe(recipe, id);
+  const data = await response.json();
+
+  if (response.ok) {
+    return dispatch(updateRecipeSuccess());
+  }
+  return dispatch(updateRecipeFailure(data));
+};
