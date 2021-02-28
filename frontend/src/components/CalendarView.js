@@ -128,7 +128,7 @@ class CalendarView extends Component {
           {jsony(this.props.meals)}
         </div>
         <div>
-          {/* {console.log(this.props.meals)} */}
+          {console.log(this.props.meals)}
         </div>
 
 

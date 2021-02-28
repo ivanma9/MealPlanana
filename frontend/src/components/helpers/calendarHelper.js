@@ -21,7 +21,8 @@ const timeDiff = (d1, d2) => {
 
 const rrule = (meal) => {
   let rruleArray = {};
-  rruleArray.freq = 'weekly';
+  console.log(meal.freqType);
+  rruleArray.freq = "daily"; //meal.freqType
   rruleArray.interval = meal.interval;
   //rruleArray.byweekday = "";
   rruleArray.dtstart = meal.start_date;
