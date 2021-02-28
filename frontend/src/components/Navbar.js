@@ -5,17 +5,17 @@ import { GiBananaBunch } from 'react-icons/gi';
 import { Link } from 'react-router-dom';
 import { Typography } from '@material-ui/core';
 import { connect } from 'react-redux';
-import { logout } from '../actions/session';
+import { logout as lg } from '../actions/session';
 
 const mapStateToProps = ({ session }) => ({
   session,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  logout: () => dispatch(logout()),
+  logout: () => dispatch(lg()),
 });
 
-function Navbar() {
+function Navbar({ logout }) {
   return (
     <nav
       className="navbar navbar-expand-lg navbar-light bg"
