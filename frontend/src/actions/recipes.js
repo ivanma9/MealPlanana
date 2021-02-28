@@ -94,8 +94,57 @@ export const updateRecipeFailure = (error) => ({
   payload: { error },
 });
 
+// export const updateRecipe = (recipe, id) => async (dispatch) => {
+//   // const formData = new FormData();
+//   // formData.append('body', JSON.stringify(recipe));
+//   // formData.append('preview', recipe.preview);
+//   // for (const item in recipe) {
+//   //   formData.append(item, recipe[item]);
+//   // }
+
+//   // const response = await apiUtil.updateRecipe(formData, id);
+//   const response = await apiUtil.updateRecipe(recipe, id);
+//   const data = await response.json();
+
+//   if (response.ok) {
+//     return dispatch(updateRecipeSuccess());
+//   }
+//   return dispatch(updateRecipeFailure(data));
+// };
+
 export const updateRecipe = (recipe, id) => async (dispatch) => {
-  const response = await apiUtil.updateRecipe(recipe, id);
+  const formData = new FormData();
+  formData.append('title', recipe.title);
+  formData.append('description', recipe.description);
+  formData.append('directions', recipe.directions);
+  formData.append('ratingTotal', recipe.ratingTotal);
+
+  if (recipe.preview !== undefined) {
+    formData.append('preview', recipe.preview);
+  }
+
+  if (recipe.ingredients.length !== 0) {
+    recipe.ingredients.forEach((item) => formData.append('ingredients[]', item));
+  } else {
+    formData.append('ingredients[]', []);
+  }
+
+  if (recipe.tags.length !== 0) {
+    recipe.tags.forEach((item) => formData.append('tags[]', item));
+  } else {
+    formData.append('tags[]', []);
+  }
+
+  // formData.append('ingredients', recipe.ingredients);
+  // if (recipe.ingredients !== undefined) { recipe.ingredients.forEach((item) => formData.append('ingredients[]', item)); } else formData.append('ingredients[]', []);
+  // if (recipe.ingredients.length === 0) { formData.append('ingredients[]', []); }
+  // recipe.ingredients.forEach((item) => formData.append('ingredients[]', item));
+  // formData.append('tags', recipe.tags);
+  // if (recipe.tags !== undefined) { recipe.tags.forEach((item) => formData.append('tags[]', item)); }
+  // if (previewChanged) { formData.append('preview', recipe.preview); }
+  // formData.append('images', recipe.images);
+
+  const response = await apiUtil.updateRecipe(formData, id);
   const data = await response.json();
 
   if (response.ok) {
@@ -103,3 +152,19 @@ export const updateRecipe = (recipe, id) => async (dispatch) => {
   }
   return dispatch(updateRecipeFailure(data));
 };
+
+/*
+Working image code example
+export const updateRecipe = (recipe, id) => async (dispatch) => {
+  const formData = new FormData();
+  formData.append('preview', recipe.preview);
+
+  const response = await apiUtil.updateRecipe(formData, id);
+  const data = await response.json();
+
+  if (response.ok) {
+    return dispatch(updateRecipeSuccess());
+  }
+  return dispatch(updateRecipeFailure(data));
+};
+*/

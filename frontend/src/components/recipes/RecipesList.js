@@ -61,10 +61,7 @@ function Recipe(props) {
             {ReactHtmlParser(props.recipe.description)}
           </Typography>
         </CardContent>
-        <div
-          className="row"
-          align="center"
-        >
+        <div align="center">
           {props.recipe.tags.map((tag, i) => (
             <Chip
               size="small"
