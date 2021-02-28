@@ -89,8 +89,8 @@ class CalendarView extends Component {
 	    //   ],
       dateState: new Date(), // Can just Use state in Component
     };
-    // this.handleChangeViewMonth = this.handleChangeViewMonth.bind(this);
-    // this.handleChangeViewWeek = this.handleChangeViewWeek.bind(this);
+    this.handleAddMeal = this.handleAddMeal.bind(this);
+    this.handleEditMeal = this.handleEditMeal.bind(this);
     // this.handleChangeView4Day = this.handleChangeView4Day.bind(this);
     // this.handleChangeViewDay = this.handleChangeViewDay.bind(this);
   }
@@ -98,6 +98,14 @@ class CalendarView extends Component {
   changeDate(e) {
     console.log(e);
     this.setState({ dateState: e });
+  }
+
+  handleAddMeal(){
+
+  }
+  
+  handleEditMeal(){
+
   }
 
   render() {
@@ -126,16 +134,10 @@ class CalendarView extends Component {
 
         <Container className="text-center">
           <Button className="mr-4 p-2" onClick={this.handleChangeViewMonth}>
-            Month View
+            Add Meal
           </Button>
           <Button className="m-4 p-2" onClick={this.handleChangeViewWeek}>
-            Week View
-          </Button>
-          <Button className="m-4 p-2" onClick={this.handleChangeView4Day}>
-            4 Day View
-          </Button>
-          <Button className="m-4 p-2" onClick={this.handleChangeViewDay}>
-            Day View
+            Edit Meal
           </Button>
         </Container>
 
@@ -146,7 +148,7 @@ class CalendarView extends Component {
           }}
           plugins={[rrulePlugin, dayGridPlugin, interactionPlugin, timeGridPlugin]}
           initialView="timeGridDay"
-      // events={meals}
+          events={parseMeals(this.props.meals)}
           views={{
             timeGridFourDay: {
               type: 'timeGrid',
