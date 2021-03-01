@@ -46,6 +46,13 @@ const RecipeSchema = new mongoose.Schema({
       location: String,
     },
   },
+  prepTime: {
+    type: Number,
+  },
+  servingSize: {
+    type: Number,
+    min: 1,
+  },
   // reviews: {
   //   type: [{
   //     user: {

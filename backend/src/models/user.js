@@ -4,7 +4,7 @@ import { compareSync, hashSync } from 'bcryptjs';
 const UserSchema = new mongoose.Schema({
   username: {
     type: String,
-    reuired: true,
+    required: true,
   },
   email: {
     type: String,

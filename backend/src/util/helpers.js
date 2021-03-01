@@ -12,3 +12,21 @@ export const sessionizeUser = (user) => ({
   recipes: user.recipes,
   profile: user.profile,
 });
+
+export const checkRes = (res, recipeObj, returnObj, message = 'Success!', errMessage = 'No results!') => {
+  // if there was an object made/found
+  if (recipeObj) {
+    // if we want to return this object
+    if (returnObj) {
+      console.log(message);
+      return res.status(200).json(recipeObj);
+    }
+    console.log(message);
+    return res.status(200).json({ message });
+  }
+  // if there was an error or nothing found
+  if (returnObj) {
+    console.log(errMessage);
+    return res.status(404).json({ message: errMessage });
+  }
+};
