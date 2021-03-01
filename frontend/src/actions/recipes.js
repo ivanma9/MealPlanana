@@ -10,12 +10,10 @@ export const fetchRecipesBegin = () => ({
 export const fetchRecipesSuccess = (recipes) => ({
   type: FETCH_RECIPES_SUCCESS,
   payload: { recipes },
-  // recipes,
 });
 export const fetchRecipesFailure = (error) => ({
   type: FETCH_RECIPES_FAILURE,
   payload: { error },
-  // error,
 });
 
 export const fetchRecipes = () => async (dispatch) => {
@@ -94,24 +92,6 @@ export const updateRecipeFailure = (error) => ({
   payload: { error },
 });
 
-// export const updateRecipe = (recipe, id) => async (dispatch) => {
-//   // const formData = new FormData();
-//   // formData.append('body', JSON.stringify(recipe));
-//   // formData.append('preview', recipe.preview);
-//   // for (const item in recipe) {
-//   //   formData.append(item, recipe[item]);
-//   // }
-
-//   // const response = await apiUtil.updateRecipe(formData, id);
-//   const response = await apiUtil.updateRecipe(recipe, id);
-//   const data = await response.json();
-
-//   if (response.ok) {
-//     return dispatch(updateRecipeSuccess());
-//   }
-//   return dispatch(updateRecipeFailure(data));
-// };
-
 export const updateRecipe = (recipe, id) => async (dispatch) => {
   const formData = new FormData();
   formData.append('title', recipe.title);
@@ -121,6 +101,12 @@ export const updateRecipe = (recipe, id) => async (dispatch) => {
 
   if (recipe.preview !== undefined) {
     formData.append('preview', recipe.preview);
+  }
+
+  if (recipe.images.length !== 0) {
+    recipe.images.forEach((item) => formData.append('images[]', item));
+  } else {
+    formData.append('images[]', []);
   }
 
   if (recipe.ingredients.length !== 0) {
@@ -135,15 +121,6 @@ export const updateRecipe = (recipe, id) => async (dispatch) => {
     formData.append('tags[]', []);
   }
 
-  // formData.append('ingredients', recipe.ingredients);
-  // if (recipe.ingredients !== undefined) { recipe.ingredients.forEach((item) => formData.append('ingredients[]', item)); } else formData.append('ingredients[]', []);
-  // if (recipe.ingredients.length === 0) { formData.append('ingredients[]', []); }
-  // recipe.ingredients.forEach((item) => formData.append('ingredients[]', item));
-  // formData.append('tags', recipe.tags);
-  // if (recipe.tags !== undefined) { recipe.tags.forEach((item) => formData.append('tags[]', item)); }
-  // if (previewChanged) { formData.append('preview', recipe.preview); }
-  // formData.append('images', recipe.images);
-
   const response = await apiUtil.updateRecipe(formData, id);
   const data = await response.json();
 
@@ -152,19 +129,3 @@ export const updateRecipe = (recipe, id) => async (dispatch) => {
   }
   return dispatch(updateRecipeFailure(data));
 };
-
-/*
-Working image code example
-export const updateRecipe = (recipe, id) => async (dispatch) => {
-  const formData = new FormData();
-  formData.append('preview', recipe.preview);
-
-  const response = await apiUtil.updateRecipe(formData, id);
-  const data = await response.json();
-
-  if (response.ok) {
-    return dispatch(updateRecipeSuccess());
-  }
-  return dispatch(updateRecipeFailure(data));
-};
-*/
