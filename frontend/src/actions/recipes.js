@@ -129,3 +129,30 @@ export const updateRecipe = (recipe, id) => async (dispatch) => {
   }
   return dispatch(updateRecipeFailure(data));
 };
+
+export const DELETE_RECIPE_BEGIN = 'DELETE_RECIPE_BEGIN';
+export const DELETE_RECIPE_SUCCESS = 'DELETE_RECIPE_SUCCESS';
+export const DELETE_RECIPE_FAILURE = 'DELETE_RECIPE_FAILURE';
+
+export const deleteRecipeBegin = () => ({
+  type: DELETE_RECIPE_BEGIN,
+});
+export const deleteRecipeSuccess = () => ({
+  type: DELETE_RECIPE_SUCCESS,
+});
+export const deleteRecipeFailure = (error) => ({
+  type: DELETE_RECIPE_FAILURE,
+  payload: { error },
+});
+
+export const deleteRecipe = (id) => async (dispatch) => {
+  dispatch(deleteRecipeBegin());
+  const response = await apiUtil.deleteRecipe(id);
+  console.log(response);
+  const data = await response.json();
+  console.log(data);
+  if (response.ok) {
+    return dispatch(deleteRecipeSuccess());
+  }
+  return dispatch(deleteRecipeFailure(data));
+};

@@ -10,7 +10,6 @@ export const createRecipe = (recipe) => (
   fetch('/api/recipes/add', {
     method: 'POST',
     body: JSON.stringify(recipe),
-    // files: recipe.preview,
     headers: {
       'Content-Type': 'application/json',
     },
@@ -22,4 +21,8 @@ export const updateRecipe = (formData, id) => (
     method: 'PUT',
     body: formData,
   })
+);
+
+export const deleteRecipe = (id) => (
+  fetch(`/api/recipes/delete/${id}`, { method: 'DELETE' })
 );

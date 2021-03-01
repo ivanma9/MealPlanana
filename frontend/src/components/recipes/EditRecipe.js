@@ -1,17 +1,15 @@
 import React, { Component } from 'react';
-
-import Box from '@material-ui/core/Box';
-import ButtonMUI from '@material-ui/core/Button';
+import {
+  Box, Button, TextField, Typography, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions,
+} from '@material-ui/core';
 import ChipInput from 'material-ui-chip-input';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { Form } from 'react-bootstrap';
 import Rating from '@material-ui/lab/Rating';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
 import { connect } from 'react-redux';
 import { Editor } from '@tinymce/tinymce-react';
 import ImageUploader from 'react-images-upload';
-import { fetchRecipe, updateRecipe } from '../../actions/recipes';
+import { fetchRecipe, updateRecipe, deleteRecipe } from '../../actions/recipes';
 
 const sanitizeHtml = require('sanitize-html');
 
@@ -52,6 +50,7 @@ class EditRecipe extends Component {
 
       titleIsEmpty: false,
       previewChanged: false,
+      deleteDialogOpen: false,
     };
   }
 
@@ -208,14 +207,27 @@ class EditRecipe extends Component {
       };
     }
 
-    this.props.updateRecipe(recipe, this.props.match.params.id).then(() => {
-      this.props.history.push({
-        pathname: `/recipes/view/${this.props.match.params.id}`,
-        appState: {
-          open: editSuccessful,
-        },
+    this.props.updateRecipe(recipe, this.props.match.params.id)
+      .then(() => {
+        this.props.history.push({
+          pathname: `/recipes/view/${this.props.match.params.id}`,
+          appState: {
+            open: editSuccessful,
+          },
+        });
       });
+  }
+
+  handleDeleteDialogYes = () => {
+    this.setState({ deleteDialogOpen: false });
+    this.props.deleteRecipe(this.props.match.params.id);
+    this.props.history.push({
+      pathname: '/recipes',
     });
+  }
+
+  handleDeleteDialogNo = () => {
+    this.setState({ deleteDialogOpen: false });
   }
 
   render() {
@@ -369,10 +381,25 @@ class EditRecipe extends Component {
             justifyContent: 'center',
             alignItems: 'center',
             display: 'flex',
+            marginBottom: '10rem',
           }}
           >
-            <ButtonMUI variant="contained" color="primary" onClick={this.onSubmit}>Update Recipe</ButtonMUI>
+            <Button variant="contained" color="primary" onClick={this.onSubmit} style={{ marginRight: '5rem' }}>Update Recipe</Button>
+            <Button variant="contained" color="secondary" onClick={() => this.setState({ deleteDialogOpen: true })}>Delete Recipe</Button>
           </div>
+          <Dialog
+            open={this.state.deleteDialogOpen}
+            onClose={() => this.setState({ deleteDialogOpen: false })}
+          >
+            <DialogTitle>Delete this recipe</DialogTitle>
+            <DialogContent>
+              <DialogContentText>Are you sure you want to delete this recipe?</DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={this.handleDeleteDialogNo}>No</Button>
+              <Button color="secondary" onClick={this.handleDeleteDialogYes}>Yes</Button>
+            </DialogActions>
+          </Dialog>
         </Form>
       </div>
     );
@@ -381,5 +408,5 @@ class EditRecipe extends Component {
 
 export default connect(
   mapStateToProps,
-  { fetchRecipe, updateRecipe },
+  { fetchRecipe, updateRecipe, deleteRecipe },
 )(EditRecipe);

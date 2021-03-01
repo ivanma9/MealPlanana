@@ -99,7 +99,6 @@ class ViewRecipe extends Component {
           <MuiAlert elevation={6} variant="filled" severity="success" onClose={() => { this.setState({ open: false }); }}>Recipe successfully edited!</MuiAlert>
         </Snackbar>
 
-        {console.log(recipe.preview)}
         {recipe.preview
           && (
           <CardMedia
