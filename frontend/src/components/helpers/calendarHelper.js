@@ -22,13 +22,11 @@ const timeDiff = (d1, d2) => {
 const rrule = (meal) => {
   let rruleArray = {};
   console.log(meal.freqType);
-  rruleArray.freq = "daily"; //meal.freqType
+  rruleArray.freq = meal.freqType;
   rruleArray.interval = meal.interval;
   //rruleArray.byweekday = "";
   rruleArray.dtstart = meal.start_date;
   rruleArray.until = meal.end_date;
-  // mealDict.startTime = new Date(meal.start_date);
-  // mealDict.endTime = moment(meal.start_date).add(meal.duration, 'm').toDate();
 
 
   return rruleArray;
@@ -38,6 +36,9 @@ const convMeal = (meal) => {
   let mealDict = {};
   mealDict.title = meal.title;
   mealDict.rrule = rrule(meal);
+  // mealDict.startTime = new Date(meal.start_date);
+  // mealDict.endTime = moment(meal.start_date).add(meal.duration+100, 'm').toDate();
+  mealDict.duration = meal.duration;
   
   return mealDict;
 };
@@ -48,8 +49,4 @@ export function parseMeals(m) {
     // timeDiff(meal.start_date, meal.end_date)
     // + ' ' +
     // meal.title
-}
-
-export function jsony(m) {
-  return m[0]["start_date"];
 }

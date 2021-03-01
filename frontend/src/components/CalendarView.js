@@ -10,7 +10,7 @@ import { Button, Container } from 'react-bootstrap';
 import moment from 'moment';
 
 import { connect } from 'react-redux';
-import { parseMeals, jsony } from './helpers/calendarHelper';
+import { parseMeals } from './helpers/calendarHelper';
 
 // import axios from 'axios';
 
@@ -108,6 +108,8 @@ class CalendarView extends Component {
 
   }
 
+  
+
   render() {
     // const { username } = this.props;
 
@@ -123,9 +125,6 @@ class CalendarView extends Component {
 
         <div>
           {console.log(parseMeals(this.props.meals))}
-        </div>
-        <div>
-          {jsony(this.props.meals)}
         </div>
         <div>
           {console.log(this.props.meals)}
@@ -160,7 +159,20 @@ class CalendarView extends Component {
             },
           }}
           fixedWeekCount={false}
+          selectable={true}
           dateClick={(e) => this.changeDate(e)}
+          eventClick={
+            function(info) {
+              info.jsEvent.preventDefault(); // don't let the browser navigate
+
+              alert('Event: ' + info.event.title);
+              alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
+              alert('View: ' + info.view.type);
+          
+              // change the border color just for fun
+              info.el.style.borderColor = 'red';
+            }
+          }
         />
 
         <p>
