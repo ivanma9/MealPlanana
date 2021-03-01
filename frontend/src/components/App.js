@@ -1,22 +1,21 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { AuthRoute, ProtectedRoute } from '../util/route';
+import { AuthRoute, ProtectedRoute, ConditionalRoute } from '../util/route';
 
 import CreateRecipe from './recipes/CreateRecipe';
 import Dashboard from './Dashboard';
-import Login from './Login';
 import Navbar from './Navbar';
 import RecipesList from './recipes/RecipesList';
 import Signup from './Signup';
 import ViewRecipe from './recipes/ViewRecipe';
-import Welcome from './Welcome';
+import WelcomeLogin from './WelcomeLogin';
 import EditRecipe from './recipes/EditRecipe';
 
 export default () => (
   <>
+    <ConditionalRoute path="/" />
     <Switch>
-      <Route exact path="/" component={Welcome} />
-      <AuthRoute path="/login" component={Login} />
+      <AuthRoute path="/login" component={WelcomeLogin} />
       <AuthRoute path="/signup" component={Signup} />
       <>
         <Navbar />

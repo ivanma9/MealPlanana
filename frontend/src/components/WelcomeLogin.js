@@ -1,17 +1,17 @@
+import { Link } from 'react-router-dom';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { login } from '../actions/session';
 
 const mapStateToProps = ({ errors }) => ({
   errors,
 });
 
-const mapDispatchtoProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch) => ({
   login: (user) => dispatch(login(user)),
 });
 
-const Login = ({ errors, login }) => {
+const WelcomeLogin = ({ errors, login }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const user = {
@@ -23,8 +23,25 @@ const Login = ({ errors, login }) => {
   };
 
   return (
-    <>
-      <h1>Login</h1>
+    <div>
+      <h1 style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: '5rem',
+      }}
+      >
+        Welcome to MealPlanana!
+      </h1>
+      <h2 style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+      >
+        Login
+
+      </h2>
       <p>{errors}</p>
       <form onSubmit={handleSubmit}>
         <label>
@@ -38,11 +55,11 @@ const Login = ({ errors, login }) => {
         <input type="submit" value="Submit" />
       </form>
       <Link to="/signup">Signup</Link>
-    </>
+    </div>
   );
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchtoProps,
-)(Login);
+  mapDispatchToProps,
+)(WelcomeLogin);

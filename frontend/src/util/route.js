@@ -40,10 +40,28 @@ Protected.propTypes = {
   component: PropTypes.elementType.isRequired,
 };
 
+const Conditional = ({ loggedIn, path }) => (
+  <Route
+    path={path}
+    render={() => (
+      loggedIn ? <Redirect to="/dashboard" /> : <Redirect to="/login" />
+    )}
+  />
+);
+
+Conditional.propTypes = {
+  loggedIn: PropTypes.bool.isRequired,
+  path: PropTypes.string.isRequired,
+};
+
 export const AuthRoute = withRouter(
   connect(mapStateToProps)(Auth),
 );
 
 export const ProtectedRoute = withRouter(
   connect(mapStateToProps)(Protected),
+);
+
+export const ConditionalRoute = withRouter(
+  connect(mapStateToProps)(Conditional),
 );
