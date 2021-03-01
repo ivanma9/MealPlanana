@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
+import listPlugin from '@fullcalendar/list';
+
 import interactionPlugin from '@fullcalendar/interaction';
 import rrulePlugin from '@fullcalendar/rrule';
 import { Button, Container } from 'react-bootstrap';
@@ -100,15 +102,13 @@ class CalendarView extends Component {
     this.setState({ dateState: e });
   }
 
-  handleAddMeal(){
-
-  }
-  
-  handleEditMeal(){
+  handleAddMeal() {
 
   }
 
-  
+  handleEditMeal() {
+
+  }
 
   render() {
     // const { username } = this.props;
@@ -130,7 +130,6 @@ class CalendarView extends Component {
           {console.log(this.props.meals)}
         </div>
 
-
         <Container className="text-center">
           <Button className="mr-4 p-2" onClick={this.handleChangeViewMonth}>
             Add Meal
@@ -142,33 +141,40 @@ class CalendarView extends Component {
 
         <FullCalendar
           ref={this.calendarRef}
+          aspectRatio={1}
           headerToolbar={{
-            center: 'dayGridMonth,dayGridWeek,timeGridFourDay,timeGridDay', // buttons for switching between views
+            center: 'dayGridMonth,dayGridWeek,timeGridFourDay,timeGridDay,listWeek', // buttons for switching between views
           }}
-          plugins={[rrulePlugin, dayGridPlugin, interactionPlugin, timeGridPlugin]}
+          plugins={[rrulePlugin, dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin]}
           initialView="timeGridDay"
           events={parseMeals(this.props.meals)}
           views={{
             timeGridFourDay: {
               type: 'timeGrid',
               duration: { days: 4 },
-              buttonText: '4 day',
+              buttonText: '4 Day',
             },
             timeGridDay: {
-
+              buttonText: 'Day',
+            },
+            listWeek: {
+              buttonText: 'Todo list',
+            },
+            dayGridMonth: {
+              buttonText: 'Month',
+            },
+            dayGridWeek: {
+              buttonText: 'Week',
             },
           }}
           fixedWeekCount={false}
-          selectable={true}
+          selectable
           dateClick={(e) => this.changeDate(e)}
           eventClick={
-            function(info) {
+            function (info) {
               info.jsEvent.preventDefault(); // don't let the browser navigate
 
-              alert('Event: ' + info.event.title);
-              alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
-              alert('View: ' + info.view.type);
-          
+              alert(`Event: ${info.event.title}`);
               // change the border color just for fun
               info.el.style.borderColor = 'red';
             }
