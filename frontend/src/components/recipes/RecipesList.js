@@ -29,21 +29,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   fetchRecipes: () => dispatch(fetchRecipes()),
 });
-// * or comment this out and add { fetchRecipes } to the connect function.
-
-// FIXME: Card raised property not working.
-//        Only being called once per card on initial load, and prints false.
-
-let activeCardID = '';
-const onMouseOver = (currentCardID) => { activeCardID = currentCardID; };
-const onMouseOut = () => { activeCardID = ''; };
-
-// const checkIfCurrentCard = (currentID) => activeCardID === currentID;
-function checkIfCurrentCard(currentID) {
-  const x = activeCardID === currentID;
-  // console.log(x);
-  return x;
-}
+// or comment this out and add { fetchRecipes } to the connect function.
 
 function Recipe(props) {
   return (
@@ -52,9 +38,9 @@ function Recipe(props) {
       style={{ color: 'black', textDecoration: 'none' }}
     >
       <Card
-        raised={checkIfCurrentCard(props.recipe._id)}
-        onMouseOver={() => onMouseOver(props.recipe._id)}
-        onMouseLeave={() => onMouseOut()}
+        raised={props.checkIfCurrentCard(props.recipe._id)}
+        onMouseOver={() => props.onMouseOver(props.recipe._id)}
+        onMouseLeave={() => props.onMouseOut()}
         style={{
           width: '18rem', borderRadius: '10px', padding: '1rem', margin: '2rem',
         }}
@@ -75,10 +61,7 @@ function Recipe(props) {
             {ReactHtmlParser(props.recipe.description)}
           </Typography>
         </CardContent>
-        <div
-          className="row"
-          align="center"
-        >
+        <div align="center">
           {props.recipe.tags.map((tag, i) => (
             <Chip
               size="small"
@@ -110,10 +93,12 @@ class RecipesList extends Component {
     if (this.props.location.appState !== undefined) {
       this.state = {
         open: this.props.location.appState.open,
+        activeCardID: '',
       };
     } else {
       this.state = {
         open: false,
+        activeCardID: '',
       };
     }
   }
@@ -122,14 +107,28 @@ class RecipesList extends Component {
     this.props.fetchRecipes();
   }
 
+  onMouseOver = (currentCardID) => this.setState({ activeCardID: currentCardID });
+
+  onMouseOut = () => this.setState({ activeCardID: '' });
+
+  checkIfCurrentCard = (currentID) => this.state.activeCardID === currentID;
+
   recipeList() {
     return this.props.recipes.map(
-      (currentRecipe, i) => <Recipe recipe={currentRecipe} key={i} raised={false} />,
+      (currentRecipe, i) => (
+        <Recipe
+          recipe={currentRecipe}
+          key={i}
+          onMouseOver={this.onMouseOver}
+          onMouseOut={this.onMouseOut}
+          checkIfCurrentCard={this.checkIfCurrentCard}
+        />
+      ),
     );
   }
 
   render() {
-    const { error, loading, recipes } = this.props;
+    const { error, loading } = this.props;
 
     if (error) {
       return (

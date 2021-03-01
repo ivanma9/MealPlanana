@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
-
-import Box from '@material-ui/core/Box';
-import ButtonMUI from '@material-ui/core/Button';
+import {
+  Box, Button, TextField, Typography, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions,
+} from '@material-ui/core';
 import ChipInput from 'material-ui-chip-input';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { Form } from 'react-bootstrap';
 import Rating from '@material-ui/lab/Rating';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
 import { connect } from 'react-redux';
 import { Editor } from '@tinymce/tinymce-react';
-import { fetchRecipe, updateRecipe } from '../../actions/recipes';
+import ImageUploader from 'react-images-upload';
+import { fetchRecipe, updateRecipe, deleteRecipe } from '../../actions/recipes';
 
 const sanitizeHtml = require('sanitize-html');
 
@@ -32,6 +31,7 @@ class EditRecipe extends Component {
     this.onChangeRecipeDirections = this.onChangeRecipeDirections.bind(this);
     this.onAddRecipeTag = this.onAddRecipeTag.bind(this);
     this.onDeleteRecipeTag = this.onDeleteRecipeTag.bind(this);
+    this.onChangeRecipePreview = this.onChangeRecipePreview.bind(this);
     // this.onChangeRecipeImage = this.onChangeRecipeImage.bind(this);
     this.onChangeRecipeRating = this.onChangeRecipeRating.bind(this);
     // this.onChangeRecipeAuthor = this.onChangeRecipeAuthor.bind(this);
@@ -43,46 +43,47 @@ class EditRecipe extends Component {
       ingredients: [],
       directions: '',
       tags: [],
-      // recipe_image: '',
+      preview: {},
+      images: [],
       ratingTotal: 0,
       // recipe_author: '',
 
       titleIsEmpty: false,
-      // directionsIsEmpty: false,
+      previewChanged: false,
+      deleteDialogOpen: false,
     };
   }
 
   componentDidMount() {
     const { id } = this.props.match.params;
     this.props.fetchRecipe(id);
-    this.setState({
-      title: this.props.recipe.title,
-      description: this.props.recipe.description,
-      ingredients: this.props.recipe.ingredients,
-      directions: this.props.recipe.directions,
-      tags: this.props.recipe.tags,
-      // image: this.props.recipe.image,
-      ratingTotal: Number(this.props.recipe.ratingTotal),
-      // author: this.props.recipe.author
-    });
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.recipe !== prevProps.recipe) {
+      this.setState({
+        title: this.props.recipe.title,
+        description: this.props.recipe.description,
+        ingredients: this.props.recipe.ingredients,
+        directions: this.props.recipe.directions,
+        tags: this.props.recipe.tags,
+        preview: this.props.recipe.preview,
+        images: this.props.recipe.images,
+        ratingTotal: Number(this.props.recipe.ratingTotal),
+        // author: this.props.recipe.author
+      });
+    }
   }
 
   handleValidation() {
     let formIsValid = true;
 
-    // const { title } = this.props.recipe;
     const { title } = this.state;
-    // const { directions } = this.state;
 
     if (title.length === 0) {
       this.setState({ titleIsEmpty: true });
       formIsValid = false;
     } else this.setState({ titleIsEmpty: false });
-
-    // if (directions.length === 0) {
-    //   this.setState({ directionsIsEmpty: true });
-    //   formIsValid = false;
-    // } else this.setState({ directionsIsEmpty: false });
 
     return formIsValid;
   }
@@ -91,7 +92,6 @@ class EditRecipe extends Component {
     this.setState({
       title: e.target.value,
     });
-    // this.props.recipe.title = e.target.value;
 
     if (e.target.value.length === 0) {
       this.setState({ titleIsEmpty: true });
@@ -105,21 +105,18 @@ class EditRecipe extends Component {
     this.setState({
       description: content,
     });
-    // this.props.recipe.description = content;
   }
 
   onAddRecipeIngredient(chip) {
     this.setState((prevState) => ({
       ingredients: [...prevState.ingredients, chip],
     }));
-    // this.props.recipe.ingredients = [...this.props.recipe.ingredients, chip];
   }
 
   onDeleteRecipeIngredient(chip, index) {
     this.setState((prevState) => ({
       ingredients: prevState.ingredients.filter((_, i) => i !== index),
     }));
-    // this.props.recipe.ingredients = this.props.recipe.ingredients.filter((_, i) => i !== index);
   }
 
   onChangeRecipeDirections(e) {
@@ -127,12 +124,6 @@ class EditRecipe extends Component {
     this.setState({
       directions: content,
     });
-
-    // if (content.length === 0) {
-    //   this.setState({ directionsIsEmpty: true });
-    // } else {
-    //   this.setState({ directionsIsEmpty: false });
-    // }
   }
 
   onAddRecipeTag(chip) {
@@ -147,31 +138,25 @@ class EditRecipe extends Component {
     }));
   }
 
-  // onChangeRecipeImage(e) {
-  //   this.setState({
-  //     recipe_image: e.target.value,
-  //   });
-  // }
+  onChangeRecipePreview(picture) {
+    if (picture === undefined || picture.length === 0) {
+      this.setState({
+        preview: [],
+        previewChanged: true,
+      });
+    } else {
+      this.setState({
+        preview: picture,
+        previewChanged: true,
+      });
+    }
+  }
 
   onChangeRecipeRating(e) {
-    // TODO: instead of changing the direct value of the recipe, we want to add the user's rating
-    // TODO:   to the average rating of the item
-
-    // TODO: idea: have 2 rating fields, 1 that shows the average and updates it once user
-    // TODO:   submits their rating, and another field just for the user's input so they
-    // TODO:   know what rating they had given and can change it at any time. But would
-    // TODO:   have to handle this. Might be difficult.
     this.setState({
       ratingTotal: Number(e.target.value),
     });
-    this.props.recipe.ratingTotal = e.target.value;
   }
-
-  // onChangeRecipeAuthor(e) {
-  //   this.setState({
-  //     recipe_author: e.target.value,
-  //   });
-  // }
 
   onSubmit(e) {
     if (!this.handleValidation()) {
@@ -181,25 +166,68 @@ class EditRecipe extends Component {
 
     editSuccessful = true;
 
-    const recipe = {
-      title: sanitizeHtml(this.state.title),
-      description: this.state.description,
-      ingredients: this.state.ingredients,
-      directions: this.state.directions,
-      tags: this.state.tags,
-      // recipe_image: this.state.recipe_image,
-      ratingTotal: this.state.ratingTotal,
-      // recipe_author: this.state.recipe_author,
-    };
+    let recipe;
+    if (this.state.previewChanged === false) {
+      recipe = {
+        title: sanitizeHtml(this.state.title),
+        description: this.state.description,
+        ingredients: this.state.ingredients,
+        directions: this.state.directions,
+        // don't set preview image here. Backend doesn't change
+        // preview if no preview is sent, so this is what we want
+        tags: this.state.tags,
+        // recipe_image: this.state.recipe_image,
+        ratingTotal: this.state.ratingTotal,
+        // recipe_author: this.state.recipe_author,
+      };
+    } else if (this.state.preview.length !== 0) {
+      recipe = {
+        title: sanitizeHtml(this.state.title),
+        description: this.state.description,
+        ingredients: this.state.ingredients,
+        directions: this.state.directions,
+        tags: this.state.tags,
+        preview: this.state.preview[0],
+        // preview: this.state.preview also seems to work?
+        // recipe_image: this.state.recipe_image,
+        ratingTotal: this.state.ratingTotal,
+        // recipe_author: this.state.recipe_author,
+      };
+    } else {
+      recipe = {
+        title: sanitizeHtml(this.state.title),
+        description: this.state.description,
+        ingredients: this.state.ingredients,
+        directions: this.state.directions,
+        tags: this.state.tags,
+        preview: {},
+        // recipe_image: this.state.recipe_image,
+        ratingTotal: this.state.ratingTotal,
+        // recipe_author: this.state.recipe_author,
+      };
+    }
 
-    this.props.updateRecipe(recipe, this.props.match.params.id);
+    this.props.updateRecipe(recipe, this.props.match.params.id)
+      .then(() => {
+        this.props.history.push({
+          pathname: `/recipes/view/${this.props.match.params.id}`,
+          appState: {
+            open: editSuccessful,
+          },
+        });
+      });
+  }
 
+  handleDeleteDialogYes = () => {
+    this.setState({ deleteDialogOpen: false });
+    this.props.deleteRecipe(this.props.match.params.id);
     this.props.history.push({
-      pathname: `/recipes/view/${this.props.match.params.id}`,
-      appState: {
-        open: editSuccessful,
-      },
+      pathname: '/recipes',
     });
+  }
+
+  handleDeleteDialogNo = () => {
+    this.setState({ deleteDialogOpen: false });
   }
 
   render() {
@@ -214,7 +242,7 @@ class EditRecipe extends Component {
         </Typography>
       );
     }
-    if (loading) {
+    if (loading || recipe === null) {
       return <Typography variant="h1" align="center">Loading...</Typography>;
     }
 
@@ -223,8 +251,20 @@ class EditRecipe extends Component {
         <h3>Update Recipe</h3>
 
         <Form>
+
+          <Form.Group controlid="formGroupRecipePreview">
+            <ImageUploader
+              onChange={this.onChangeRecipePreview}
+              withPreview
+              defaultImages={recipe.preview && [recipe.preview.location]}
+              withIcon
+              buttonText="Choose image"
+              withLabel
+              singleImage
+            />
+          </Form.Group>
+
           {/* Title */}
-          {/* TODO: Implement check to make sure something is entered in the field */}
           <Form.Group controlid="formGroupRecipeTitle">
             <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}>Title</Typography>
             <TextField
@@ -245,7 +285,7 @@ class EditRecipe extends Component {
           <Form.Group controlid="formGroupRecipeDescription">
             <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}>Description</Typography>
             <Editor
-              initialValue={this.state.description}
+              initialValue={recipe.description}
               init={{
                 height: 300,
                 menubar: false,
@@ -270,7 +310,7 @@ class EditRecipe extends Component {
             <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}>Ingredients</Typography>
             <ChipInput
               allowDuplicates={false}
-							// TODO: add "dataSource" array for autocompletion
+              // TODO: add "dataSource" array for autocompletion
               fullWidth
               value={this.state.ingredients}
               onAdd={(chip) => this.onAddRecipeIngredient(chip)}
@@ -281,11 +321,10 @@ class EditRecipe extends Component {
           <br />
 
           {/* Directions */}
-          {/* TODO: Implement check to make sure something is entered in the field */}
           <Form.Group controlid="formGroupRecipeDirections">
             <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}>Directions</Typography>
             <Editor
-              initialValue={this.state.directions}
+              initialValue={recipe.directions}
               init={{
                 height: 300,
                 menubar: false,
@@ -318,8 +357,6 @@ class EditRecipe extends Component {
             />
           </Form.Group>
 
-          {/* TODO: add image preview and upload ability */}
-
           <br />
 
           {/* Rating */}
@@ -344,10 +381,25 @@ class EditRecipe extends Component {
             justifyContent: 'center',
             alignItems: 'center',
             display: 'flex',
+            marginBottom: '10rem',
           }}
           >
-            <ButtonMUI variant="contained" color="primary" onClick={this.onSubmit}>Update Recipe</ButtonMUI>
+            <Button variant="contained" color="primary" onClick={this.onSubmit} style={{ marginRight: '5rem' }}>Update Recipe</Button>
+            <Button variant="contained" color="secondary" onClick={() => this.setState({ deleteDialogOpen: true })}>Delete Recipe</Button>
           </div>
+          <Dialog
+            open={this.state.deleteDialogOpen}
+            onClose={() => this.setState({ deleteDialogOpen: false })}
+          >
+            <DialogTitle>Delete this recipe</DialogTitle>
+            <DialogContent>
+              <DialogContentText>Are you sure you want to delete this recipe?</DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={this.handleDeleteDialogNo}>No</Button>
+              <Button color="secondary" onClick={this.handleDeleteDialogYes}>Yes</Button>
+            </DialogActions>
+          </Dialog>
         </Form>
       </div>
     );
@@ -356,6 +408,5 @@ class EditRecipe extends Component {
 
 export default connect(
   mapStateToProps,
-  // mapDispatchToProps,
-  { fetchRecipe, updateRecipe },
+  { fetchRecipe, updateRecipe, deleteRecipe },
 )(EditRecipe);

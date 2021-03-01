@@ -93,6 +93,7 @@ recipeRoutes.put('/update/:id', recipeUploader, async (req, res) => {
   try {
     const { id } = req.params;
     const update = req.body;
+    const { ingredients, tags } = req.body;
 
     // only if files/images involved
     if (req.files) {
@@ -112,6 +113,19 @@ recipeRoutes.put('/update/:id', recipeUploader, async (req, res) => {
         update.images = imgUrls;
       }
     }
+
+    if (ingredients) {
+      if (ingredients.length === 0 || !ingredients[0]) {
+        update.ingredients = [];
+      }
+    }
+
+    if (tags) {
+      if (tags.length === 0 || !tags[0]) {
+        update.tags = [];
+      }
+    }
+
     await Recipe.updateOne(
       { _id: id },
       {

@@ -16,12 +16,13 @@ export const createRecipe = (recipe) => (
   })
 );
 
-export const updateRecipe = (recipe, id) => (
+export const updateRecipe = (formData, id) => (
   fetch(`/api/recipes/update/${id}`, {
     method: 'PUT',
-    body: JSON.stringify(recipe),
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    body: formData,
   })
+);
+
+export const deleteRecipe = (id) => (
+  fetch(`/api/recipes/delete/${id}`, { method: 'DELETE' })
 );

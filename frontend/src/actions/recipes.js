@@ -10,12 +10,10 @@ export const fetchRecipesBegin = () => ({
 export const fetchRecipesSuccess = (recipes) => ({
   type: FETCH_RECIPES_SUCCESS,
   payload: { recipes },
-  // recipes,
 });
 export const fetchRecipesFailure = (error) => ({
   type: FETCH_RECIPES_FAILURE,
   payload: { error },
-  // error,
 });
 
 export const fetchRecipes = () => async (dispatch) => {
@@ -95,11 +93,66 @@ export const updateRecipeFailure = (error) => ({
 });
 
 export const updateRecipe = (recipe, id) => async (dispatch) => {
-  const response = await apiUtil.updateRecipe(recipe, id);
+  const formData = new FormData();
+  formData.append('title', recipe.title);
+  formData.append('description', recipe.description);
+  formData.append('directions', recipe.directions);
+  formData.append('ratingTotal', recipe.ratingTotal);
+
+  if (recipe.preview !== undefined) {
+    formData.append('preview', recipe.preview);
+  }
+
+  if (recipe.images.length !== 0) {
+    recipe.images.forEach((item) => formData.append('images[]', item));
+  } else {
+    formData.append('images[]', []);
+  }
+
+  if (recipe.ingredients.length !== 0) {
+    recipe.ingredients.forEach((item) => formData.append('ingredients[]', item));
+  } else {
+    formData.append('ingredients[]', []);
+  }
+
+  if (recipe.tags.length !== 0) {
+    recipe.tags.forEach((item) => formData.append('tags[]', item));
+  } else {
+    formData.append('tags[]', []);
+  }
+
+  const response = await apiUtil.updateRecipe(formData, id);
   const data = await response.json();
 
   if (response.ok) {
     return dispatch(updateRecipeSuccess());
   }
   return dispatch(updateRecipeFailure(data));
+};
+
+export const DELETE_RECIPE_BEGIN = 'DELETE_RECIPE_BEGIN';
+export const DELETE_RECIPE_SUCCESS = 'DELETE_RECIPE_SUCCESS';
+export const DELETE_RECIPE_FAILURE = 'DELETE_RECIPE_FAILURE';
+
+export const deleteRecipeBegin = () => ({
+  type: DELETE_RECIPE_BEGIN,
+});
+export const deleteRecipeSuccess = () => ({
+  type: DELETE_RECIPE_SUCCESS,
+});
+export const deleteRecipeFailure = (error) => ({
+  type: DELETE_RECIPE_FAILURE,
+  payload: { error },
+});
+
+export const deleteRecipe = (id) => async (dispatch) => {
+  dispatch(deleteRecipeBegin());
+  const response = await apiUtil.deleteRecipe(id);
+  console.log(response);
+  const data = await response.json();
+  console.log(data);
+  if (response.ok) {
+    return dispatch(deleteRecipeSuccess());
+  }
+  return dispatch(deleteRecipeFailure(data));
 };

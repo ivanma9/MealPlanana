@@ -1,5 +1,6 @@
 import {
   CardMedia,
+  Card,
   Chip,
   Fab,
   Grid,
@@ -16,6 +17,7 @@ import { Link } from 'react-router-dom';
 import Rating from '@material-ui/lab/Rating';
 import { connect } from 'react-redux';
 import ReactHtmlParser from 'react-html-parser';
+import SimpleReactLightbox, { SRLWrapper } from 'simple-react-lightbox';
 import { fetchRecipe } from '../../actions/recipes';
 
 const mapStateToProps = (state) => ({
@@ -24,16 +26,13 @@ const mapStateToProps = (state) => ({
   error: state.recipe.error,
 });
 
-// const mapDispatchToProps = (dispatch) => ({
-//   fetchRecipe: (id) => dispatch(fetchRecipe(id)),
-// });
-
 class ViewRecipe extends Component {
   constructor(props) {
     super(props);
     if (this.props.location.appState !== undefined) {
       this.state = {
         open: this.props.location.appState.open,
+        activeID: '',
       };
     } else {
       this.state = {
@@ -66,6 +65,20 @@ class ViewRecipe extends Component {
       return <Typography variant="h1" align="center">Undef...</Typography>;
     }
 
+    const options = {
+      settings: {},
+      buttons: {
+        showAutoplayButton: false,
+        showThumbnailsButton: false,
+      },
+    };
+
+    const onMouseOver = (currentID) => this.setState({ activeID: currentID });
+
+    const onMouseOut = () => this.setState({ activeID: '' });
+
+    const checkIfCurrentCard = (currentID) => this.state.activeID === currentID;
+
     return (
       <div>
         <Link
@@ -86,13 +99,16 @@ class ViewRecipe extends Component {
           <MuiAlert elevation={6} variant="filled" severity="success" onClose={() => { this.setState({ open: false }); }}>Recipe successfully edited!</MuiAlert>
         </Snackbar>
 
-        <CardMedia
-          component="img"
-          image={recipe.preview && recipe.preview.location}
-          style={{
-            height: '20rem', marginBottom: '1rem', width: '100%',
-          }}
-        />
+        {recipe.preview
+          && (
+          <CardMedia
+            component="img"
+            image={recipe.preview && recipe.preview.location}
+            style={{
+              height: '20rem', marginBottom: '1rem', width: '100%',
+            }}
+          />
+          )}
 
         <div style={{ marginLeft: '5rem', marginRight: '5rem' }}>
           {/* Title */}
@@ -169,7 +185,7 @@ class ViewRecipe extends Component {
             </Grid>
 
             {/* Rating */}
-            <Grid container style={{ marginTop: '5rem' }}>
+            <Grid container style={{ marginTop: '5rem', marginBottom: '5rem' }}>
               <Grid item sm={12} md={2}>
                 <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}> Rating: </Typography>
               </Grid>
@@ -185,6 +201,43 @@ class ViewRecipe extends Component {
                 />
               </Grid>
             </Grid>
+
+            <SimpleReactLightbox>
+              <SRLWrapper options={options}>
+                <Grid
+                  container
+                  alignItems="flex-start"
+                  justify="space-evenly"
+                >
+                  {recipe.images.map(
+                    (image) => (
+                      <a
+                        href={image.location}
+                        key={image.key}
+                        style={{ padding: '2em' }}
+                      >
+                        <Card
+                          raised={checkIfCurrentCard(image.key)}
+                          onMouseOver={() => onMouseOver(image.key)}
+                          onMouseLeave={() => onMouseOut()}
+                        >
+                          <img
+                            src={image.location}
+                            key={image.key}
+                            alt=""
+                            height="250rem"
+                            zIndex={10}
+                            style={{
+                              zIndex: 10,
+                            }}
+                          />
+                        </Card>
+                      </a>
+                    ),
+                  )}
+                </Grid>
+              </SRLWrapper>
+            </SimpleReactLightbox>
 
             {/* Author */}
             <Grid container style={{ marginTop: '5rem', justifyContent: 'center' }}>
