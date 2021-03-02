@@ -111,7 +111,6 @@ export const updateRecipe = (recipe, id) => async (dispatch) => {
   formData.append('title', recipe.title);
   formData.append('description', recipe.description);
   formData.append('directions', recipe.directions);
-  formData.append('ratingTotal', recipe.ratingTotal);
 
   if (recipe.preview !== undefined) {
     formData.append('preview', recipe.preview);

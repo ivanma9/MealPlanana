@@ -86,7 +86,7 @@ class EditRecipe extends Component {
 
   handleDeleteDialogYes = () => {
     this.setState({ deleteDialogOpen: false });
-    this.props.deleteRecipe(this.props.match.params.id);
+    this.props.deleteRecipe(this.props.recipe._id);
     this.props.history.push({
       pathname: '/recipes',
     });
@@ -206,10 +206,11 @@ class EditRecipe extends Component {
       };
     }
 
-    this.props.updateRecipe(recipe, this.props.match.params.id)
+    // FIXME: recipe isn't updated when we push to /recipes/view
+    this.props.updateRecipe(recipe, this.props.recipe._id)
       .then(() => {
         this.props.history.push({
-          pathname: `/recipes/view/${this.props.match.params.id}`,
+          pathname: '/recipes/view/',
           appState: {
             open: editSuccessful,
           },
