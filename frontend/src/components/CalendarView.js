@@ -22,77 +22,15 @@ import { parseMeals } from './helpers/calendarHelper';
 // import "@fullcalendar/daygrid/main.css";
 // import "@fullcalendar/timegrid/main.css";
 
-const Meal = (props) => (
-  <tr>
-    <td className={props.recipe.recipe_description ? 'completed' : ''}>
-      {props.recipe.recipe_description}
-    </td>
-    <td className={props.recipe.recipe_description ? 'completed' : ''}>
-      {props.recipe.recipe_responsible}
-    </td>
-    <td className={props.recipe.recipe_description ? 'completed' : ''}>
-      {props.recipe.recipe_priority}
-    </td>
-    <td>
-      <Link to={`/editMeal/${props.recipe._id}`}>Edit Meal</Link>
-    </td>
-  </tr>
-);
-
 class CalendarView extends Component {
   calendarRef = React.createRef();
 
   constructor(props) {
     super(props);
     this.state = {
-	    //   meals: [
-	    //     {
-	    //       title: 'Snack on Bananas',
-	    //       date: '2021-02-01',
-	    //       startTime: '14:30:00',
-	    //       endTime: '16:00:00',
-	    //       daysOfWeek: ['2', '5'],
-	    //     },
-	    //     {
-	    //       groupID: 'smoothieEvents',
-	    //       daysOfWeek: ['4'],
-	    //       title: 'drink nana smoothie',
-	    //       date: '2021-02-02',
-	    //       color: 'red',
-	    //       startTime: '9:30:00',
-	    //       endTime: '10:00:00',
-	    //     },
-	    //     {
-	    //       title: 'fresh plantana',
-	    //       date: '2021-02-06',
-	    //     },
-	    //     {
-	    //       title: 'moonki meeting meal',
-	    //       date: '2021-02-16',
-	    //     },
-	    //     {
-	    //       groupId: 'blueEvents', // recurrent events in this group move together
-	    //       daysOfWeek: ['4'],
-	    //       startTime: '10:45:00',
-	    //       endTime: '12:45:00',
-	    //     },
-	    //     {
-	    //       daysOfWeek: ['3'], // these recurrent events move separately
-	    //       startTime: '11:00:00',
-	    //       endTime: '11:30:00',
-	    //       color: 'red',
-	    //     },
-	    //     {
-	    //       title: 'rrule event bananamamam',
-	    //       rrule: {
-	    //         dtstart: '2021-02-11T13:00:00',
-	    //         freq: 'weekly',
-	    //       },
-	    //       duration: '02:00',
-	    //     },
-	    //   ],
       dateState: new Date(), // Can just Use state in Component
       addModalVisible: false,
+      mealSelected: '',
     };
     this.handleAddMeal = this.handleAddMeal.bind(this);
     // this.handleEditMeal = this.handleEditMeal.bind(this);
@@ -101,6 +39,8 @@ class CalendarView extends Component {
   }
 
   addModalRef = React.createRef();
+
+  viewModalRef = React.createRef();
 
   changeDate(e) {
     console.log(e);
@@ -113,6 +53,17 @@ class CalendarView extends Component {
 
   handleEditMeal() {
 
+  }
+
+  handleViewMeal(info) {
+    info.el.style.borderColor = 'red';
+    console.log(info);
+    console.log(info.event._def.extendedProps.recipes);
+    this.setState({
+      mealSelected: info.event._def.title,
+    });
+    console.log(this.state.mealSelected);
+    this.viewModalRef.current.open();
   }
 
   render() {
@@ -128,7 +79,17 @@ class CalendarView extends Component {
               Add Meal
             </h3>
           )}
-          contentStyle={{ width: '30%', height: '35%' }}
+          contentStyle={{ width: 500, height: 370 }}
+          children={<AddMeal />}
+        />
+        <Modal
+          ref={this.viewModalRef}
+          header={(
+            <h3>
+              {this.state.mealSelected}
+            </h3>
+          )}
+          contentStyle={{ width: 500, height: 370 }}
           children={<AddMeal />}
         />
         <h2 className="text-center">
@@ -206,14 +167,15 @@ class CalendarView extends Component {
           fixedWeekCount={false}
           selectable
           dateClick={(e) => this.changeDate(e)}
-          eventClick={
-            function (info) {
-              info.jsEvent.preventDefault(); // don't let the browser navigate
+          eventClick={(info) => this.handleViewMeal(info)
+            // function (info) { 
+            //   info.jsEvent.preventDefault(); // don't let the browser navigate
 
-              alert(`Event: ${info.event.title}`);
-              // change the border color just for fun
-              info.el.style.borderColor = 'red';
-            }
+            //   alert(`Event: ${info.event.title}`);
+            //   this.handleViewMeal();
+            //   // change the border color just for fun
+            //   info.el.style.borderColor = 'red';
+            // }
           }
         />
 
