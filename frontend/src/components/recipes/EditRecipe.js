@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Dialog,
   DialogActions,
@@ -16,7 +15,7 @@ import { Editor } from '@tinymce/tinymce-react';
 import { Form } from 'react-bootstrap';
 import ImageUploader from 'react-images-upload';
 import { connect } from 'react-redux';
-import { deleteRecipe, fetchRecipe, updateRecipe } from '../../actions/recipes';
+import { deleteRecipe, updateRecipe } from '../../actions/recipes';
 
 const sanitizeHtml = require('sanitize-html');
 
@@ -31,12 +30,6 @@ let editSuccessful = false;
 class EditRecipe extends Component {
   constructor(props) {
     super(props);
-
-    //* Checks to see if user reached edit recipe page by using button or manually changing the URL
-    //* If they manually changed the URL, they get redirected to the previous page
-    if (this.props.location.appState === undefined) {
-      this.props.history.goBack();
-    }
 
     this.onChangeTitle = this.onChangeTitle.bind(this);
     this.onChangeDescription = this.onChangeDescription.bind(this);
@@ -56,7 +49,7 @@ class EditRecipe extends Component {
       directions: '',
       tags: [],
       preview: {},
-      images: [],
+      // images: [],
       // recipe_author: '',
 
       titleIsEmpty: false,
@@ -66,23 +59,16 @@ class EditRecipe extends Component {
   }
 
   componentDidMount() {
-    const { id } = this.props.match.params;
-    this.props.fetchRecipe(id);
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.recipe !== prevProps.recipe) {
-      this.setState({
-        title: this.props.recipe.title,
-        description: this.props.recipe.description,
-        ingredients: this.props.recipe.ingredients,
-        directions: this.props.recipe.directions,
-        tags: this.props.recipe.tags,
-        preview: this.props.recipe.preview,
-        images: this.props.recipe.images,
-        // author: this.props.recipe.author
-      });
-    }
+    this.setState({
+      title: this.props.recipe.title,
+      description: this.props.recipe.description,
+      ingredients: this.props.recipe.ingredients,
+      directions: this.props.recipe.directions,
+      tags: this.props.recipe.tags,
+      preview: this.props.recipe.preview,
+      // images: this.props.recipe.images,
+      // author: this.props.recipe.author
+    });
   }
 
   handleValidation() {
@@ -393,5 +379,5 @@ class EditRecipe extends Component {
 
 export default connect(
   mapStateToProps,
-  { fetchRecipe, updateRecipe, deleteRecipe },
+  { updateRecipe, deleteRecipe },
 )(EditRecipe);

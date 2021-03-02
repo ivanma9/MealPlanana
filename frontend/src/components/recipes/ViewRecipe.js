@@ -8,22 +8,16 @@ import {
   Popover,
   Snackbar,
   Typography,
-  // withStyles,
-  // withTheme,
 } from '@material-ui/core';
 import React, { Component } from 'react';
 import SimpleReactLightbox, { SRLWrapper } from 'simple-react-lightbox';
-// import { ThemeProvider } from '@material-ui/styles';
 
 import EditIcon from '@material-ui/icons/Edit';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import { Link } from 'react-router-dom';
 import MuiAlert from '@material-ui/lab/Alert';
 import Rating from '@material-ui/lab/Rating';
 import ReactHtmlParser from 'react-html-parser';
 import { connect } from 'react-redux';
-import { GiLetterBomb } from 'react-icons/gi';
-import { fetchRecipe } from '../../actions/recipes';
 
 const mapStateToProps = (state) => ({
   recipe: state.recipe.item,
@@ -55,14 +49,8 @@ class ViewRecipe extends Component {
     }
   }
 
-  componentDidMount() {
-    const { id } = this.props.match.params;
-    this.props.fetchRecipe(id);
-  }
-
   render() {
     const { error, loading, recipe } = this.props;
-    // const classes = useStyles();
 
     if (error) {
       return (
@@ -102,7 +90,7 @@ class ViewRecipe extends Component {
         });
       } else {
         this.props.history.push({
-          pathname: `/recipes/edit/${this.props.match.params.id}`,
+          pathname: '/recipes/edit',
           appState: {
             userUsedButton: true,
           },
@@ -110,16 +98,12 @@ class ViewRecipe extends Component {
       }
     };
 
-    // const handlePopoverOpen = (e) => { this.setState({ cannotEditPopoverAnchorElement: e.currentTarget }); console.log('enter'); };
-
     const handleEditPopoverClosed = () => {
       this.setState({
         cannotEditPopoverOpen: false,
         cannotEditPopoverAnchorElement: null,
       });
     };
-
-    // const hi = Boolean(this.state.cannotEditPopoverAnchorElement);
 
     const handleAddRatingButtonClicked = (e) => {
       this.setState({ addRatingPopoverOpen: true, addRatingPopoverAnchorElement: e.currentTarget });
@@ -142,7 +126,6 @@ class ViewRecipe extends Component {
       <div>
         <Popover
           open={this.state.cannotEditPopoverOpen || false}
-          // open={hi}
           anchorEl={this.state.cannotEditPopoverAnchorElement}
           onClose={handleEditPopoverClosed}
           anchorOrigin={{
@@ -153,19 +136,12 @@ class ViewRecipe extends Component {
             vertical: 'center',
             horizontal: 'right',
           }}
-          // disableRestoreFocus
         >
           <Typography variant="button" style={{ paddingTop: '40rem', padding: '1rem' }}>You are not the author of this recipe</Typography>
         </Popover>
 
-        {/* <Link
-          to={`/recipes/edit/${recipe._id}`}
-          style={{ color: 'black', textDecoration: 'none' }}
-        > */}
         <Fab
           onClick={handleEditButtonClicked}
-          // onMouseEnter={handlePopoverOpen}
-          // onMouseOut={handlePopoverClosed}
           color="primary"
           variant="extended"
           style={{ position: 'fixed', bottom: '2rem', right: '2rem' }}
@@ -173,7 +149,6 @@ class ViewRecipe extends Component {
           <EditIcon />
           Edit
         </Fab>
-        {/* </Link> */}
 
         <Snackbar
           autoHideDuration={6000}
@@ -380,7 +355,4 @@ class ViewRecipe extends Component {
 
 export default connect(
   mapStateToProps,
-  // mapDispatchToProps,
-  { fetchRecipe },
 )(ViewRecipe);
-// )(withStyles(styles, { withTheme: true })(ViewRecipe));
