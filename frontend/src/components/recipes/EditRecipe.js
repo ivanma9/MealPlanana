@@ -13,10 +13,8 @@ import React, { Component } from 'react';
 
 import ChipInput from 'material-ui-chip-input';
 import { Editor } from '@tinymce/tinymce-react';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import { Form } from 'react-bootstrap';
 import ImageUploader from 'react-images-upload';
-import Rating from '@material-ui/lab/Rating';
 import { connect } from 'react-redux';
 import { deleteRecipe, fetchRecipe, updateRecipe } from '../../actions/recipes';
 
@@ -49,7 +47,6 @@ class EditRecipe extends Component {
     this.onDeleteTag = this.onDeleteTag.bind(this);
     this.onChangePreview = this.onChangePreview.bind(this);
     // this.onChangeRecipeImage = this.onChangeRecipeImage.bind(this);
-    this.onChangeRating = this.onChangeRating.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
 
     this.state = {
@@ -60,7 +57,6 @@ class EditRecipe extends Component {
       tags: [],
       preview: {},
       images: [],
-      ratingTotal: 0,
       // recipe_author: '',
 
       titleIsEmpty: false,
@@ -84,7 +80,6 @@ class EditRecipe extends Component {
         tags: this.props.recipe.tags,
         preview: this.props.recipe.preview,
         images: this.props.recipe.images,
-        ratingTotal: Number(this.props.recipe.ratingTotal),
         // author: this.props.recipe.author
       });
     }
@@ -179,12 +174,6 @@ class EditRecipe extends Component {
     }
   }
 
-  onChangeRating(e) {
-    this.setState({
-      ratingTotal: Number(e.target.value),
-    });
-  }
-
   onSubmit(e) {
     if (!this.handleValidation()) {
       console.log('Form invalid');
@@ -204,7 +193,6 @@ class EditRecipe extends Component {
         // preview if no preview is sent, so this is what we want
         tags: this.state.tags,
         // recipe_image: this.state.recipe_image,
-        ratingTotal: this.state.ratingTotal,
         // recipe_author: this.state.recipe_author,
       };
     } else if (this.state.preview.length !== 0) {
@@ -217,7 +205,6 @@ class EditRecipe extends Component {
         preview: this.state.preview[0],
         // preview: this.state.preview also seems to work?
         // recipe_image: this.state.recipe_image,
-        ratingTotal: this.state.ratingTotal,
         // recipe_author: this.state.recipe_author,
       };
     } else {
@@ -229,7 +216,6 @@ class EditRecipe extends Component {
         tags: this.state.tags,
         preview: {},
         // recipe_image: this.state.recipe_image,
-        ratingTotal: this.state.ratingTotal,
         // recipe_author: this.state.recipe_author,
       };
     }
@@ -373,22 +359,6 @@ class EditRecipe extends Component {
           </Form.Group>
 
           <br />
-
-          {/* Rating */}
-          <Form.Group controlid="formGroupRecipeRating">
-            <Box component="fieldset" mb={3} borderColor="transparent">
-              <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}>Rating</Typography>
-              <Rating
-                name="hearts"
-                defaultValue={0}
-                value={this.state.ratingTotal}
-                precision={0.5}
-                icon={<FavoriteIcon fontSize="inherit" />}
-                style={{ color: 'red' }}
-                onChange={this.onChangeRating}
-              />
-            </Box>
-          </Form.Group>
 
           <br />
 
