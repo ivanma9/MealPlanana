@@ -58,7 +58,6 @@ export default class AddMeal extends Component {
       startTime: null,
       endTime: null,
       color: DEFAULT_COLOR,
-      fontColor: '#FFFFFF',
     });
     this.props.onSubmit();
   }
@@ -77,11 +76,11 @@ export default class AddMeal extends Component {
   }
 
   getFontColor(backgroundColor) {
-    console.log(backgroundColor);
-    if (!this.state.color) return '#FFFFFF';
-    const r = parseInt(`0x${backgroundColor[1]}${backgroundColor[2]}`, 10);
-    const g = parseInt(`0x${backgroundColor[3]}${backgroundColor[4]}`, 10);
-    const b = parseInt(`0x${backgroundColor[5]}${backgroundColor[6]}`, 10);
+    if (!backgroundColor) return '#FFFFFF';
+    const r = parseInt(`0x${backgroundColor[1]}${backgroundColor[2]}`);
+    const g = parseInt(`0x${backgroundColor[3]}${backgroundColor[4]}`);
+    const b = parseInt(`0x${backgroundColor[5]}${backgroundColor[6]}`);
+    console.log(r, g, b);
     return r + g + b > 400 ? '#000000' : '#FFFFFF';
   }
 
@@ -92,9 +91,9 @@ export default class AddMeal extends Component {
    colorModalRef = React.createRef();
 
    render() {
-     const SWITCH_HANDLE_ICON = (
-       <div style={{ display: 'flex', 'justify-content': 'center', marginTop: '25%' }}>
-         <GiBananaBunch color={this.state.color ? this.state.color : '#000000'} />
+     const SWITCH_ICON = (
+       <div style={{ display: 'flex', 'justify-content': 'center', paddingTop: '22%' }}>
+         <GiBananaBunch color={this.state.fontColor ? this.state.fontColor : '#000000'} />
        </div>
      );
      return (
@@ -149,8 +148,7 @@ export default class AddMeal extends Component {
                checked={this.state.repeat}
                onColor={this.state.color ? this.state.color : DEFAULT_COLOR}
                onHandleColor={this.state.fontColor}
-               uncheckedHandleIcon={SWITCH_HANDLE_ICON}
-               checkedHandleIcon={SWITCH_HANDLE_ICON}
+               checkedIcon={SWITCH_ICON}
              />
            </label>
            {this.state.repeat ? null : null}
