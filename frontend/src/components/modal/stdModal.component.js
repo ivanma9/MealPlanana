@@ -46,7 +46,7 @@ class Modal extends Component {
                 delay: 0.3,
               },
             }}
-            onClick={() => {}}
+            onClick={() => { this.close(); }}
             className={styles.modalBackdrop}
           />
           <motion.div
@@ -66,17 +66,26 @@ class Modal extends Component {
               },
             }}
             className={styles.modalContentWrapper}
+            style={this.props.contentStyle}
           >
-            <div className={styles.closeButtonDiv}>
-              <Button
-                variant="custom"
-                role="button"
-                onClick={this.close}
-              >
-                {' '}
-                <IoCloseOutline size={25} />
-              </Button>
-            </div>
+            {!this.props.headerDisabled
+              ? (
+                <div className={styles.headerContainer}>
+                  <div className={styles.headerStyle}>
+                    {this.props.header}
+                  </div>
+                  <div className={styles.closeButtonDiv}>
+                    <Button
+                      variant="custom"
+                      role="button"
+                      onClick={this.close}
+                    >
+                      {' '}
+                      <IoCloseOutline size={25} />
+                    </Button>
+                  </div>
+                </div>
+              ) : null }
             <div className={styles.modalPadding}>
               {this.props.children}
             </div>
@@ -90,9 +99,13 @@ class Modal extends Component {
 
 Modal.propTypes = {
   children: PropTypes.element,
+  header: PropTypes.element,
+  headerDisabled: PropTypes.bool,
 };
 Modal.defaultProps = {
   children: <div />,
+  header: <div />,
+  headerDisabled: false,
 };
 
 export default Modal;

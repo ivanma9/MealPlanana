@@ -25,5 +25,6 @@ module.exports = {
     'react/destructuring-assignment': 'off',
     'no-console': 'off',
     'array-callback-return': 'off',
+    'react/jsx-fragments': 'off',
   },
 };

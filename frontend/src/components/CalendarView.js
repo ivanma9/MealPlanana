@@ -1,6 +1,5 @@
 import React, { Component, useState } from 'react';
 import { Link } from 'react-router-dom';
-
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -10,8 +9,11 @@ import interactionPlugin from '@fullcalendar/interaction';
 import rrulePlugin from '@fullcalendar/rrule';
 import { Button, Container } from 'react-bootstrap';
 import moment from 'moment';
-
+import { GiMeal } from 'react-icons/gi';
 import { connect } from 'react-redux';
+import Modal from './modal/stdModal.component';
+import AddMeal from './AddMeal/add-meal.component';
+
 import { parseMeals } from './helpers/calendarHelper';
 
 // import axios from 'axios';
@@ -90,6 +92,7 @@ class CalendarView extends Component {
 	    //     },
 	    //   ],
       dateState: new Date(), // Can just Use state in Component
+      addModalVisible: false,
     };
     this.handleAddMeal = this.handleAddMeal.bind(this);
     // this.handleEditMeal = this.handleEditMeal.bind(this);
@@ -97,13 +100,15 @@ class CalendarView extends Component {
     // this.handleChangeViewDay = this.handleChangeViewDay.bind(this);
   }
 
+  addModalRef = React.createRef();
+
   changeDate(e) {
     console.log(e);
     this.setState({ dateState: e });
   }
 
   handleAddMeal() {
-
+    this.addModalRef.current.open();
   }
 
   handleEditMeal() {
@@ -115,6 +120,17 @@ class CalendarView extends Component {
 
     return (
       <div>
+        <Modal
+          ref={this.addModalRef}
+          header={(
+            <h3>
+              {'  '}
+              Add Meal
+            </h3>
+          )}
+          contentStyle={{ width: '30%', height: '35%' }}
+          children={<AddMeal />}
+        />
         <h2 className="text-center">
           NANA
           {' '}
@@ -149,11 +165,9 @@ class CalendarView extends Component {
           }
           `}
           </style>
-          <Link to="/addMeal">
-            <Button variant="flat" size="xxl" onClick={this.handleAddMeal}>
-              Add Meal
-            </Button>
-          </Link>
+          <Button variant="flat" size="xxl" onClick={this.handleAddMeal}>
+            Add Meal
+          </Button>
 
           {/* <Button className="m-4 p-2" onClick={this.handleChangeViewWeek}>
             Edit Meal

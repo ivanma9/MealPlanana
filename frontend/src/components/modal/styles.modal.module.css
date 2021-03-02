@@ -33,4 +33,14 @@
     color: #fff;
     background-color: white;
     border-color: white;
-}
+  }
+
+  .headerContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 50px;
+  }
+  .headerStyle {
+    padding: 2%;
+  }

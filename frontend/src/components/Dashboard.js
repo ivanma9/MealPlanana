@@ -5,7 +5,7 @@ import { logout } from '../actions/session';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import CalendarView from './CalendarView';
-import AddMeal from './add-meal.component';
+import AddMeal from './AddMeal/add-meal.component';
 
 const mapStateToProps = ({ session }) => ({
   session,
