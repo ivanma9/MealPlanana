@@ -5,6 +5,7 @@ import { logout } from '../actions/session';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import CalendarView from './CalendarView';
+import AddMeal from './add-meal.component';
 
 const mapStateToProps = ({ session }) => ({
   session,
@@ -27,6 +28,7 @@ const Dashboard = ({ logout, session }) => (
 
         <div className="container">
           <Route path="/dashboard" exact component={CalendarView} />
+          <Route path="/addMeal" component={AddMeal} />
         </div>
 
       </div>

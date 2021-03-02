@@ -92,7 +92,7 @@ class CalendarView extends Component {
       dateState: new Date(), // Can just Use state in Component
     };
     this.handleAddMeal = this.handleAddMeal.bind(this);
-    this.handleEditMeal = this.handleEditMeal.bind(this);
+    // this.handleEditMeal = this.handleEditMeal.bind(this);
     // this.handleChangeView4Day = this.handleChangeView4Day.bind(this);
     // this.handleChangeViewDay = this.handleChangeViewDay.bind(this);
   }
@@ -126,22 +126,44 @@ class CalendarView extends Component {
         <div>
           {console.log(parseMeals(this.props.meals))}
         </div>
+
         <div>
           {console.log(this.props.meals)}
         </div>
 
         <Container className="text-center">
-          <Button className="mr-4 p-2" onClick={this.handleChangeViewMonth}>
-            Add Meal
-          </Button>
-          <Button className="m-4 p-2" onClick={this.handleChangeViewWeek}>
+          <style type="text/css">
+            {`
+          .btn-flat {
+            background-color: #ffe135;
+            color: black;
+          }
+
+          .btn-xxl {
+            padding: 1rem 7rem;
+            font-size: 1.5rem;
+            margin: 5rem;
+            border-radius: 10rem;
+            border-color: black;
+            border-width: 0.5rem;
+          }
+          `}
+          </style>
+          <Link to="/addMeal">
+            <Button variant="flat" size="xxl" onClick={this.handleAddMeal}>
+              Add Meal
+            </Button>
+          </Link>
+
+          {/* <Button className="m-4 p-2" onClick={this.handleChangeViewWeek}>
             Edit Meal
-          </Button>
+          </Button> */}
         </Container>
 
         <FullCalendar
           ref={this.calendarRef}
-          aspectRatio={1}
+          height={screen.height - 50}
+          // aspectRatio={1}
           headerToolbar={{
             center: 'dayGridMonth,dayGridWeek,timeGridFourDay,timeGridDay,listWeek', // buttons for switching between views
           }}
