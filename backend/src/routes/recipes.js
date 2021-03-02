@@ -8,7 +8,7 @@ import {
 import {
   AWS_BUCKET_NAME,
 } from '../config';
-
+import { checkRes } from '../util/helpers';
 import Recipe from '../models/recipe';
 
 const recipeRoutes = express.Router();
@@ -17,8 +17,7 @@ const recipeRoutes = express.Router();
 recipeRoutes.get('/', async (req, res) => {
   try {
     const recipes = await Recipe.find();
-    res.status(200).json(recipes);
-    console.log('Successfully retrieved recipes!');
+    return checkRes(res, recipes, true, 'Successfully retrieved recipes!');
   } catch (err) {
     res.status(500).json({ message: err });
   }
@@ -29,12 +28,7 @@ recipeRoutes.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const recipe = await Recipe.findById(id);
-    if (recipe) {
-      res.status(200).json(recipe);
-      console.log(`Successfully retrieved recipe ${id}!`);
-    } else {
-      res.status(404).json({ message: 'Recipe not found!' });
-    }
+    return checkRes(res, recipe, true, 'Successfully retrieved recipe!', 'Recipe not found!');
   } catch (err) {
     res.status(500).json({ message: err });
   }
@@ -67,11 +61,10 @@ recipeRoutes.post('/add', recipeUploader, async (req, res) => {
 
     const newRecipe = new Recipe(update);
     await newRecipe.save();
-    res.status(200).json({ message: 'Successfully added recipe!' });
-    console.log('Successfully added recipe!');
+    return checkRes(res, newRecipe, false, 'Successfully added recipe!', 'Something went wrong!');
   } catch (err) {
     if (err instanceof multer.MulterError) {
-      console.log('multer oopsie in recipe creation');
+      console.log('multer did an oopsie in recipe creation');
       return res.json({
         success: false,
         errors: {
@@ -94,6 +87,9 @@ recipeRoutes.put('/update/:id', recipeUploader, async (req, res) => {
     const { id } = req.params;
     const update = req.body;
     const { ingredients, tags } = req.body;
+    const recipe = await Recipe.findById(id);
+    const oldPreview = recipe.preview;
+    const oldImages = recipe.images;
 
     // only if files/images involved
     if (req.files) {
@@ -103,6 +99,17 @@ recipeRoutes.put('/update/:id', recipeUploader, async (req, res) => {
           location: preview[0].location,
           key: preview[0].key,
         };
+        if (oldPreview) {
+          s3bucket.deleteObject(
+            { Bucket: AWS_BUCKET_NAME, Key: oldPreview.key },
+            (err, data) => {
+              if (err) {
+                return res.status(500).json({ message: err });
+              }
+              console.log('Successfully deleted preview');
+            },
+          );
+        }
       }
       if (images) {
         const imgUrls = images
@@ -111,6 +118,19 @@ recipeRoutes.put('/update/:id', recipeUploader, async (req, res) => {
             key: image.key,
           }));
         update.images = imgUrls;
+        if (oldImages) {
+          oldImages.forEach(async (image) => {
+            await s3bucket.deleteObject(
+              { Bucket: AWS_BUCKET_NAME, Key: image.key },
+              (err, data) => {
+                if (err) {
+                  return res.status(500).json({ message: err });
+                }
+                console.log('Successfully deleted an image');
+              },
+            );
+          });
+        }
       }
     }
 
@@ -194,5 +214,90 @@ recipeRoutes.delete('/delete/:id', async (req, res) => {
     res.status(500).json({ message: err });
   }
 });
+
+// search query in URL
+recipeRoutes.post('/searchy', async (req, res) => {
+  try {
+    const { query } = req;
+    console.log(query.title);
+    // empty query -- get all recipes
+    if (Object.keys(query).length === 0) {
+      console.log(1);
+      const recipe = await Recipe.find();
+      return checkRes(res, recipe, true, 'Retrieved all recipes!');
+    }
+    // query has title and tags
+    if (query.title && query.tags && query.tags.length > 0) {
+      console.log(2);
+      const recipePattern = new RegExp(`${query.title}`);
+      const tags = [];
+      if (typeof query.tags === 'string') tags.push(new RegExp(`^${query.tags}$`, 'i'));
+      else {
+        query.tags.forEach((tag) => {
+          tags.push(new RegExp(`^${tag}$`, 'i'));
+        });
+      }
+      const recipe = await Recipe.find({
+        $or: [
+          { title: { $regex: recipePattern, $options: 'i' } },
+          { tags: { $all: tags } }],
+        // title: { $regex: recipePattern, $options: 'i' },
+        // tags: { $all: tags },
+      });
+      return checkRes(res, recipe, true, 'Got query!');
+    }
+    // query only has title
+    if (query.title) {
+      console.log(3);
+      const recipePattern = new RegExp(`${query.title}`);
+      const recipe = await Recipe.find({
+        title: { $regex: recipePattern, $options: 'i' },
+      });
+      return checkRes(res, recipe, true, 'Got query!');
+    }
+    // query only has tags
+    console.log(4);
+    const tags = [];
+    if (typeof query.tags === 'string') {
+      console.log(query.tags);
+      tags.push(new RegExp(`^${query.tags}$`, 'i'));
+    } else {
+      console.log('yes');
+      query.tags.forEach((tag) => {
+        tags.push(new RegExp(`^${tag}$`, 'i'));
+      });
+    }
+    const recipe = await Recipe.find({
+      tags: { $all: tags },
+    });
+    return checkRes(res, recipe, true, 'Got query!');
+  } catch (err) {
+    console.log('query did a BAD BAD');
+    res.status(500).json({ message: err });
+  }
+});
+
+// search query in body (dynamic?)
+// NOTE: since we are getting req.body, it is usually a POST req with header app/json
+// possible add on: a "loose" option that will change tags from AND to OR
+// might need to use $in or $ or instead of $and
+// recipeRoutes.get('/search', async (req, res) => {
+//   try {
+//     const recipePattern = new RegExp(`${req.body.query.title}`);
+//     const { tags } = req.body.query;
+
+//     const recipe = await Recipe.find({
+//       title: { $regex: recipePattern, $options: 'i' },
+//       $and: [{ tags: { $all: tags } }],
+//     });
+//     if (recipe) {
+//       res.status(200).json();
+//     } else {
+//       res.status(404).json({ message: 'No results' });
+//     }
+//   } catch (err) {
+//     res.status(500).json({ message: err });
+//   }
+// });
 
 export default recipeRoutes;
