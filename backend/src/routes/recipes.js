@@ -105,12 +105,16 @@ recipeRoutes.put('/update/:id', recipeUploader, async (req, res) => {
         };
       }
       if (images) {
-        const imgUrls = images
-          .map((image) => ({
-            location: image.location,
-            key: image.key,
-          }));
-        update.images = imgUrls;
+        if (images.length === 0 || !images[0]) {
+          update.images = [];
+        } else {
+          const imgUrls = images
+            .map((image) => ({
+              location: image.location,
+              key: image.key,
+            }));
+          update.images = imgUrls;
+        }
       }
     }
 

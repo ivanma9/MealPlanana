@@ -15,8 +15,8 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import { Link } from 'react-router-dom';
 import MuiAlert from '@material-ui/lab/Alert';
 import Rating from '@material-ui/lab/Rating';
-import { connect } from 'react-redux';
 import ReactHtmlParser from 'react-html-parser';
+import { connect } from 'react-redux';
 import { fetchRecipes } from '../../actions/recipes';
 
 const mapStateToProps = (state) => ({

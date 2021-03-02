@@ -1,15 +1,24 @@
-import React, { Component } from 'react';
 import {
-  Box, Button, TextField, Typography, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions,
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+  Typography,
 } from '@material-ui/core';
+import React, { Component } from 'react';
+
 import ChipInput from 'material-ui-chip-input';
+import { Editor } from '@tinymce/tinymce-react';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { Form } from 'react-bootstrap';
+import ImageUploader from 'react-images-upload';
 import Rating from '@material-ui/lab/Rating';
 import { connect } from 'react-redux';
-import { Editor } from '@tinymce/tinymce-react';
-import ImageUploader from 'react-images-upload';
-import { fetchRecipe, updateRecipe, deleteRecipe } from '../../actions/recipes';
+import { deleteRecipe, fetchRecipe, updateRecipe } from '../../actions/recipes';
 
 const sanitizeHtml = require('sanitize-html');
 
@@ -24,17 +33,23 @@ let editSuccessful = false;
 class EditRecipe extends Component {
   constructor(props) {
     super(props);
-    this.onChangeRecipeTitle = this.onChangeRecipeTitle.bind(this);
-    this.onChangeRecipeDescription = this.onChangeRecipeDescription.bind(this);
-    this.onAddRecipeIngredient = this.onAddRecipeIngredient.bind(this);
-    this.onDeleteRecipeIngredient = this.onDeleteRecipeIngredient.bind(this);
-    this.onChangeRecipeDirections = this.onChangeRecipeDirections.bind(this);
-    this.onAddRecipeTag = this.onAddRecipeTag.bind(this);
-    this.onDeleteRecipeTag = this.onDeleteRecipeTag.bind(this);
-    this.onChangeRecipePreview = this.onChangeRecipePreview.bind(this);
+
+    //* Checks to see if user reached edit recipe page by using button or manually changing the URL
+    //* If they manually changed the URL, they get redirected to the previous page
+    if (this.props.location.appState === undefined) {
+      this.props.history.goBack();
+    }
+
+    this.onChangeTitle = this.onChangeTitle.bind(this);
+    this.onChangeDescription = this.onChangeDescription.bind(this);
+    this.onAddIngredient = this.onAddIngredient.bind(this);
+    this.onDeleteIngredient = this.onDeleteIngredient.bind(this);
+    this.onChangeDirections = this.onChangeDirections.bind(this);
+    this.onAddTag = this.onAddTag.bind(this);
+    this.onDeleteTag = this.onDeleteTag.bind(this);
+    this.onChangePreview = this.onChangePreview.bind(this);
     // this.onChangeRecipeImage = this.onChangeRecipeImage.bind(this);
-    this.onChangeRecipeRating = this.onChangeRecipeRating.bind(this);
-    // this.onChangeRecipeAuthor = this.onChangeRecipeAuthor.bind(this);
+    this.onChangeRating = this.onChangeRating.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
 
     this.state = {
@@ -88,7 +103,19 @@ class EditRecipe extends Component {
     return formIsValid;
   }
 
-  onChangeRecipeTitle(e) {
+  handleDeleteDialogYes = () => {
+    this.setState({ deleteDialogOpen: false });
+    this.props.deleteRecipe(this.props.match.params.id);
+    this.props.history.push({
+      pathname: '/recipes',
+    });
+  }
+
+  handleDeleteDialogNo = () => {
+    this.setState({ deleteDialogOpen: false });
+  }
+
+  onChangeTitle(e) {
     this.setState({
       title: e.target.value,
     });
@@ -100,45 +127,45 @@ class EditRecipe extends Component {
     }
   }
 
-  onChangeRecipeDescription(e) {
+  onChangeDescription(e) {
     const content = e.target.getContent();
     this.setState({
       description: content,
     });
   }
 
-  onAddRecipeIngredient(chip) {
+  onAddIngredient(chip) {
     this.setState((prevState) => ({
       ingredients: [...prevState.ingredients, chip],
     }));
   }
 
-  onDeleteRecipeIngredient(chip, index) {
+  onDeleteIngredient(chip, index) {
     this.setState((prevState) => ({
       ingredients: prevState.ingredients.filter((_, i) => i !== index),
     }));
   }
 
-  onChangeRecipeDirections(e) {
+  onChangeDirections(e) {
     const content = e.target.getContent();
     this.setState({
       directions: content,
     });
   }
 
-  onAddRecipeTag(chip) {
+  onAddTag(chip) {
     this.setState((prevState) => ({
       tags: [...prevState.tags, chip],
     }));
   }
 
-  onDeleteRecipeTag(chip, index) {
+  onDeleteTag(chip, index) {
     this.setState((prevState) => ({
       tags: prevState.tags.filter((_, i) => i !== index),
     }));
   }
 
-  onChangeRecipePreview(picture) {
+  onChangePreview(picture) {
     if (picture === undefined || picture.length === 0) {
       this.setState({
         preview: [],
@@ -152,7 +179,7 @@ class EditRecipe extends Component {
     }
   }
 
-  onChangeRecipeRating(e) {
+  onChangeRating(e) {
     this.setState({
       ratingTotal: Number(e.target.value),
     });
@@ -218,18 +245,6 @@ class EditRecipe extends Component {
       });
   }
 
-  handleDeleteDialogYes = () => {
-    this.setState({ deleteDialogOpen: false });
-    this.props.deleteRecipe(this.props.match.params.id);
-    this.props.history.push({
-      pathname: '/recipes',
-    });
-  }
-
-  handleDeleteDialogNo = () => {
-    this.setState({ deleteDialogOpen: false });
-  }
-
   render() {
     const { error, loading, recipe } = this.props;
 
@@ -254,7 +269,7 @@ class EditRecipe extends Component {
 
           <Form.Group controlid="formGroupRecipePreview">
             <ImageUploader
-              onChange={this.onChangeRecipePreview}
+              onChange={this.onChangePreview}
               withPreview
               defaultImages={recipe.preview && [recipe.preview.location]}
               withIcon
@@ -274,7 +289,7 @@ class EditRecipe extends Component {
               variant="outlined"
               placeholder="Title"
               value={this.state.title}
-              onChange={this.onChangeRecipeTitle}
+              onChange={this.onChangeTitle}
               style={{ width: '100%' }}
             />
           </Form.Group>
@@ -298,7 +313,7 @@ class EditRecipe extends Component {
                 toolbar:
                   'undo redo | formatselect | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | help',
               }}
-              onChange={this.onChangeRecipeDescription}
+              onChange={this.onChangeDescription}
               apiKey="mqyujdmrjuid1rkbt26rbvqf8ga7ne6l23noy9kfvmg3q1x3"
             />
           </Form.Group>
@@ -313,8 +328,8 @@ class EditRecipe extends Component {
               // TODO: add "dataSource" array for autocompletion
               fullWidth
               value={this.state.ingredients}
-              onAdd={(chip) => this.onAddRecipeIngredient(chip)}
-              onDelete={(chip, index) => this.onDeleteRecipeIngredient(chip, index)}
+              onAdd={(chip) => this.onAddIngredient(chip)}
+              onDelete={(chip, index) => this.onDeleteIngredient(chip, index)}
             />
           </Form.Group>
 
@@ -337,7 +352,7 @@ class EditRecipe extends Component {
                 toolbar:
                   'undo redo | formatselect | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | help',
               }}
-              onChange={this.onChangeRecipeDirections}
+              onChange={this.onChangeDirections}
               apiKey="mqyujdmrjuid1rkbt26rbvqf8ga7ne6l23noy9kfvmg3q1x3"
             />
           </Form.Group>
@@ -352,8 +367,8 @@ class EditRecipe extends Component {
               // TODO: add "dataSource" array for autocompletion
               fullWidth
               value={this.state.tags}
-              onAdd={(chip) => this.onAddRecipeTag(chip)}
-              onDelete={(chip, index) => this.onDeleteRecipeTag(chip, index)}
+              onAdd={(chip) => this.onAddTag(chip)}
+              onDelete={(chip, index) => this.onDeleteTag(chip, index)}
             />
           </Form.Group>
 
@@ -370,7 +385,7 @@ class EditRecipe extends Component {
                 precision={0.5}
                 icon={<FavoriteIcon fontSize="inherit" />}
                 style={{ color: 'red' }}
-                onChange={this.onChangeRecipeRating}
+                onChange={this.onChangeRating}
               />
             </Box>
           </Form.Group>

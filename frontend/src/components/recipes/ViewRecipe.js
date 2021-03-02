@@ -1,29 +1,35 @@
 import {
-  CardMedia,
   Card,
+  CardMedia,
   Chip,
   Fab,
   Grid,
   Paper,
-  Typography,
+  Popover,
   Snackbar,
+  Typography,
+  // withStyles,
+  // withTheme,
 } from '@material-ui/core';
 import React, { Component } from 'react';
+import SimpleReactLightbox, { SRLWrapper } from 'simple-react-lightbox';
+// import { ThemeProvider } from '@material-ui/styles';
 
 import EditIcon from '@material-ui/icons/Edit';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import MuiAlert from '@material-ui/lab/Alert';
 import { Link } from 'react-router-dom';
+import MuiAlert from '@material-ui/lab/Alert';
 import Rating from '@material-ui/lab/Rating';
-import { connect } from 'react-redux';
 import ReactHtmlParser from 'react-html-parser';
-import SimpleReactLightbox, { SRLWrapper } from 'simple-react-lightbox';
+import { connect } from 'react-redux';
+import { GiLetterBomb } from 'react-icons/gi';
 import { fetchRecipe } from '../../actions/recipes';
 
 const mapStateToProps = (state) => ({
   recipe: state.recipe.item,
   loading: state.recipe.loading,
   error: state.recipe.error,
+  userID: state.session.userId,
 });
 
 class ViewRecipe extends Component {
@@ -33,6 +39,8 @@ class ViewRecipe extends Component {
       this.state = {
         open: this.props.location.appState.open,
         activeID: '',
+        cannotEditPopoverOpen: false,
+        cannotEditPopoverAnchorElement: null,
       };
     } else {
       this.state = {
@@ -48,6 +56,7 @@ class ViewRecipe extends Component {
 
   render() {
     const { error, loading, recipe } = this.props;
+    // const classes = useStyles();
 
     if (error) {
       return (
@@ -79,17 +88,69 @@ class ViewRecipe extends Component {
 
     const checkIfCurrentCard = (currentID) => this.state.activeID === currentID;
 
+    const handleEditButtonClicked = (e) => {
+      if (this.props.userID !== this.props.recipe.author) {
+        this.setState({
+          cannotEditPopoverOpen: true,
+          cannotEditPopoverAnchorElement: e.currentTarget,
+        });
+      } else {
+        this.props.history.push({
+          pathname: `/recipes/edit/${this.props.match.params.id}`,
+          appState: {
+            userUsedButton: true,
+          },
+        });
+      }
+    };
+
+    // const handlePopoverOpen = (e) => { this.setState({ cannotEditPopoverAnchorElement: e.currentTarget }); console.log('enter'); };
+
+    const handlePopoverClosed = () => {
+      this.setState({
+        cannotEditPopoverOpen: false,
+        cannotEditPopoverAnchorElement: null,
+      });
+    };
+
+    // const hi = Boolean(this.state.cannotEditPopoverAnchorElement);
+
     return (
       <div>
-        <Link
+        <Popover
+          open={this.state.cannotEditPopoverOpen || false}
+          // open={hi}
+          anchorEl={this.state.cannotEditPopoverAnchorElement}
+          onClose={handlePopoverClosed}
+          anchorOrigin={{
+            vertical: 'center',
+            horizontal: 'left',
+          }}
+          transformOrigin={{
+            vertical: 'center',
+            horizontal: 'right',
+          }}
+          // disableRestoreFocus
+        >
+          <Typography variant="button" style={{ paddingTop: '40rem', padding: '1rem' }}>You are not the author of this recipe</Typography>
+        </Popover>
+
+        {/* <Link
           to={`/recipes/edit/${recipe._id}`}
           style={{ color: 'black', textDecoration: 'none' }}
+        > */}
+        <Fab
+          onClick={handleEditButtonClicked}
+          // onMouseEnter={handlePopoverOpen}
+          // onMouseOut={handlePopoverClosed}
+          color="primary"
+          variant="extended"
+          style={{ position: 'fixed', bottom: '2rem', right: '2rem' }}
         >
-          <Fab color="primary" variant="extended" style={{ position: 'fixed', bottom: '2rem', right: '2rem' }}>
-            <EditIcon />
-            Edit
-          </Fab>
-        </Link>
+          <EditIcon />
+          Edit
+        </Fab>
+        {/* </Link> */}
 
         <Snackbar
           autoHideDuration={6000}
@@ -226,10 +287,6 @@ class ViewRecipe extends Component {
                             key={image.key}
                             alt=""
                             height="250rem"
-                            zIndex={10}
-                            style={{
-                              zIndex: 10,
-                            }}
                           />
                         </Card>
                       </a>
@@ -240,7 +297,7 @@ class ViewRecipe extends Component {
             </SimpleReactLightbox>
 
             {/* Author */}
-            <Grid container style={{ marginTop: '5rem', justifyContent: 'center' }}>
+            <Grid container style={{ margin: '5rem', justifyContent: 'center' }}>
               <Paper
                 elevation={3}
                 style={{
@@ -269,3 +326,4 @@ export default connect(
   // mapDispatchToProps,
   { fetchRecipe },
 )(ViewRecipe);
+// )(withStyles(styles, { withTheme: true })(ViewRecipe));

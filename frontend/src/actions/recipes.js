@@ -103,7 +103,7 @@ export const updateRecipe = (recipe, id) => async (dispatch) => {
     formData.append('preview', recipe.preview);
   }
 
-  if (recipe.images.length !== 0) {
+  if (recipe.images && recipe.images.length !== 0) {
     recipe.images.forEach((item) => formData.append('images[]', item));
   } else {
     formData.append('images[]', []);
