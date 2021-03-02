@@ -1,29 +1,29 @@
 import {
-  CardMedia,
   Card,
+  CardMedia,
   Chip,
   Fab,
   Grid,
   Paper,
-  Typography,
+  Popover,
   Snackbar,
+  Typography,
 } from '@material-ui/core';
 import React, { Component } from 'react';
+import SimpleReactLightbox, { SRLWrapper } from 'simple-react-lightbox';
 
 import EditIcon from '@material-ui/icons/Edit';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import MuiAlert from '@material-ui/lab/Alert';
-import { Link } from 'react-router-dom';
 import Rating from '@material-ui/lab/Rating';
-import { connect } from 'react-redux';
 import ReactHtmlParser from 'react-html-parser';
-import SimpleReactLightbox, { SRLWrapper } from 'simple-react-lightbox';
-import { fetchRecipe } from '../../actions/recipes';
+import { connect } from 'react-redux';
 
 const mapStateToProps = (state) => ({
   recipe: state.recipe.item,
   loading: state.recipe.loading,
   error: state.recipe.error,
+  userID: state.session.userId,
 });
 
 class ViewRecipe extends Component {
@@ -33,17 +33,20 @@ class ViewRecipe extends Component {
       this.state = {
         open: this.props.location.appState.open,
         activeID: '',
+
+        cannotEditPopoverOpen: false,
+        cannotEditPopoverAnchorElement: null,
+
+        addRatingPopoverOpen: false,
+        addRatingPopoverAnchorElement: null,
+
+        userRating: null,
       };
     } else {
       this.state = {
         open: false,
       };
     }
-  }
-
-  componentDidMount() {
-    const { id } = this.props.match.params;
-    this.props.fetchRecipe(id);
   }
 
   render() {
@@ -79,17 +82,73 @@ class ViewRecipe extends Component {
 
     const checkIfCurrentCard = (currentID) => this.state.activeID === currentID;
 
+    const handleEditButtonClicked = (e) => {
+      if (this.props.userID !== this.props.recipe.author) {
+        this.setState({
+          cannotEditPopoverOpen: true,
+          cannotEditPopoverAnchorElement: e.currentTarget,
+        });
+      } else {
+        this.props.history.push({
+          pathname: '/recipes/edit',
+          appState: {
+            userUsedButton: true,
+          },
+        });
+      }
+    };
+
+    const handleEditPopoverClosed = () => {
+      this.setState({
+        cannotEditPopoverOpen: false,
+        cannotEditPopoverAnchorElement: null,
+      });
+    };
+
+    const handleAddRatingButtonClicked = (e) => {
+      this.setState({ addRatingPopoverOpen: true, addRatingPopoverAnchorElement: e.currentTarget });
+    };
+
+    const handleAddRatingPopoverClosed = () => {
+      this.setState({
+        addRatingPopoverOpen: false,
+        addRatingPopoverAnchorElement: null,
+      });
+    };
+
+    const onChangeRating = (e) => {
+      this.setState({
+        userRating: Number(e.target.value),
+      });
+    };
+
     return (
       <div>
-        <Link
-          to={`/recipes/edit/${recipe._id}`}
-          style={{ color: 'black', textDecoration: 'none' }}
+        <Popover
+          open={this.state.cannotEditPopoverOpen || false}
+          anchorEl={this.state.cannotEditPopoverAnchorElement}
+          onClose={handleEditPopoverClosed}
+          anchorOrigin={{
+            vertical: 'center',
+            horizontal: 'left',
+          }}
+          transformOrigin={{
+            vertical: 'center',
+            horizontal: 'right',
+          }}
         >
-          <Fab color="primary" variant="extended" style={{ position: 'fixed', bottom: '2rem', right: '2rem' }}>
-            <EditIcon />
-            Edit
-          </Fab>
-        </Link>
+          <Typography variant="button" style={{ paddingTop: '40rem', padding: '1rem' }}>You are not the author of this recipe</Typography>
+        </Popover>
+
+        <Fab
+          onClick={handleEditButtonClicked}
+          color="primary"
+          variant="extended"
+          style={{ position: 'fixed', bottom: '2rem', right: '2rem' }}
+        >
+          <EditIcon />
+          Edit
+        </Fab>
 
         <Snackbar
           autoHideDuration={6000}
@@ -98,7 +157,6 @@ class ViewRecipe extends Component {
         >
           <MuiAlert elevation={6} variant="filled" severity="success" onClose={() => { this.setState({ open: false }); }}>Recipe successfully edited!</MuiAlert>
         </Snackbar>
-
         {recipe.preview
           && (
           <CardMedia
@@ -189,18 +247,53 @@ class ViewRecipe extends Component {
               <Grid item sm={12} md={2}>
                 <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}> Rating: </Typography>
               </Grid>
-              <Grid item>
+              <Grid item md={2}>
                 <Rating
                   name="hearts"
                   defaultValue={0}
-                  value={Number(recipe.ratingTotal)}
+                  value={Number(recipe.userRating)}
                   precision={0.2}
                   icon={<FavoriteIcon fontSize="inherit" />}
                   readOnly
-                  style={{ color: 'red', marginTop: '5%' }}
+                  style={{ color: 'red', marginTop: '2%' }}
                 />
               </Grid>
+              <Grid item md={2}>
+                <Chip label="Add rating" icon={<FavoriteIcon />} clickable color="secondary" onClick={handleAddRatingButtonClicked} style={{ marginTop: '1%' }} />
+              </Grid>
             </Grid>
+
+            <Popover
+              open={this.state.addRatingPopoverOpen || false}
+              anchorEl={this.state.addRatingPopoverAnchorElement}
+              onClose={handleAddRatingPopoverClosed}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'center',
+              }}
+              transformOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center',
+              }}
+            >
+              {/* FIXME: mouse hover on rating isn't aligned properly */}
+              <Rating
+                name="hearts"
+                defaultValue={0}
+                value={Number(this.state.userRating)}
+                precision={0.2}
+                icon={<FavoriteIcon fontSize="inherit" />}
+                onChange={onChangeRating}
+                style={{
+                  color: 'red',
+                  marginTop: '2%',
+                  paddingLeft: '1rem',
+                  paddingRight: '1rem',
+                  paddingTop: '0.5rem',
+                  paddingBottom: '0.3rem',
+                }}
+              />
+            </Popover>
 
             <SimpleReactLightbox>
               <SRLWrapper options={options}>
@@ -226,10 +319,6 @@ class ViewRecipe extends Component {
                             key={image.key}
                             alt=""
                             height="250rem"
-                            zIndex={10}
-                            style={{
-                              zIndex: 10,
-                            }}
                           />
                         </Card>
                       </a>
@@ -240,7 +329,7 @@ class ViewRecipe extends Component {
             </SimpleReactLightbox>
 
             {/* Author */}
-            <Grid container style={{ marginTop: '5rem', justifyContent: 'center' }}>
+            <Grid container style={{ margin: '5rem', justifyContent: 'center' }}>
               <Paper
                 elevation={3}
                 style={{
@@ -266,6 +355,4 @@ class ViewRecipe extends Component {
 
 export default connect(
   mapStateToProps,
-  // mapDispatchToProps,
-  { fetchRecipe },
 )(ViewRecipe);

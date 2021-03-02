@@ -26,9 +26,9 @@ export default () => (
           render={({ match: { url } }) => (
             <>
               <ProtectedRoute path={`${url}/`} component={RecipesList} exact />
-              <ProtectedRoute path={`${url}/view/:id`} component={ViewRecipe} />
+              <ProtectedRoute path={`${url}/view`} component={ViewRecipe} />
               <ProtectedRoute path={`${url}/create`} component={CreateRecipe} />
-              <ProtectedRoute path={`${url}/edit/:id`} component={EditRecipe} />
+              <ProtectedRoute path={`${url}/edit`} component={EditRecipe} />
             </>
           )}
         />

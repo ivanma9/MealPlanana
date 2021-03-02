@@ -1,5 +1,19 @@
 import * as apiUtil from '../util/recipes';
 
+export const ADD_SELECTED_RECIPE_TO_STATE = 'ADD_SELECTED_RECIPE';
+
+export function addSelectedRecipeToState(id) {
+  return (dispatch, getState) => {
+    const { recipeList } = getState();
+    const recipe = recipeList.items.find((x) => x._id === id);
+
+    dispatch({
+      type: ADD_SELECTED_RECIPE_TO_STATE,
+      payload: { recipe },
+    });
+  };
+}
+
 export const FETCH_RECIPES_BEGIN = 'FETCH_RECIPES_BEGIN';
 export const FETCH_RECIPES_SUCCESS = 'FETCH_RECIPES_SUCCESS';
 export const FETCH_RECIPES_FAILURE = 'FETCH_RECIPES_FAILURE';
@@ -26,31 +40,31 @@ export const fetchRecipes = () => async (dispatch) => {
   return dispatch(fetchRecipesFailure(data));
 };
 
-export const FETCH_RECIPE_BEGIN = 'FETCH_RECIPE_BEGIN';
-export const FETCH_RECIPE_SUCCESS = 'FETCH_RECIPE_SUCCESS';
-export const FETCH_RECIPE_FAILURE = 'FETCH_RECIPE_FAILURE';
+// export const FETCH_RECIPE_BEGIN = 'FETCH_RECIPE_BEGIN';
+// export const FETCH_RECIPE_SUCCESS = 'FETCH_RECIPE_SUCCESS';
+// export const FETCH_RECIPE_FAILURE = 'FETCH_RECIPE_FAILURE';
 
-export const fetchRecipeBegin = () => ({
-  type: FETCH_RECIPE_BEGIN,
-});
-export const fetchRecipeSuccess = (recipe) => ({
-  type: FETCH_RECIPE_SUCCESS,
-  payload: { recipe },
-});
-export const fetchRecipeFailure = (error) => ({
-  type: FETCH_RECIPE_FAILURE,
-  payload: { error },
-});
+// export const fetchRecipeBegin = () => ({
+//   type: FETCH_RECIPE_BEGIN,
+// });
+// export const fetchRecipeSuccess = (recipe) => ({
+//   type: FETCH_RECIPE_SUCCESS,
+//   payload: { recipe },
+// });
+// export const fetchRecipeFailure = (error) => ({
+//   type: FETCH_RECIPE_FAILURE,
+//   payload: { error },
+// });
 
-export const fetchRecipe = (id) => async (dispatch) => {
-  dispatch(fetchRecipeBegin());
-  const response = await apiUtil.fetchRecipe(id);
-  const data = await response.json();
-  if (response.ok) {
-    return dispatch(fetchRecipeSuccess(data));
-  }
-  return dispatch(fetchRecipeFailure(data));
-};
+// export const fetchRecipe = (id) => async (dispatch) => {
+//   dispatch(fetchRecipeBegin());
+//   const response = await apiUtil.fetchRecipe(id);
+//   const data = await response.json();
+//   if (response.ok) {
+//     return dispatch(fetchRecipeSuccess(data));
+//   }
+//   return dispatch(fetchRecipeFailure(data));
+// };
 
 export const CREATE_RECIPE_BEGIN = 'CREATE_RECIPE_BEGIN';
 export const CREATE_RECIPE_SUCCESS = 'CREATE_RECIPE_SUCCESS';
@@ -103,7 +117,7 @@ export const updateRecipe = (recipe, id) => async (dispatch) => {
     formData.append('preview', recipe.preview);
   }
 
-  if (recipe.images.length !== 0) {
+  if (recipe.images && recipe.images.length !== 0) {
     recipe.images.forEach((item) => formData.append('images[]', item));
   } else {
     formData.append('images[]', []);
@@ -148,9 +162,7 @@ export const deleteRecipeFailure = (error) => ({
 export const deleteRecipe = (id) => async (dispatch) => {
   dispatch(deleteRecipeBegin());
   const response = await apiUtil.deleteRecipe(id);
-  console.log(response);
   const data = await response.json();
-  console.log(data);
   if (response.ok) {
     return dispatch(deleteRecipeSuccess());
   }
