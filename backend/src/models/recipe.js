@@ -5,10 +5,14 @@ const RecipeSchema = new mongoose.Schema({
     type: String,
     // required: true,
   },
-  author: { // either Default, User-created, or Unknown
-  //   type: String,
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+  author: {
+    type: {
+      id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+      username: String,
+    },
   },
   ratingTotal: { // total score of rating
     type: Number,
@@ -27,9 +31,7 @@ const RecipeSchema = new mongoose.Schema({
     type: [String],
   },
   directions: {
-    // type: [String],
     type: String,
-    // required: true,
   },
   description: {
     type: String,
