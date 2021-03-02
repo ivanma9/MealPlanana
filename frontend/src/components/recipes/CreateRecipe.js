@@ -10,6 +10,7 @@ import Rating from '@material-ui/lab/Rating';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { createRecipe } from '../../actions/recipes';
 
 const sanitizeHtml = require('sanitize-html');
@@ -146,7 +147,7 @@ class CreateRecipe extends Component {
     });
   }
 
-  onSubmit(e) {
+  onSubmit() {
     if (!this.handleValidation()) {
       console.log('Form invalid');
       return;
@@ -356,3 +357,33 @@ export default connect(
   mapStateToProps,
   { createRecipe },
 )(CreateRecipe);
+
+CreateRecipe.propTypes = {
+  session: PropTypes.shape({
+    email: PropTypes.string,
+    meals: PropTypes.arrayOf(PropTypes.object),
+    ratings: PropTypes.arrayOf(PropTypes.object),
+    recipes: PropTypes.arrayOf(PropTypes.object),
+    userId: PropTypes.string.isRequired,
+    username: PropTypes.string,
+  }).isRequired,
+  createRecipe: PropTypes.func,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+  error(props, propName, componentName) {
+    try {
+      JSON.parse(props[propName]);
+      return null;
+    } catch (e) {
+      return new Error(`Invalid prop \`${propName}\` supplied to \`${componentName}\`. Validation failed.`);
+    }
+  },
+  loading: PropTypes.bool,
+};
+
+CreateRecipe.defaultProps = {
+  createRecipe: () => {},
+  error: null,
+  loading: false,
+};

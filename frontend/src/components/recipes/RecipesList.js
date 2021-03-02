@@ -1,3 +1,5 @@
+/* eslint no-undef: 0 */ // --> OFF
+
 // TODO: Check to see if global state is updated upon creation or updating of a recipe and if you
 //       can avoid fetching all recipes each time you go to this page
 
@@ -17,10 +19,12 @@ import AddIcon from '@material-ui/icons/Add';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { Link } from 'react-router-dom';
 import MuiAlert from '@material-ui/lab/Alert';
+import PropTypes from 'prop-types';
 import Rating from '@material-ui/lab/Rating';
 import ReactHtmlParser from 'react-html-parser';
 import { connect } from 'react-redux';
-import { fetchRecipes, addSelectedRecipeToState } from '../../actions/recipes';
+import { Schema } from 'mongoose';
+import { addSelectedRecipeToState, fetchRecipes } from '../../actions/recipes';
 
 const mapStateToProps = (state) => ({
   // * recipeList comes from the root reducer definition
@@ -73,6 +77,9 @@ function Recipe(props) {
               style={{
                 backgroundColor: 'lawngreen', marginLeft: '1%', marginRight: '1%', marginBottom: '2%',
               }}
+              // TODO: change i to be a unique identifier
+              // can use:
+              //   `const myItemsWithIds = myItems.map((item, index) => { ...item, myId: index });`
               key={i}
             />
           ))}
@@ -119,10 +126,10 @@ class RecipesList extends Component {
 
   recipeList() {
     return this.props.recipes.map(
-      (currentRecipe, i) => (
+      (currentRecipe) => (
         <Recipe
           recipe={currentRecipe}
-          key={i}
+          key={currentRecipe._id}
           onMouseOver={this.onMouseOver}
           onMouseOut={this.onMouseOut}
           checkIfCurrentCard={this.checkIfCurrentCard}
@@ -189,3 +196,65 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps,
 )(RecipesList);
+
+// TODO: check if this makes all these props exist with default values if none is given.
+//       Would have to change the check if preview exists, for example.
+Recipe.propTypes = {
+  onMouseOver: PropTypes.func,
+  onMouseOut: PropTypes.func,
+  checkIfCurrentCard: PropTypes.func,
+  addRecipeToState: PropTypes.func,
+  recipe: PropTypes.shape({
+    _id: Schema.Types.ObjectId.isRequired,
+    preview: PropTypes.shape({
+      key: PropTypes.string,
+      location: PropTypes.string,
+    }),
+    title: PropTypes.string.isRequired,
+    description: PropTypes.string,
+    ratingTotal: PropTypes.number,
+    tags: PropTypes.arrayOf(PropTypes.string),
+  }),
+};
+Recipe.defaultProps = {
+  onMouseOver: () => {},
+  onMouseOut: () => {},
+  checkIfCurrentCard: () => {},
+  addRecipeToState: () => {},
+  recipe: PropTypes.shape({
+    preview: null,
+    description: '',
+    ratingTotal: 0,
+    tags: [],
+  }),
+};
+
+RecipesList.propTypes = {
+  fetchRecipes: PropTypes.func,
+  location: PropTypes.shape({
+    appState: PropTypes.shape({
+      open: PropTypes.bool,
+    }),
+  }),
+  // TODO: eventually change this to PropTypes.shape({}) and add recipe validation
+  //       once you take the recipe out of the global state
+  recipes: PropTypes.arrayOf(PropTypes.object),
+  addRecipeToState: PropTypes.func,
+  error: PropTypes.shape({
+    message: PropTypes.string,
+  }),
+  loading: PropTypes.bool,
+};
+
+RecipesList.defaultProps = {
+  fetchRecipes: () => {},
+  location: {
+    appState: {
+      open: false,
+    },
+  },
+  recipes: [],
+  addRecipeToState: () => {},
+  error: null,
+  loading: false,
+};

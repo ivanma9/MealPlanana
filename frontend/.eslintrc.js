@@ -26,5 +26,6 @@ module.exports = {
     'no-console': 'off',
     'array-callback-return': 'off',
     'react/jsx-fragments': 'off',
+    'no-underscore-dangle': [2, { allow: ['_id'] }],
   },
 };
