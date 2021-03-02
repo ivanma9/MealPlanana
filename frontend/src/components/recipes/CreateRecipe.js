@@ -3,13 +3,13 @@ import React, { Component } from 'react';
 import Box from '@material-ui/core/Box';
 import ButtonMUI from '@material-ui/core/Button';
 import ChipInput from 'material-ui-chip-input';
+import { Editor } from '@tinymce/tinymce-react';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { Form } from 'react-bootstrap';
 import Rating from '@material-ui/lab/Rating';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { connect } from 'react-redux';
-import { Editor } from '@tinymce/tinymce-react';
 import { createRecipe } from '../../actions/recipes';
 
 const sanitizeHtml = require('sanitize-html');
@@ -18,6 +18,7 @@ const mapStateToProps = (state) => ({
   loading: state.createRecipe.loading,
   success: state.createRecipe.success,
   error: state.createRecipe.error,
+  session: state.session,
 });
 
 let createSuccessful = false;
@@ -34,23 +35,28 @@ class CreateRecipe extends Component {
       tags: [],
       // recipe_image: '',
       ratingTotal: 0,
-      // recipe_author: '',
+      authorID: '',
 
       titleIsEmpty: false,
       // directionsIsEmpty: false,
     };
 
-    this.onChangeRecipeTitle = this.onChangeRecipeTitle.bind(this);
-    this.onChangeRecipeDescription = this.onChangeRecipeDescription.bind(this);
-    this.onAddRecipeIngredient = this.onAddRecipeIngredient.bind(this);
-    this.onDeleteRecipeIngredient = this.onDeleteRecipeIngredient.bind(this);
-    this.onChangeRecipeDirections = this.onChangeRecipeDirections.bind(this);
-    this.onAddRecipeTag = this.onAddRecipeTag.bind(this);
-    this.onDeleteRecipeTag = this.onDeleteRecipeTag.bind(this);
+    this.onChangeTitle = this.onChangeTitle.bind(this);
+    this.onChangeDescription = this.onChangeDescription.bind(this);
+    this.onAddIngredient = this.onAddIngredient.bind(this);
+    this.onDeleteIngredient = this.onDeleteIngredient.bind(this);
+    this.onChangeDirections = this.onChangeDirections.bind(this);
+    this.onAddTag = this.onAddTag.bind(this);
+    this.onDeleteTag = this.onDeleteTag.bind(this);
     // this.onChangeRecipeImage = this.onChangeRecipeImage.bind(this);
-    this.onChangeRecipeRating = this.onChangeRecipeRating.bind(this);
-    // this.onChangeRecipeAuthor = this.onChangeRecipeAuthor.bind(this);
+    this.onChangeRating = this.onChangeRating.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+  }
+
+  componentDidMount() {
+    this.setState({
+      authorID: this.props.session.userId,
+    });
   }
 
   handleValidation() {
@@ -72,7 +78,7 @@ class CreateRecipe extends Component {
     return formIsValid;
   }
 
-  onChangeRecipeTitle(e) {
+  onChangeTitle(e) {
     this.setState({
       title: e.target.value,
     });
@@ -84,26 +90,26 @@ class CreateRecipe extends Component {
     }
   }
 
-  onChangeRecipeDescription(e) {
+  onChangeDescription(e) {
     const content = e.target.getContent();
     this.setState({
       description: content,
     });
   }
 
-  onAddRecipeIngredient(chip) {
+  onAddIngredient(chip) {
     this.setState((prevState) => ({
       ingredients: [...prevState.ingredients, chip],
     }));
   }
 
-  onDeleteRecipeIngredient(chip, index) {
+  onDeleteIngredient(chip, index) {
     this.setState((prevState) => ({
       ingredients: prevState.ingredients.filter((_, i) => i !== index),
     }));
   }
 
-  onChangeRecipeDirections(e) {
+  onChangeDirections(e) {
     const content = e.target.getContent();
     this.setState({
       directions: content,
@@ -116,13 +122,13 @@ class CreateRecipe extends Component {
     // }
   }
 
-  onAddRecipeTag(chip) {
+  onAddTag(chip) {
     this.setState((prevState) => ({
       tags: [...prevState.tags, chip],
     }));
   }
 
-  onDeleteRecipeTag(chip, index) {
+  onDeleteTag(chip, index) {
     this.setState((prevState) => ({
       tags: prevState.tags.filter((_, i) => i !== index),
     }));
@@ -134,17 +140,11 @@ class CreateRecipe extends Component {
   //   });
   // }
 
-  onChangeRecipeRating(e) {
+  onChangeRating(e) {
     this.setState({
       ratingTotal: e.target.value,
     });
   }
-
-  // onChangeRecipeAuthor(e) {
-  //   this.setState({
-  //     recipe_author: e.target.value,
-  //   });
-  // }
 
   onSubmit(e) {
     if (!this.handleValidation()) {
@@ -154,6 +154,7 @@ class CreateRecipe extends Component {
 
     createSuccessful = true;
 
+    console.log(this.props.session.userId);
     console.log('Form submitted:');
     console.log(`Recipe Title: ${this.state.title}`);
     console.log(`Recipe Description: ${this.state.description}`);
@@ -162,7 +163,7 @@ class CreateRecipe extends Component {
     console.log(`Recipe Tags: ${this.state.tags}`);
     // console.log(`Recipe Image: ${this.state.recipe_image}`);
     console.log(`Recipe Rating: ${this.state.ratingTotal}`);
-    // console.log(`Recipe Author: ${this.state.recipe_author}`);
+    console.log(`Recipe Author: ${this.state.authorID}`);
 
     // TODO: more advanced sanitizing. Error if user trying to input bad data and don't post to db?
     const newRecipe = {
@@ -173,12 +174,10 @@ class CreateRecipe extends Component {
       tags: this.state.tags,
       // recipe_image: this.state.recipe_image,
       ratingTotal: this.state.ratingTotal,
-      // recipe_author: this.state.recipe_author,
+      author: this.state.authorID,
     };
 
     console.log(newRecipe);
-
-    this.props.createRecipe(newRecipe);
 
     this.setState({
       title: '',
@@ -188,19 +187,22 @@ class CreateRecipe extends Component {
       tags: [],
       // recipe_image: '',
       ratingTotal: 0,
-      // recipe_author: '',
+      authorID: '',
     });
 
-    this.props.history.push({
-      pathname: '/recipes',
-      appState: {
-        open: createSuccessful,
-      },
-    });
+    this.props.createRecipe(newRecipe)
+      .then(() => {
+        this.props.history.push({
+          pathname: '/recipes',
+          appState: {
+            open: createSuccessful,
+          },
+        });
+      });
   }
 
   render() {
-    const { error, loading } = this.props;
+    const { error, loading, session } = this.props;
 
     if (error) {
       return (
@@ -232,7 +234,7 @@ class CreateRecipe extends Component {
               variant="outlined"
               placeholder="Title"
               value={this.state.title}
-              onChange={this.onChangeRecipeTitle}
+              onChange={this.onChangeTitle}
               style={{ width: '100%' }}
             />
           </Form.Group>
@@ -256,7 +258,7 @@ class CreateRecipe extends Component {
                 toolbar:
                   'undo redo | formatselect | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | help',
               }}
-              onChange={this.onChangeRecipeDescription}
+              onChange={this.onChangeDescription}
               apiKey="mqyujdmrjuid1rkbt26rbvqf8ga7ne6l23noy9kfvmg3q1x3"
             />
           </Form.Group>
@@ -270,8 +272,8 @@ class CreateRecipe extends Component {
               // TODO: add "dataSource" array for autocompletion
               fullWidth
               value={this.state.ingredients}
-              onAdd={(chip) => this.onAddRecipeIngredient(chip)}
-              onDelete={(chip, index) => this.onDeleteRecipeIngredient(chip, index)}
+              onAdd={(chip) => this.onAddIngredient(chip)}
+              onDelete={(chip, index) => this.onDeleteIngredient(chip, index)}
             />
           </Form.Group>
 
@@ -295,7 +297,7 @@ class CreateRecipe extends Component {
                 toolbar:
                   'undo redo | formatselect | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | help',
               }}
-              onChange={this.onChangeRecipeDirections}
+              onChange={this.onChangeDirections}
               apiKey="mqyujdmrjuid1rkbt26rbvqf8ga7ne6l23noy9kfvmg3q1x3"
             />
           </Form.Group>
@@ -310,8 +312,8 @@ class CreateRecipe extends Component {
               // TODO: add "dataSource" array for autocompletion
               fullWidth
               value={this.state.tags}
-              onAdd={(chip) => this.onAddRecipeTag(chip)}
-              onDelete={(chip, index) => this.onDeleteRecipeTag(chip, index)}
+              onAdd={(chip) => this.onAddTag(chip)}
+              onDelete={(chip, index) => this.onDeleteTag(chip, index)}
             />
           </Form.Group>
           {/* TODO: add image preview and upload ability */}
@@ -329,7 +331,7 @@ class CreateRecipe extends Component {
                 precision={0.5}
                 icon={<FavoriteIcon fontSize="inherit" />}
                 style={{ color: 'red' }}
-                onChange={this.onChangeRecipeRating}
+                onChange={this.onChangeRating}
               />
             </Box>
           </Form.Group>

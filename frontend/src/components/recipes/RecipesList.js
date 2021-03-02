@@ -1,3 +1,6 @@
+// TODO: Check to see if global state is updated upon creation or updating of a recipe and if you
+//       can avoid fetching all recipes each time you go to this page
+
 import {
   Card,
   CardContent,
@@ -15,9 +18,9 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import { Link } from 'react-router-dom';
 import MuiAlert from '@material-ui/lab/Alert';
 import Rating from '@material-ui/lab/Rating';
-import { connect } from 'react-redux';
 import ReactHtmlParser from 'react-html-parser';
-import { fetchRecipes } from '../../actions/recipes';
+import { connect } from 'react-redux';
+import { fetchRecipes, addSelectedRecipeToState } from '../../actions/recipes';
 
 const mapStateToProps = (state) => ({
   // * recipeList comes from the root reducer definition
@@ -28,19 +31,20 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   fetchRecipes: () => dispatch(fetchRecipes()),
+  addRecipeToState: (id) => dispatch(addSelectedRecipeToState(id)),
 });
-// or comment this out and add { fetchRecipes } to the connect function.
 
 function Recipe(props) {
   return (
     <Link
-      to={`/recipes/view/${props.recipe._id}`}
+      to="/recipes/view"
       style={{ color: 'black', textDecoration: 'none' }}
     >
       <Card
         raised={props.checkIfCurrentCard(props.recipe._id)}
         onMouseOver={() => props.onMouseOver(props.recipe._id)}
         onMouseLeave={() => props.onMouseOut()}
+        onClick={() => props.addRecipeToState(props.recipe._id)}
         style={{
           width: '18rem', borderRadius: '10px', padding: '1rem', margin: '2rem',
         }}
@@ -122,6 +126,7 @@ class RecipesList extends Component {
           onMouseOver={this.onMouseOver}
           onMouseOut={this.onMouseOut}
           checkIfCurrentCard={this.checkIfCurrentCard}
+          addRecipeToState={this.props.addRecipeToState}
         />
       ),
     );
@@ -174,9 +179,6 @@ class RecipesList extends Component {
           // spacing={3}
         >
           {this.recipeList()}
-          {/* {recipes.map(
-            (currentRecipe, i) => <Recipe recipe={currentRecipe} key={i} raised={false} />,
-          )} */}
         </Grid>
       </div>
     );
@@ -186,5 +188,4 @@ class RecipesList extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-  // { fetchRecipes },
 )(RecipesList);

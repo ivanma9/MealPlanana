@@ -112,12 +112,16 @@ recipeRoutes.put('/update/:id', recipeUploader, async (req, res) => {
         }
       }
       if (images) {
-        const imgUrls = images
-          .map((image) => ({
-            location: image.location,
-            key: image.key,
-          }));
-        update.images = imgUrls;
+        if (images.length === 0 || !images[0]) {
+          update.images = [];
+        } else {
+          const imgUrls = images
+            .map((image) => ({
+              location: image.location,
+              key: image.key,
+            }));
+          update.images = imgUrls;
+        }
         if (oldImages) {
           oldImages.forEach(async (image) => {
             await s3bucket.deleteObject(
@@ -216,59 +220,23 @@ recipeRoutes.delete('/delete/:id', async (req, res) => {
 });
 
 // search query in URL
-recipeRoutes.post('/searchy', async (req, res) => {
+recipeRoutes.post('/search', async (req, res) => {
   try {
-    const { query } = req;
-    console.log(query.title);
+    const { query } = req.body;
     // empty query -- get all recipes
-    if (Object.keys(query).length === 0) {
+    if (!query) {
       console.log(1);
       const recipe = await Recipe.find();
       return checkRes(res, recipe, true, 'Retrieved all recipes!');
     }
-    // query has title and tags
-    if (query.title && query.tags && query.tags.length > 0) {
-      console.log(2);
-      const recipePattern = new RegExp(`${query.title}`);
-      const tags = [];
-      if (typeof query.tags === 'string') tags.push(new RegExp(`^${query.tags}$`, 'i'));
-      else {
-        query.tags.forEach((tag) => {
-          tags.push(new RegExp(`^${tag}$`, 'i'));
-        });
-      }
-      const recipe = await Recipe.find({
-        $or: [
-          { title: { $regex: recipePattern, $options: 'i' } },
-          { tags: { $all: tags } }],
-        // title: { $regex: recipePattern, $options: 'i' },
-        // tags: { $all: tags },
-      });
-      return checkRes(res, recipe, true, 'Got query!');
-    }
-    // query only has title
-    if (query.title) {
-      console.log(3);
-      const recipePattern = new RegExp(`${query.title}`);
-      const recipe = await Recipe.find({
-        title: { $regex: recipePattern, $options: 'i' },
-      });
-      return checkRes(res, recipe, true, 'Got query!');
-    }
-    // query only has tags
-    console.log(4);
-    const tags = [];
-    if (typeof query.tags === 'string') {
-      console.log(query.tags);
-      tags.push(new RegExp(`^${query.tags}$`, 'i'));
-    } else {
-      console.log('yes');
-      query.tags.forEach((tag) => {
-        tags.push(new RegExp(`^${tag}$`, 'i'));
-      });
-    }
+    // search title and tags for query
+    console.log(2);
+    const recipePattern = new RegExp(`${query}`);
+    const tag = [new RegExp(`^${query}`, 'i')];
+
     const recipe = await Recipe.find({
-      tags: { $all: tags },
+      title: { $regex: recipePattern, $options: 'i' },
+      tags: { $all: tag },
     });
     return checkRes(res, recipe, true, 'Got query!');
   } catch (err) {
@@ -276,6 +244,68 @@ recipeRoutes.post('/searchy', async (req, res) => {
     res.status(500).json({ message: err });
   }
 });
+
+// // search query in URL
+// recipeRoutes.post('/searchy', async (req, res) => {
+//   try {
+//     const { query } = req;
+//     console.log(query.title);
+//     // empty query -- get all recipes
+//     if (Object.keys(query).length === 0) {
+//       console.log(1);
+//       const recipe = await Recipe.find();
+//       return checkRes(res, recipe, true, 'Retrieved all recipes!');
+//     }
+//     // query has title and tags
+//     if (query.title && query.tags && query.tags.length > 0) {
+//       console.log(2);
+//       const recipePattern = new RegExp(`${query.title}`);
+//       const tags = [];
+//       if (typeof query.tags === 'string') tags.push(new RegExp(`^${query.tags}$`, 'i'));
+//       else {
+//         query.tags.forEach((tag) => {
+//           tags.push(new RegExp(`^${tag}$`, 'i'));
+//         });
+//       }
+//       const recipe = await Recipe.find({
+//         $or: [
+//           { title: { $regex: recipePattern, $options: 'i' } },
+//           { tags: { $all: tags } }],
+//         // title: { $regex: recipePattern, $options: 'i' },
+//         // tags: { $all: tags },
+//       });
+//       return checkRes(res, recipe, true, 'Got query!');
+//     }
+//     // query only has title
+//     if (query.title) {
+//       console.log(3);
+//       const recipePattern = new RegExp(`${query.title}`);
+//       const recipe = await Recipe.find({
+//         title: { $regex: recipePattern, $options: 'i' },
+//       });
+//       return checkRes(res, recipe, true, 'Got query!');
+//     }
+//     // query only has tags
+//     console.log(4);
+//     const tags = [];
+//     if (typeof query.tags === 'string') {
+//       console.log(query.tags);
+//       tags.push(new RegExp(`^${query.tags}$`, 'i'));
+//     } else {
+//       console.log('yes');
+//       query.tags.forEach((tag) => {
+//         tags.push(new RegExp(`^${tag}$`, 'i'));
+//       });
+//     }
+//     const recipe = await Recipe.find({
+//       tags: { $all: tags },
+//     });
+//     return checkRes(res, recipe, true, 'Got query!');
+//   } catch (err) {
+//     console.log('query did a BAD BAD');
+//     res.status(500).json({ message: err });
+//   }
+// });
 
 // search query in body (dynamic?)
 // NOTE: since we are getting req.body, it is usually a POST req with header app/json
