@@ -21,6 +21,7 @@ import Rating from '@material-ui/lab/Rating';
 import ReactHtmlParser from 'react-html-parser';
 import { connect } from 'react-redux';
 import { fetchRecipes, addSelectedRecipeToState } from '../../actions/recipes';
+import Search from '../Search/Search';
 
 const mapStateToProps = (state) => ({
   // * recipeList comes from the root reducer definition
@@ -172,6 +173,7 @@ class RecipesList extends Component {
           <MuiAlert elevation={6} variant="filled" severity="success" onClose={() => { this.setState({ open: false }); }}>Recipe successfully created!</MuiAlert>
         </Snackbar>
         <Typography variant="h1" align="center">Recipes List</Typography>
+        <Search />
         <Grid
           container
           alignItems="flex-start"

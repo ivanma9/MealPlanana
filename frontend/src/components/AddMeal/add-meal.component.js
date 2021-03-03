@@ -1,6 +1,7 @@
 import { GiMeal, GiBananaBunch } from 'react-icons/gi';
 import React, { Component } from 'react';
-import TimePicker from 'react-time-picker';
+import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
+import ToggleButton from 'react-bootstrap/ToggleButton';
 import PropTypes from 'prop-types';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -18,6 +19,7 @@ export default class AddMeal extends Component {
     this.state = {
       colorPickerVisible: false,
       repeat: false,
+      value: [],
     };
     this.onSubmit = this.onSubmit.bind(this);
     this.getMeal = this.getMeal.bind(this);
@@ -26,6 +28,7 @@ export default class AddMeal extends Component {
     this.handleSelectColor = this.handleSelectColor.bind(this);
     this.handleRepeatSwitch = this.handleRepeatSwitch.bind(this);
     this.getFontColor = this.getFontColor.bind(this);
+    this.getValidDays = this.getValidDays.bind(this);
   }
 
   handleSelectColor() {
@@ -65,13 +68,12 @@ export default class AddMeal extends Component {
   getMeal() {
     return (
       {
-        groupID: 'test',
         title: this.state.mealTitle,
-        daysOfWeek: ['1'],
+        daysOfWeek: this.state.value,
         date: this.state.date,
         color: this.state.color,
-        startTime: `${this.state.startTime}:00`,
-        endTime: `${this.state.endTime}:00`,
+        start_date: this.state.startTime,
+        end_date: this.state.endTime,
       });
   }
 
@@ -84,8 +86,21 @@ export default class AddMeal extends Component {
     return r + g + b > 400 ? '#000000' : '#FFFFFF';
   }
 
+  getDaySelectorColor(day) {
+    return {
+      color: this.state.value.includes(day) ? this.state.fontColor : 'black',
+      backgroundColor: this.state.value.includes(day) ? this.state.color : 'white',
+    };
+  }
+
   toggleColorPicker() {
     this.setState({ colorPickerVisible: !this.state.colorPickerVisible });
+  }
+
+  getValidDays(date) {
+    const dDate = new Date(date);
+    const day = dDate.getDay(date);
+    return this.state.value.includes(day);
   }
 
    colorModalRef = React.createRef();
@@ -97,7 +112,7 @@ export default class AddMeal extends Component {
        </div>
      );
      return (
-       <div style={{ marginTop: 10, fontSize: 12 }}>
+       <div style={{ margin: '1%', fontSize: 12 }}>
          <form onSubmit={this.onSubmit}>
            <div className="form-group">
              Title
@@ -109,38 +124,8 @@ export default class AddMeal extends Component {
              />
            </div>
            <div className="form-group" />
-           <div className={addMealStyles.flexRow}>
-             <div>
-               Date
-               <br />
-               <DatePicker
-                 selected={this.state.date}
-                 onChange={(date) => this.setState({ date })}
-                 dateFormat="yyyy-M-d"
-               />
-             </div>
-             <div>
-               Start Time
-               <br />
-               <TimePicker
-                 onChange={(value) => {
-                   this.setState({ startTime: value });
-                   console.log('TIME DATA: ', value);
-                 }}
-                 value={this.state.startTime}
-                 format="hh:mm a"
-               />
-             </div>
-             <div>
-               End time
-               <br />
-               <TimePicker
-                 onChange={(value) => { this.setState({ endTime: value }); }}
-                 value={this.state.endTime}
-               />
-             </div>
-           </div>
-           <label style={{ 'justify-content': 'center' }}>
+
+           <label style={{ 'justify-content': 'center', marginRight: '5%' }}>
              Weekly
              <br />
              <Switch
@@ -151,8 +136,59 @@ export default class AddMeal extends Component {
                checkedIcon={SWITCH_ICON}
              />
            </label>
-           {this.state.repeat ? null : null}
+           {this.state.repeat
+             ? (
+               <ToggleButtonGroup
+                 type="checkbox"
+                 value={this.state.value}
+                 onChange={(value) => this.setState({ value })}
+               >
+                 <ToggleButton style={this.getDaySelectorColor(0)} variant="outline-primary" value={0}>Sun</ToggleButton>
+                 <ToggleButton style={this.getDaySelectorColor(1)} variant="outline-primary" value={1}>Mon</ToggleButton>
+                 <ToggleButton style={this.getDaySelectorColor(2)} variant="outline-primary" value={2}>Tue</ToggleButton>
+                 <ToggleButton style={this.getDaySelectorColor(3)} variant="outline-primary" value={3}>Wed</ToggleButton>
+                 <ToggleButton style={this.getDaySelectorColor(4)} variant="outline-primary" value={4}>Thu</ToggleButton>
+                 <ToggleButton style={this.getDaySelectorColor(5)} variant="outline-primary" value={5}>Fri</ToggleButton>
+                 <ToggleButton style={this.getDaySelectorColor(6)} variant="outline-primary" value={6}>Sat</ToggleButton>
+               </ToggleButtonGroup>
+             )
+             : null}
+
            <br />
+           <div className={addMealStyles.flexRow}>
+             <div>
+               Start Date
+               <br />
+               <DatePicker
+                 selected={this.state.startDate}
+                 onChange={(startDate) => this.setState({ startDate })}
+                 timeInputLabel="Start Time:"
+                 dateFormat="MM/dd/yyyy h:mm aa"
+                 showTimeInput
+                 filterDate={this.state.repeat ? this.getValidDays : () => true}
+                 selectsStart
+                 startDate={this.state.startDate}
+                 endDate={this.state.endDate}
+               />
+             </div>
+             <div style={{ marginLeft: '15%' }}>
+               End Date
+               <br />
+               <DatePicker
+                 selected={this.state.endDate}
+                 onChange={(endDate) => this.setState({ endDate })}
+                 timeInputLabel="End Time:"
+                 dateFormat="MM/dd/yyyy h:mm aa"
+                 filterDate={this.state.repeat ? this.getValidDays : () => true}
+                 selectsEnd
+                 startDate={this.state.startDate}
+                 endDate={this.state.endDate}
+                 minDate={this.state.startDate}
+                 showTimeInput
+               />
+             </div>
+
+           </div>
            <br />
            <button
              onClick={this.handleSelectColor}

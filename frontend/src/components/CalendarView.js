@@ -79,17 +79,7 @@ class CalendarView extends Component {
               Add Meal
             </h3>
           )}
-          contentStyle={{ width: 500, height: 370 }}
-          children={<AddMeal />}
-        />
-        <Modal
-          ref={this.viewModalRef}
-          header={(
-            <h3>
-              {this.state.mealSelected}
-            </h3>
-          )}
-          contentStyle={{ width: 500, height: 370 }}
+          contentStyle={{ width: 500, height: 350 }}
           children={<AddMeal />}
         />
         <h2 className="text-center">
@@ -168,7 +158,7 @@ class CalendarView extends Component {
           selectable
           dateClick={(e) => this.changeDate(e)}
           eventClick={(info) => this.handleViewMeal(info)
-            // function (info) { 
+            // function (info) {
             //   info.jsEvent.preventDefault(); // don't let the browser navigate
 
             //   alert(`Event: ${info.event.title}`);
