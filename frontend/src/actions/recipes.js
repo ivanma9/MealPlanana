@@ -40,31 +40,31 @@ export const fetchRecipes = () => async (dispatch) => {
   return dispatch(fetchRecipesFailure(data));
 };
 
-// export const FETCH_RECIPE_BEGIN = 'FETCH_RECIPE_BEGIN';
-// export const FETCH_RECIPE_SUCCESS = 'FETCH_RECIPE_SUCCESS';
-// export const FETCH_RECIPE_FAILURE = 'FETCH_RECIPE_FAILURE';
+export const FETCH_RECIPE_BEGIN = 'FETCH_RECIPE_BEGIN';
+export const FETCH_RECIPE_SUCCESS = 'FETCH_RECIPE_SUCCESS';
+export const FETCH_RECIPE_FAILURE = 'FETCH_RECIPE_FAILURE';
 
-// export const fetchRecipeBegin = () => ({
-//   type: FETCH_RECIPE_BEGIN,
-// });
-// export const fetchRecipeSuccess = (recipe) => ({
-//   type: FETCH_RECIPE_SUCCESS,
-//   payload: { recipe },
-// });
-// export const fetchRecipeFailure = (error) => ({
-//   type: FETCH_RECIPE_FAILURE,
-//   payload: { error },
-// });
+export const fetchRecipeBegin = () => ({
+  type: FETCH_RECIPE_BEGIN,
+});
+export const fetchRecipeSuccess = (recipe) => ({
+  type: FETCH_RECIPE_SUCCESS,
+  payload: { recipe },
+});
+export const fetchRecipeFailure = (error) => ({
+  type: FETCH_RECIPE_FAILURE,
+  payload: { error },
+});
 
-// export const fetchRecipe = (id) => async (dispatch) => {
-//   dispatch(fetchRecipeBegin());
-//   const response = await apiUtil.fetchRecipe(id);
-//   const data = await response.json();
-//   if (response.ok) {
-//     return dispatch(fetchRecipeSuccess(data));
-//   }
-//   return dispatch(fetchRecipeFailure(data));
-// };
+export const fetchRecipe = (id) => async (dispatch) => {
+  dispatch(fetchRecipeBegin());
+  const response = await apiUtil.fetchRecipe(id);
+  const data = await response.json();
+  if (response.ok) {
+    return dispatch(fetchRecipeSuccess(data));
+  }
+  return dispatch(fetchRecipeFailure(data));
+};
 
 export const CREATE_RECIPE_BEGIN = 'CREATE_RECIPE_BEGIN';
 export const CREATE_RECIPE_SUCCESS = 'CREATE_RECIPE_SUCCESS';
