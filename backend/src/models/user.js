@@ -37,7 +37,7 @@ const UserSchema = new mongoose.Schema({
   ratings: {
     type: [{
       recipe: {
-        type: [mongoose.Schema.Types.ObjectId],
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Recipe',
       },
       rating: Number,
