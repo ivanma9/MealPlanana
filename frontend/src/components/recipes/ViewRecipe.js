@@ -1,13 +1,5 @@
 import {
-  Card,
-  CardMedia,
-  Chip,
-  Fab,
-  Grid,
-  Paper,
-  Popover,
-  Snackbar,
-  Typography,
+  Card, CardMedia, Chip, Fab, Grid, Paper, Popover, Snackbar, Typography,
 } from '@material-ui/core';
 import React, { Component } from 'react';
 import SimpleReactLightbox, { SRLWrapper } from 'simple-react-lightbox';

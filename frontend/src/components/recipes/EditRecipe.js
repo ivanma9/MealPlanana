@@ -1,14 +1,8 @@
 /* eslint no-undef: 0 */ // --> OFF
 
 import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  TextField,
-  Typography,
+  Button, Dialog, DialogActions, DialogContent,
+  DialogContentText, DialogTitle, TextField, Typography,
 } from '@material-ui/core';
 import React, { Component } from 'react';
 

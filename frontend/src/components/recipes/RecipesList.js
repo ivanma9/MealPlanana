@@ -7,16 +7,7 @@
 //       reach this page
 
 import {
-  Button,
-  Card,
-  CardContent,
-  CardMedia,
-  Chip,
-  Fab,
-  Grid,
-  IconButton,
-  Snackbar,
-  Typography,
+  Button, Card, CardContent, CardMedia, Chip, Fab, Grid, IconButton, Snackbar, Typography,
 } from '@material-ui/core';
 import React, { Component, useEffect, useState } from 'react';
 
@@ -162,7 +153,9 @@ class RecipesList extends Component {
   constructor(props) {
     super(props);
 
-    const open = this.props.location.appState !== undefined ? this.props.location.appState.open : false;
+    const open = this.props.location.appState !== undefined
+      ? this.props.location.appState.open
+      : false;
 
     this.state = {
       open,
@@ -211,7 +204,8 @@ class RecipesList extends Component {
 
   createMealHandleRecipeUnselected = (recipe) => {
     this.setState((prevState) => ({
-      createMealSelectedRecipes: prevState.createMealSelectedRecipes.filter((item) => item !== recipe),
+      createMealSelectedRecipes:
+        prevState.createMealSelectedRecipes.filter((item) => item !== recipe),
     }));
   };
 
@@ -283,7 +277,7 @@ class RecipesList extends Component {
               }}
             >
               <AddIcon />
-              New
+              New Recipe
             </Fab>
           </Link>
           <Fab
@@ -368,6 +362,9 @@ Recipe.propTypes = {
   onMouseOut: PropTypes.func,
   checkIfCurrentCard: PropTypes.func,
   addRecipeToState: PropTypes.func,
+  createMealPromptIsOpen: PropTypes.bool,
+  createMealHandleRecipeSelected: PropTypes.func,
+  createMealHandleRecipeUnselected: PropTypes.func,
   recipe: PropTypes.shape({
     _id: Schema.Types.ObjectId.isRequired,
     preview: PropTypes.shape({
@@ -385,6 +382,9 @@ Recipe.defaultProps = {
   onMouseOut: () => {},
   checkIfCurrentCard: () => {},
   addRecipeToState: () => {},
+  createMealPromptIsOpen: () => {},
+  createMealHandleRecipeSelected: () => {},
+  createMealHandleRecipeUnselected: () => {},
   recipe: PropTypes.shape({
     preview: null,
     description: '',
