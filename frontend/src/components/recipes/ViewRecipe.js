@@ -75,7 +75,7 @@ class ViewRecipe extends Component {
     const checkIfCurrentCard = (currentID) => this.state.activeID === currentID;
 
     const handleEditButtonClicked = (e) => {
-      if (this.props.userID !== this.props.recipe.author) {
+      if (this.props.userID !== this.props.recipe.author.id) {
         this.setState({
           cannotEditPopoverOpen: true,
           cannotEditPopoverAnchorElement: e.currentTarget,
