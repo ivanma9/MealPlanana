@@ -1,5 +1,6 @@
 import {
   ADD_SELECTED_RECIPE_TO_STATE,
+  REMOVE_RECIPE_FROM_STATE_ON_UNSELECTED,
   // FETCH_RECIPE_BEGIN,
   // FETCH_RECIPE_FAILURE,
   // FETCH_RECIPE_SUCCESS,
@@ -11,13 +12,18 @@ const initialRecipeState = {
   error: null,
 };
 
-export default function recipeReducer(state = initialRecipeState, action) {
+export default function currentRecipeReducer(state = initialRecipeState, action) {
   Object.freeze(state);
   switch (action.type) {
     case ADD_SELECTED_RECIPE_TO_STATE:
       return {
         ...state,
         item: action.payload.recipe,
+      };
+    case REMOVE_RECIPE_FROM_STATE_ON_UNSELECTED:
+      return {
+        ...state,
+        item: null,
       };
     // case FETCH_RECIPE_BEGIN:
     //   return {

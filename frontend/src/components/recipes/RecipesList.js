@@ -6,6 +6,8 @@
 // TODO: load recipes to global state initially when the user logs in instead of waiting until they
 //       reach this page
 
+// TODO: periodically fetch from the db anyway to ensure data is up to date and nothing went wrong
+
 import {
   Button, Card, CardContent, CardMedia, Chip, Fab, Grid, IconButton, Snackbar, Typography,
 } from '@material-ui/core';
@@ -31,10 +33,10 @@ import Modal from '../modal/stdModal.component';
 import { addSelectedRecipeToState, fetchRecipes } from '../../actions/recipes';
 
 const mapStateToProps = (state) => ({
-  // * recipeList comes from the root reducer definition
-  recipes: state.recipeList.items,
-  loading: state.recipeList.loading,
-  error: state.recipeList.error,
+  // * recipes comes from the root reducer definition
+  recipes: state.recipes.items,
+  loading: state.recipes.loading,
+  error: state.recipes.error,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -50,6 +52,12 @@ function Recipe(props) {
       setSelected(false);
     }
   }, [props.createMealPromptIsOpen]);
+
+  // useEffect(() => {
+  //   if (props.recipe._id === undefined) {
+  //     props.fetchRecipes();
+  //   }
+  // }, [props.recipe._id]);
 
   const createMealHandleRecipeSelected = (e) => {
     e.preventDefault();
@@ -153,18 +161,19 @@ class RecipesList extends Component {
   constructor(props) {
     super(props);
 
-    const open = this.props.location.appState !== undefined
-      ? this.props.location.appState.open
+    const createPressed = this.props.location.appState !== undefined
+      ? this.props.location.appState.createPressed
       : false;
 
     this.state = {
-      open,
+      createPressed,
       activeCardID: '',
       createMealPromptIsOpen: false,
       createMealSelectedRecipes: [],
     };
   }
 
+  // TODO: add check here so you don't always fetch on mount
   componentDidMount() {
     this.props.fetchRecipes();
   }
@@ -222,6 +231,7 @@ class RecipesList extends Component {
           createMealPromptIsOpen={this.state.createMealPromptIsOpen}
           createMealHandleRecipeSelected={this.createMealHandleRecipeSelected}
           createMealHandleRecipeUnselected={this.createMealHandleRecipeUnselected}
+          // fetchRecipes={this.props.fetchRecipes}
         />
       ),
     );
@@ -293,10 +303,10 @@ class RecipesList extends Component {
         </div>
         <Snackbar
           autoHideDuration={6000}
-          open={this.state.open}
-          onClose={() => { this.setState({ open: false }); }}
+          open={this.state.createPressed}
+          onClose={() => { this.setState({ createPressed: false }); }}
         >
-          <MuiAlert elevation={6} variant="filled" severity="success" onClose={() => { this.setState({ open: false }); }}>Recipe successfully created!</MuiAlert>
+          <MuiAlert elevation={6} variant="filled" severity="success" onClose={() => { this.setState({ createPressed: false }); }}>Recipe successfully created!</MuiAlert>
         </Snackbar>
         <Snackbar
           open={this.state.createMealPromptIsOpen}

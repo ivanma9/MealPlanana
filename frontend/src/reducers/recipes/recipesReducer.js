@@ -1,4 +1,5 @@
 import {
+  // ADD_CREATED_RECIPE_TO_RECIPES,
   FETCH_RECIPES_BEGIN,
   FETCH_RECIPES_FAILURE,
   FETCH_RECIPES_SUCCESS,
@@ -10,9 +11,14 @@ const initialListState = {
   error: null,
 };
 
-export default function recipeListReducer(state = initialListState, action) {
+export default function recipesReducer(state = initialListState, action) {
   Object.freeze(state);
   switch (action.type) {
+    // case ADD_CREATED_RECIPE_TO_RECIPES:
+    //   return {
+    //     ...state,
+    //     items: [...state.items, action.payload.recipe],
+    //   };
     case FETCH_RECIPES_BEGIN:
       return {
         ...state,

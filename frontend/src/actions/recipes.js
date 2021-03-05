@@ -7,8 +7,8 @@ export const ADD_SELECTED_RECIPE_TO_STATE = 'ADD_SELECTED_RECIPE';
 
 export function addSelectedRecipeToState(id) {
   return (dispatch, getState) => {
-    const { recipeList } = getState();
-    const recipe = recipeList.items.find((x) => x._id === id);
+    const { recipes } = getState();
+    const recipe = recipes.items.find((x) => x._id === id);
 
     dispatch({
       type: ADD_SELECTED_RECIPE_TO_STATE,
@@ -16,6 +16,47 @@ export function addSelectedRecipeToState(id) {
     });
   };
 }
+
+export const REMOVE_RECIPE_FROM_STATE_ON_UNSELECTED = 'REMOVE_RECIPE_FROM_STATE_ON_UNSELECTED';
+
+/**
+ * Removes recipe from global state once user has return from viewing or editing a recipe
+ *
+ * @export
+ */
+export const removeRecipeFromStateOnUnselected = () => async (dispatch) => dispatch({
+  type: REMOVE_RECIPE_FROM_STATE_ON_UNSELECTED,
+});
+
+// export const ADD_CREATED_RECIPE_TO_RECIPES = 'ADD_CREATED_RECIPE_TO_RECIPES';
+
+/**
+ * adds user's newly created recipe to the global state
+ * array of recipes to avoid having to fetch from db
+ *
+ * @export
+ * @param {*} recipe recipe that was added
+ * @returns
+ */
+// export function addCreatedRecipeToRecipes(recipe) {
+//   return async (dispatch) => {
+//     dispatch({
+//       type: ADD_CREATED_RECIPE_TO_RECIPES,
+//       payload: { recipe },
+//     });
+//   };
+// }
+
+// export const UPDATE_UPDATED_RECIPE_IN_RECIPES = 'UPDATE_UPDATED_RECIPE_IN_RECIPES';
+
+// export function updateUpdatedRecipeInRecipes(recipe) {
+//   return async (dispatch) => {
+//     dispatch({
+//       type: ADD_CREATED_RECIPE_TO_RECIPES,
+//       payload: { recipe },
+//     });
+//   };
+// }
 
 export const FETCH_RECIPES_BEGIN = 'FETCH_RECIPES_BEGIN';
 export const FETCH_RECIPES_SUCCESS = 'FETCH_RECIPES_SUCCESS';
@@ -34,6 +75,7 @@ export const fetchRecipesFailure = (error) => ({
 });
 
 export const fetchRecipes = () => async (dispatch) => {
+  console.log('fetching');
   dispatch(fetchRecipesBegin());
   const response = await apiUtil.fetchRecipes();
   const data = await response.json();
@@ -89,6 +131,7 @@ export const createRecipe = (recipe) => async (dispatch) => {
   const data = await response.json();
 
   if (response.ok) {
+    // dispatch(addCreatedRecipeToRecipes(recipe));
     return dispatch(createRecipeSuccess());
   }
   return dispatch(createRecipeFailure(data));
