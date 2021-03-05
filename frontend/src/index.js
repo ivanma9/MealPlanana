@@ -20,7 +20,6 @@ const renderApp = (preloadedState) => {
 
   // FOR TESTING, remove before production
   window.getState = store.getState;
-  console.log(store.getState());
 };
 
 (async () => renderApp(await checkLoggedIn()))();

@@ -6,9 +6,7 @@
 			"request": "launch",
 			"name": "Launch Frontend",
 			"runtimeExecutable": "npm",
-			"runtimeArgs": [
-				"start"
-			],
+			"runtimeArgs": ["start"],
 			"console": "internalConsole",
 			"localRoot": "${workspaceRoot}/frontend"
 		},
@@ -17,10 +15,7 @@
 			"request": "launch",
 			"name": "Launch Backend",
 			"runtimeExecutable": "npm",
-			"runtimeArgs": [
-				"run",
-				"dev"
-			],
+			"runtimeArgs": ["run", "dev"],
 			"console": "internalConsole",
 			"localRoot": "${workspaceRoot}/backend"
 		},
