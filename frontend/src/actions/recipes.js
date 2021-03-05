@@ -1,5 +1,8 @@
 import * as apiUtil from '../util/recipes';
 
+// TODO: reorganize and minimize reducers, actions, and utils used. Look at the user ones as an
+//       example
+
 export const ADD_SELECTED_RECIPE_TO_STATE = 'ADD_SELECTED_RECIPE';
 
 export function addSelectedRecipeToState(id) {
