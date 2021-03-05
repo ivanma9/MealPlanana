@@ -2,16 +2,19 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { signup } from '../actions/session';
+import { fetchRecipes } from '../actions/recipes';
 
-const mapStateToProps = ({ errors }) => ({
+const mapStateToProps = ({ errors, recipes }) => ({
   errors,
+  recipes: recipes.items,
 });
 
 const mapDispatchtoProps = (dispatch) => ({
   signup: (user) => dispatch(signup(user)),
+  fetchRecipes: () => dispatch(fetchRecipes()),
 });
 
-const Signup = ({ errors, signup }) => {
+const Signup = ({ errors, signup, fetchRecipes }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const user = {
@@ -21,6 +24,8 @@ const Signup = ({ errors, signup }) => {
     };
 
     signup(user);
+
+    fetchRecipes();
   };
 
   return (
