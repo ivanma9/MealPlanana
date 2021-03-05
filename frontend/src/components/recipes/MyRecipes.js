@@ -2,10 +2,6 @@
 //       can avoid fetching all recipes each time you go to this page
 
 import {
-  Card,
-  CardContent,
-  CardMedia,
-  Chip,
   Fab,
   Grid,
   Snackbar,
@@ -14,19 +10,21 @@ import {
 import React, { Component } from 'react';
 
 import AddIcon from '@material-ui/icons/Add';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import { Link } from 'react-router-dom';
 import MuiAlert from '@material-ui/lab/Alert';
-import Rating from '@material-ui/lab/Rating';
-import ReactHtmlParser from 'react-html-parser';
 import { connect } from 'react-redux';
 import { fetchRecipes, addSelectedRecipeToState } from '../../actions/recipes';
+import Recipe from './Recipe';
 
 const mapStateToProps = (state) => ({
   // * recipeList comes from the root reducer definition
+  // recipes: state.myRecipes.items,
+  // loading: state.myRecipes.loading,
+  // error: state.myRecipes.error,
   recipes: state.recipeList.items,
   loading: state.recipeList.loading,
   error: state.recipeList.error,
+  userID: state.session.userId,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -34,64 +32,7 @@ const mapDispatchToProps = (dispatch) => ({
   addRecipeToState: (id) => dispatch(addSelectedRecipeToState(id)),
 });
 
-function Recipe(props) {
-  return (
-    <Link
-      to="/recipes/view"
-      style={{ color: 'black', textDecoration: 'none' }}
-    >
-      <Card
-        raised={props.checkIfCurrentCard(props.recipe._id)}
-        onMouseOver={() => props.onMouseOver(props.recipe._id)}
-        onMouseLeave={() => props.onMouseOut()}
-        onClick={() => props.addRecipeToState(props.recipe._id)}
-        style={{
-          width: '18rem', borderRadius: '10px', padding: '1rem', margin: '2rem',
-        }}
-      >
-        <CardMedia
-          component="img"
-          image={props.recipe.preview && props.recipe.preview.location}
-        />
-        <CardContent>
-          <Typography variant="h5" align="center">{props.recipe.title}</Typography>
-          <Typography
-            variant="body1"
-            component="span"
-            style={{
-              overflow: 'hidden', textOverflow: 'ellipsis', wordBreak: 'break-word', hyphens: 'auto',
-            }}
-          >
-            {ReactHtmlParser(props.recipe.description)}
-          </Typography>
-        </CardContent>
-        <div align="center">
-          {props.recipe.tags.map((tag, i) => (
-            <Chip
-              size="small"
-              label={tag}
-              style={{
-                backgroundColor: 'lawngreen', marginLeft: '1%', marginRight: '1%', marginBottom: '2%',
-              }}
-              key={i}
-            />
-          ))}
-        </div>
-        <Rating
-          name="hearts"
-          defaultValue={0}
-          value={props.recipe.ratingTotal}
-          precision={0.2}
-          icon={<FavoriteIcon fontSize="inherit" />}
-          readOnly
-          style={{ color: 'red', marginTop: '5%', padding: '5%' }}
-        />
-      </Card>
-    </Link>
-  );
-}
-
-class RecipesList extends Component {
+class MyRecipes extends Component {
   constructor(props) {
     super(props);
     if (this.props.location.appState !== undefined) {
@@ -108,7 +49,10 @@ class RecipesList extends Component {
   }
 
   componentDidMount() { // TODO: FILTER HERE
+    // Not sure if we need to fetch again, aren't they already in our state
+    // console.log(this.props.recipes);
     this.props.fetchRecipes();
+    // console.log(this.props.recipes);
   }
 
   onMouseOver = (currentCardID) => this.setState({ activeCardID: currentCardID });
@@ -117,8 +61,11 @@ class RecipesList extends Component {
 
   checkIfCurrentCard = (currentID) => this.state.activeCardID === currentID;
 
-  recipeList() {
-    return this.props.recipes.map(
+  myRecipes() {
+    return this.props.recipes.filter((item) => {
+      if (!this.props.userID) return false;
+      if (item.author === this.props.userID) return true;
+    }).map(
       (currentRecipe, i) => (
         <Recipe
           recipe={currentRecipe}
@@ -171,14 +118,14 @@ class RecipesList extends Component {
         >
           <MuiAlert elevation={6} variant="filled" severity="success" onClose={() => { this.setState({ open: false }); }}>Recipe successfully created!</MuiAlert>
         </Snackbar>
-        <Typography variant="h1" align="center">Recipes List</Typography>
+        <Typography variant="h1" align="center">My Recipes</Typography>
         <Grid
           container
           alignItems="flex-start"
           justify="space-evenly"
           // spacing={3}
         >
-          {this.recipeList()}
+          {this.myRecipes()}
         </Grid>
       </div>
     );
@@ -188,4 +135,4 @@ class RecipesList extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(RecipesList);
+)(MyRecipes);

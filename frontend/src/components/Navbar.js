@@ -58,14 +58,14 @@ function Navbar({ logout }) {
 
               </Typography>
             </Link>
-            <Link to="/recipes" className="nav-link">
+            <Link to="/recipes/my-recipes" className="nav-link">
               <Typography
                 variant="button"
                 style={{
                   fontSize: 25,
                 }}
               >
-                Recipes
+                My Recipes
 
               </Typography>
             </Link>
