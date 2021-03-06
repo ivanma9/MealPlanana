@@ -87,7 +87,7 @@ class CalendarView extends Component {
           ref={this.viewModalRef}
           headerDisabled
           contentStyle={{ width: 500, height: 350 }}
-          children={<ViewMeal header={this.state.mealSelected} />}
+          children={<ViewMeal header={this.state.mealSelected} recipeInfo={this.props.recipe}/>}
         />
 
         <h2 className="text-center">
@@ -189,6 +189,7 @@ class CalendarView extends Component {
 const mapStateToProps = (state) => ({
   username: state.session.username,
   meals: state.session.meals,
+  recipe: state.recipe.item,
 });
 
 export default connect(

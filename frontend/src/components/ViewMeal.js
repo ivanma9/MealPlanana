@@ -76,6 +76,9 @@ export default class ViewMeal extends Component {
           <Button variant="outline-primary" value={6}>Sat</Button>
         </div>
         <br />
+        <h2>
+          {this.props.recipeInfo.title}
+        </h2>
       </div>
     );
   }
