@@ -9,7 +9,7 @@ import {
 import React, { useEffect, useState } from 'react';
 
 import CheckIcon from '@material-ui/icons/Check';
-import CloseIcon from '@material-ui/icons/Close';
+import AddIcon from '@material-ui/icons/Add';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -107,21 +107,20 @@ export default function Recipe(props) {
           {props.createMealPromptIsOpen && !isSelected
             && (
             <IconButton
-              color="primary"
               onClick={(e) => createMealHandleRecipeSelected(e)}
               style={{ marginTop: '5%', padding: '5%' }}
             >
-              <CheckIcon />
+              <AddIcon style={{ stroke: 'dimgray', strokeWidth: 2 }} />
             </IconButton>
             )}
           {props.createMealPromptIsOpen && isSelected
             && (
             <IconButton
-              color="secondary"
+              color="primary"
               onClick={(e) => createMealHandleRecipeUnselected(e)}
               style={{ marginTop: '5%', padding: '5%' }}
             >
-              <CloseIcon />
+              <CheckIcon style={{ stroke: 'steelblue', strokeWidth: 2 }} />
             </IconButton>
             )}
         </div>

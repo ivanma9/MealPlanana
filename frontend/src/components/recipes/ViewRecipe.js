@@ -43,7 +43,6 @@ class ViewRecipe extends Component {
   }
 
   componentWillUnmount() {
-    console.log(this.props.history);
     if (
       this.props.history.location.appState === undefined
       || !this.props.history.location.appState.editPressed

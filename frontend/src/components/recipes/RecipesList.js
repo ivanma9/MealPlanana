@@ -204,7 +204,7 @@ class RecipesList extends Component {
             icon={<MenuBookIcon fontSize="large" />}
             action={(
               <div>
-                <Button onClick={this.handleCreateMealPromptDoneClick} size="large">Done</Button>
+                <Button onClick={this.handleCreateMealPromptDoneClick} size="large" disabled={this.state.createMealSelectedRecipes.length === 0}>Done</Button>
                 <Button onClick={this.handleCreateMealPromptCancelClick} size="large" style={{ color: 'lightcoral' }}>Cancel</Button>
               </div>
             )}
