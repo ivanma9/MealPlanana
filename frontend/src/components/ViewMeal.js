@@ -1,168 +1,82 @@
-import { GiMeal, GiBananaBunch } from 'react-icons/gi';
+import { MdEdit } from 'react-icons/md';
+import { BsFillTrashFill } from 'react-icons/bs';
 import React, { Component } from 'react';
-import TimePicker from 'react-time-picker';
-import PropTypes from 'prop-types';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { HexColorPicker } from 'react-colorful';
-import Switch from 'react-switch';
-import addMealStyles from './styles.AddMeal.module.css';
-import Modal from '../modal/stdModal.component';
+import { Button, Container } from 'react-bootstrap';
 
-const DEFAULT_COLOR = '#007AFF';
-
-export default class AddMeal extends Component {
+export default class ViewMeal extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      colorPickerVisible: false,
-      repeat: false,
+
     };
-    this.onSubmit = this.onSubmit.bind(this);
-    this.getMeal = this.getMeal.bind(this);
-    this.onChangeRecipeTitle = this.onChangeRecipeTitle.bind(this);
-    this.toggleColorPicker = this.toggleColorPicker.bind(this);
-    this.handleSelectColor = this.handleSelectColor.bind(this);
-    this.handleRepeatSwitch = this.handleRepeatSwitch.bind(this);
-    this.getFontColor = this.getFontColor.bind(this);
+    this.editMeal = this.editMeal.bind(this);
+    this.deleteMeal = this.deleteMeal.bind(this);
   }
 
-  handleSelectColor() {
-    this.colorModalRef.current.open();
+  editMeal() {
+    // TODO: Add Meal Extension
   }
 
-  handleRepeatSwitch() {
-    this.setState({ repeat: !this.state.repeat });
+  deleteMeal() {
+    // TODO: Delete meal endpt
+    console.log('ko');
   }
 
-  onChangeRecipeTitle(e) {
-    this.setState({ mealTitle: e.target.value });
-  }
-
-  onSubmit(e) {
-    e.preventDefault();
-
-    // const newRecipe = {
-    //   recipe_description: this.state.recipe_description,
-    //   recipe_responsible: this.state.recipe_responsible,
-    //   recipe_priority: this.state.recipe_priority,
-    //   recipe_completed: this.state.recipe_completed,
-    // };
-
-    // axios
-    //   .post('http://localhost:4000/recipes/add', newRecipe)
-    //   .then((res) => console.log(res.data));
-
-    this.setState({
-      startTime: null,
-      endTime: null,
-      color: DEFAULT_COLOR,
-    });
-    this.props.onSubmit();
-  }
-
-  getMeal() {
+  render() {
     return (
-      {
-        groupID: 'test',
-        title: this.state.mealTitle,
-        daysOfWeek: ['1'],
-        date: this.state.date,
-        color: this.state.color,
-        startTime: `${this.state.startTime}:00`,
-        endTime: `${this.state.endTime}:00`,
-      });
+      <div style={{ marginTop: 10, fontSize: 12 }}>
+        <div>
+          <h3>
+            {this.props.header}
+            <span className="float-right">
+              <style type="text/css">
+                {`
+                  .btn-flat {
+                    background-color: #eaf4f4;
+                    color: black;
+                  }
+
+                  .btn-icon {
+                    padding: 0.9rem 0.9rem;
+                    font-size: 1.5rem;
+                    border-radius: 10rem;
+                    margin: 0em 0.5em;
+                    box-shadow: 10px 10px 5px #aaaaaa;
+                  }
+                  .btn:hover {
+                    padding: 1.1rem 1.1rem;
+                  }
+              `}
+              </style>
+              <Button variant="flat" size="icon" onClick={this.deleteMeal}>
+                <MdEdit className="d-flex align-items-center" />
+              </Button>
+              <Button variant="flat" size="icon" onClick={this.deleteMeal}>
+                <BsFillTrashFill className="d-flex align-items-center" color="#eb4511" />
+              </Button>
+            </span>
+          </h3>
+        </div>
+
+        <label>
+          Starts:
+        </label>
+        <br />
+        <label>
+          Ends:
+        </label>
+        <div>
+          <Button variant="outline-primary" value={0}>Sun</Button>
+          <Button variant="outline-primary" value={1}>Mon</Button>
+          <Button variant="outline-primary" value={2}>Tue</Button>
+          <Button variant="outline-primary" value={3}>Wed</Button>
+          <Button variant="outline-primary" value={4}>Thu</Button>
+          <Button variant="outline-primary" value={5}>Fri</Button>
+          <Button variant="outline-primary" value={6}>Sat</Button>
+        </div>
+        <br />
+      </div>
+    );
   }
-
-  getFontColor(backgroundColor) {
-    if (!backgroundColor) return '#FFFFFF';
-    const r = parseInt(`0x${backgroundColor[1]}${backgroundColor[2]}`);
-    const g = parseInt(`0x${backgroundColor[3]}${backgroundColor[4]}`);
-    const b = parseInt(`0x${backgroundColor[5]}${backgroundColor[6]}`);
-    console.log(r, g, b);
-    return r + g + b > 400 ? '#000000' : '#FFFFFF';
-  }
-
-  toggleColorPicker() {
-    this.setState({ colorPickerVisible: !this.state.colorPickerVisible });
-  }
-
-   colorModalRef = React.createRef();
-
-   render() {
-     const SWITCH_ICON = (
-       <div style={{ display: 'flex', 'justify-content': 'center', paddingTop: '22%' }}>
-         <GiBananaBunch color={this.state.fontColor ? this.state.fontColor : '#000000'} />
-       </div>
-     );
-     return (
-       <div style={{ marginTop: 10, fontSize: 12 }}>
-         <div className="form-group">
-           Title
-           <input
-             type="text"
-             className="form-control"
-             value={this.state.recipe_title}
-             onChange={this.onChangeRecipeTitle}
-           />
-         </div>
-         <label style={{ 'justify-content': 'center' }}>
-           Weekly
-           <br />
-           <Switch
-             onChange={this.handleRepeatSwitch}
-             checked={this.state.repeat}
-             onColor={this.state.color ? this.state.color : DEFAULT_COLOR}
-             onHandleColor={this.state.fontColor}
-             checkedIcon={SWITCH_ICON}
-           />
-         </label>
-         {this.state.repeat ? null : null}
-         <br />
-         <br />
-         <button
-           onClick={this.handleSelectColor}
-           style={{
-             backgroundColor: this.state.color
-               ? this.state.color : DEFAULT_COLOR,
-             height: 20,
-             width: 40,
-           }}
-         />
-         <br />
-         <Modal
-           ref={this.colorModalRef}
-           contentStyle={{
-             width: 'fit-content',
-             'block-size': 'fit-content',
-             'background-color': 'transparent',
-           }}
-           headerDisabled
-         >
-           <HexColorPicker
-             color={this.state.color ? this.state.color : DEFAULT_COLOR}
-             onChange={(color) => {
-               this.setState({ color, fontColor: this.getFontColor(color) });
-             }}
-           />
-         </Modal>
-         <br />
-         <div className="form-group">
-           <input
-             style={{ backgroundColor: this.state.color, color: this.state.fontColor }}
-             type="submit"
-             value="Add Meal"
-             className="btn btn-primary"
-           />
-         </div>
-       </div>
-     );
-   }
 }
-AddMeal.propTypes = {
-  onSubmit: PropTypes.func,
-};
-AddMeal.defaultProps = {
-  onSubmit: () => {},
-};

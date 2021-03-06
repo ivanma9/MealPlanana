@@ -37,6 +37,7 @@
     "react-scripts": "4.0.2",
     "react-search-autocomplete": "^5.0.3",
     "react-switch": "^6.0.0",
+    "react-time-picker": "^4.1.2",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "rrule": "^2.6.8",

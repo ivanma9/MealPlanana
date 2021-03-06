@@ -13,6 +13,7 @@ import { GiMeal } from 'react-icons/gi';
 import { connect } from 'react-redux';
 import Modal from './modal/stdModal.component';
 import AddMeal from './AddMeal/add-meal.component';
+import ViewMeal from './ViewMeal';
 
 import { parseMeals } from './helpers/calendarHelper';
 
@@ -79,9 +80,16 @@ class CalendarView extends Component {
               Add Meal
             </h3>
           )}
-          contentStyle={{ width: 500, height: 350 }}
+          contentStyle={{ width: 500, height: 370 }}
           children={<AddMeal />}
         />
+        <Modal
+          ref={this.viewModalRef}
+          headerDisabled
+          contentStyle={{ width: 500, height: 350 }}
+          children={<ViewMeal header={this.state.mealSelected} />}
+        />
+
         <h2 className="text-center">
           {this.props.username}
           {' '}
@@ -100,11 +108,11 @@ class CalendarView extends Component {
           <style type="text/css">
             {`
           .btn-flat {
-            background-color: #ffe135;
             color: black;
           }
 
           .btn-xxl {
+            background-color: #ffe135;
             padding: 1rem 7rem;
             font-size: 1.5rem;
             margin: 5rem;
