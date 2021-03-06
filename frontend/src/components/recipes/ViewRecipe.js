@@ -10,11 +10,12 @@ import MuiAlert from '@material-ui/lab/Alert';
 import Rating from '@material-ui/lab/Rating';
 import ReactHtmlParser from 'react-html-parser';
 import { connect } from 'react-redux';
+import { removeRecipeFromStateOnUnselected } from '../../actions/recipes';
 
 const mapStateToProps = (state) => ({
-  recipe: state.recipe.item,
-  loading: state.recipe.loading,
-  error: state.recipe.error,
+  recipe: state.currentRecipe.item,
+  loading: state.currentRecipe.loading,
+  error: state.currentRecipe.error,
   userID: state.session.userId,
 });
 
@@ -23,7 +24,7 @@ class ViewRecipe extends Component {
     super(props);
     if (this.props.location.appState !== undefined) {
       this.state = {
-        open: this.props.location.appState.open,
+        updateRecipePressed: this.props.location.appState.updateRecipePressed,
         activeID: '',
 
         cannotEditPopoverOpen: false,
@@ -36,8 +37,18 @@ class ViewRecipe extends Component {
       };
     } else {
       this.state = {
-        open: false,
+        updateRecipePressed: false,
       };
+    }
+  }
+
+  componentWillUnmount() {
+    console.log(this.props.history);
+    if (
+      this.props.history.location.appState === undefined
+      || !this.props.history.location.appState.editPressed
+    ) {
+      this.props.removeRecipeFromStateOnUnselected();
     }
   }
 
@@ -46,7 +57,7 @@ class ViewRecipe extends Component {
 
     if (error) {
       return (
-        <Typography variant="h1" align="center">
+        <Typography variant="h2" align="center">
           Error!
           {' '}
           {error.message}
@@ -54,10 +65,10 @@ class ViewRecipe extends Component {
       );
     }
     if (loading) {
-      return <Typography variant="h1" align="center">Loading...</Typography>;
+      return <Typography variant="h2" align="center">Loading...</Typography>;
     }
     if (recipe === null) {
-      return <Typography variant="h1" align="center">Undef...</Typography>;
+      return <Typography variant="h2" align="center">Please select a recipe to view</Typography>;
     }
 
     const options = {
@@ -84,7 +95,7 @@ class ViewRecipe extends Component {
         this.props.history.push({
           pathname: '/recipes/edit',
           appState: {
-            userUsedButton: true,
+            editPressed: true,
           },
         });
       }
@@ -144,10 +155,10 @@ class ViewRecipe extends Component {
 
         <Snackbar
           autoHideDuration={6000}
-          open={this.state.open}
-          onClose={() => { this.setState({ open: false }); }}
+          open={this.state.updateRecipePressed}
+          onClose={() => { this.setState({ updateRecipePressed: false }); }}
         >
-          <MuiAlert elevation={6} variant="filled" severity="success" onClose={() => { this.setState({ open: false }); }}>Recipe successfully edited!</MuiAlert>
+          <MuiAlert elevation={6} variant="filled" severity="success" onClose={() => { this.setState({ updateRecipePressed: false }); }}>Recipe successfully edited!</MuiAlert>
         </Snackbar>
         {recipe.preview
           && (
@@ -294,7 +305,7 @@ class ViewRecipe extends Component {
                   alignItems="flex-start"
                   justify="space-evenly"
                 >
-                  {recipe.images.map(
+                  {recipe.images && recipe.images.map(
                     (image) => (
                       <a
                         href={image.location}
@@ -347,4 +358,5 @@ class ViewRecipe extends Component {
 
 export default connect(
   mapStateToProps,
+  { removeRecipeFromStateOnUnselected },
 )(ViewRecipe);

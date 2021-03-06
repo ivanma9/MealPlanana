@@ -13,14 +13,14 @@ import ImageUploader from 'react-images-upload';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Schema } from 'mongoose';
-import { deleteRecipe, updateRecipe } from '../../actions/recipes';
+import { deleteRecipe, updateRecipe, removeRecipeFromStateOnUnselected } from '../../actions/recipes';
 
 const sanitizeHtml = require('sanitize-html');
 
 const mapStateToProps = (state) => ({
-  recipe: state.recipe.item,
-  loading: state.recipe.loading,
-  error: state.recipe.error,
+  currentRecipe: state.currentRecipe.item,
+  loading: state.currentRecipe.loading,
+  error: state.currentRecipe.error,
 });
 
 let editSuccessful = false;
@@ -57,16 +57,29 @@ class EditRecipe extends Component {
   }
 
   componentDidMount() {
-    this.setState({
-      title: this.props.recipe.title,
-      description: this.props.recipe.description,
-      ingredients: this.props.recipe.ingredients,
-      directions: this.props.recipe.directions,
-      tags: this.props.recipe.tags,
-      preview: this.props.recipe.preview,
-      // images: this.props.recipe.images,
-      // author: this.props.recipe.author
-    });
+    if (this.props.currentRecipe) {
+      this.setState({
+        title: this.props.currentRecipe.title,
+        description: this.props.currentRecipe.description,
+        ingredients: this.props.currentRecipe.ingredients,
+        directions: this.props.currentRecipe.directions,
+        tags: this.props.currentRecipe.tags,
+        preview: this.props.currentRecipe.preview,
+        // images: this.props.currentRecipe.images,
+        // author: this.props.currentRecipe.author
+      });
+    }
+  }
+
+  componentWillUnmount() {
+    console.log(this.props.history);
+    if (
+      this.props.history.action === 'POP'
+      || this.props.history.location.appState === undefined
+      || !this.props.history.location.appState.updatePressed
+    ) {
+      this.props.removeRecipeFromStateOnUnselected();
+    }
   }
 
   handleValidation() {
@@ -84,7 +97,7 @@ class EditRecipe extends Component {
 
   handleDeleteDialogYes = () => {
     this.setState({ deleteDialogOpen: false });
-    this.props.deleteRecipe(this.props.recipe._id);
+    this.props.deleteRecipe(this.props.currentRecipe._id);
     this.props.history.push({
       pathname: '/recipes',
     });
@@ -205,31 +218,35 @@ class EditRecipe extends Component {
     }
 
     // FIXME: recipe isn't updated when we push to /recipes/view
-    this.props.updateRecipe(recipe, this.props.recipe._id)
+    this.props.updateRecipe(recipe, this.props.currentRecipe._id)
       .then(() => {
         this.props.history.push({
           pathname: '/recipes/view/',
           appState: {
-            open: editSuccessful,
+            updatePressed: editSuccessful,
           },
         });
       });
   }
 
   render() {
-    const { error, loading, recipe } = this.props;
+    const { error, loading, currentRecipe } = this.props;
 
     if (error) {
       return (
-        <Typography variant="h1" align="center">
+        <Typography variant="h2" align="center">
           Error!
           {' '}
           {error.message}
         </Typography>
       );
     }
-    if (loading || recipe === null) {
-      return <Typography variant="h1" align="center">Loading...</Typography>;
+    if (loading) {
+      return <Typography variant="h2" align="center">Loading...</Typography>;
+    }
+
+    if (currentRecipe === null) {
+      return <Typography variant="h2" align="center">Please select a recipe to edit</Typography>;
     }
 
     return (
@@ -242,7 +259,7 @@ class EditRecipe extends Component {
             <ImageUploader
               onChange={this.onChangePreview}
               withPreview
-              defaultImages={recipe.preview && [recipe.preview.location]}
+              defaultImages={currentRecipe.preview && [currentRecipe.preview.location]}
               withIcon
               buttonText="Choose image"
               withLabel
@@ -271,7 +288,7 @@ class EditRecipe extends Component {
           <Form.Group controlid="formGroupRecipeDescription">
             <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}>Description</Typography>
             <Editor
-              initialValue={recipe.description}
+              initialValue={currentRecipe.description}
               init={{
                 height: 300,
                 menubar: false,
@@ -310,7 +327,7 @@ class EditRecipe extends Component {
           <Form.Group controlid="formGroupRecipeDirections">
             <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}>Directions</Typography>
             <Editor
-              initialValue={recipe.directions}
+              initialValue={currentRecipe.directions}
               init={{
                 height: 300,
                 menubar: false,
@@ -378,11 +395,11 @@ class EditRecipe extends Component {
 
 export default connect(
   mapStateToProps,
-  { updateRecipe, deleteRecipe },
+  { updateRecipe, deleteRecipe, removeRecipeFromStateOnUnselected },
 )(EditRecipe);
 
 EditRecipe.propTypes = {
-  recipe: PropTypes.shape({
+  currentRecipe: PropTypes.shape({
     _id: Schema.Types.ObjectId.isRequired,
     preview: PropTypes.shape({
       key: PropTypes.string,
@@ -406,7 +423,7 @@ EditRecipe.propTypes = {
 };
 
 EditRecipe.defaultProps = {
-  recipe: PropTypes.shape({
+  currentRecipe: PropTypes.shape({
     preview: null,
     description: '',
     tags: [],

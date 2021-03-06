@@ -6,35 +6,35 @@
 // TODO: load recipes to global state initially when the user logs in instead of waiting until they
 //       reach this page
 
-import {
-  Button, Card, CardContent, CardMedia, Chip, Fab, Grid, IconButton, Snackbar, Typography,
-} from '@material-ui/core';
-import React, { Component, useEffect, useState } from 'react';
+// TODO: periodically fetch from the db anyway to ensure data is up to date and nothing went wrong
 
+import {
+  Button,
+  Fab,
+  Grid,
+  Snackbar,
+  Typography,
+} from '@material-ui/core';
+import React, { Component } from 'react';
+
+import AddIcon from '@material-ui/icons/Add';
+import EventIcon from '@material-ui/icons/Event';
+import { Link } from 'react-router-dom';
+import MenuBookIcon from '@material-ui/icons/MenuBook';
 import MuiAlert from '@material-ui/lab/Alert';
 import PropTypes from 'prop-types';
-import Rating from '@material-ui/lab/Rating';
-import ReactHtmlParser from 'react-html-parser';
-import AddIcon from '@material-ui/icons/Add';
-import CheckIcon from '@material-ui/icons/Check';
-import CloseIcon from '@material-ui/icons/Close';
-import EventIcon from '@material-ui/icons/Event';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import MenuBookIcon from '@material-ui/icons/MenuBook';
-import { Link } from 'react-router-dom';
-import { Schema } from 'mongoose';
 import { connect } from 'react-redux';
-
-import Search from '../Search/Search';
 import AddMeal from '../AddMeal/add-meal.component';
 import Modal from '../modal/stdModal.component';
+import Recipe from './Recipe';
+import Search from '../Search/Search';
 import { addSelectedRecipeToState, fetchRecipes } from '../../actions/recipes';
 
 const mapStateToProps = (state) => ({
-  // * recipeList comes from the root reducer definition
-  recipes: state.recipeList.items,
-  loading: state.recipeList.loading,
-  error: state.recipeList.error,
+  // * recipes comes from the root reducer definition
+  recipes: state.recipes.items,
+  loading: state.recipes.loading,
+  error: state.recipes.error,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -42,129 +42,23 @@ const mapDispatchToProps = (dispatch) => ({
   addRecipeToState: (id) => dispatch(addSelectedRecipeToState(id)),
 });
 
-function Recipe(props) {
-  const [isSelected, setSelected] = useState(false);
-
-  useEffect(() => {
-    if (!props.createMealPromptIsOpen) {
-      setSelected(false);
-    }
-  }, [props.createMealPromptIsOpen]);
-
-  const createMealHandleRecipeSelected = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setSelected(true);
-    props.createMealHandleRecipeSelected(props.recipe);
-  };
-
-  const createMealHandleRecipeUnselected = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setSelected(false);
-    props.createMealHandleRecipeUnselected(props.recipe);
-  };
-
-  return (
-    <Link
-      to="/recipes/view"
-      style={{ color: 'black', textDecoration: 'none' }}
-    >
-      <Card
-        raised={
-          (!props.createMealPromptIsOpen && props.checkIfCurrentCard(props.recipe._id))
-          || isSelected
-        }
-        onMouseOver={() => props.onMouseOver(props.recipe._id)}
-        onMouseLeave={() => props.onMouseOut()}
-        onClick={() => props.addRecipeToState(props.recipe._id)}
-        style={{
-          width: '18rem', borderRadius: '10px', padding: '1rem', margin: '2rem',
-        }}
-      >
-        <CardMedia
-          component="img"
-          image={props.recipe.preview && props.recipe.preview.location}
-        />
-        <CardContent>
-          <Typography variant="h5" align="center">{props.recipe.title}</Typography>
-          <Typography
-            variant="body1"
-            component="span"
-            style={{
-              overflow: 'hidden', textOverflow: 'ellipsis', wordBreak: 'break-word', hyphens: 'auto',
-            }}
-          >
-            {ReactHtmlParser(props.recipe.description)}
-          </Typography>
-        </CardContent>
-        <div align="center">
-          {props.recipe.tags.map((tag, i) => (
-            <Chip
-              size="small"
-              label={tag}
-              style={{
-                backgroundColor: 'lawngreen', marginLeft: '1%', marginRight: '1%', marginBottom: '2%',
-              }}
-              // TODO: change i to be a unique identifier
-              // can use:
-              //   `const myItemsWithIds = myItems.map((item, index) => { ...item, myId: index });`
-              key={i}
-            />
-          ))}
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Rating
-            name="hearts"
-            defaultValue={0}
-            value={props.recipe.ratingTotal}
-            precision={0.2}
-            icon={<FavoriteIcon fontSize="inherit" />}
-            readOnly
-            style={{ color: 'red', marginTop: '5%', padding: '5%' }}
-          />
-          {props.createMealPromptIsOpen && !isSelected
-            && (
-            <IconButton
-              color="primary"
-              onClick={(e) => createMealHandleRecipeSelected(e)}
-              style={{ marginTop: '5%', padding: '5%' }}
-            >
-              <CheckIcon />
-            </IconButton>
-            )}
-          {props.createMealPromptIsOpen && isSelected
-            && (
-            <IconButton
-              color="secondary"
-              onClick={(e) => createMealHandleRecipeUnselected(e)}
-              style={{ marginTop: '5%', padding: '5%' }}
-            >
-              <CloseIcon />
-            </IconButton>
-            )}
-        </div>
-      </Card>
-    </Link>
-  );
-}
-
 class RecipesList extends Component {
   constructor(props) {
     super(props);
 
-    const open = this.props.location.appState !== undefined
-      ? this.props.location.appState.open
+    const createPressed = this.props.location.appState !== undefined
+      ? this.props.location.appState.createPressed
       : false;
 
     this.state = {
-      open,
+      createPressed,
       activeCardID: '',
       createMealPromptIsOpen: false,
       createMealSelectedRecipes: [],
     };
   }
 
+  // TODO: add check here so you don't always fetch on mount
   componentDidMount() {
     this.props.fetchRecipes();
   }
@@ -222,6 +116,7 @@ class RecipesList extends Component {
           createMealPromptIsOpen={this.state.createMealPromptIsOpen}
           createMealHandleRecipeSelected={this.createMealHandleRecipeSelected}
           createMealHandleRecipeUnselected={this.createMealHandleRecipeUnselected}
+          // fetchRecipes={this.props.fetchRecipes}
         />
       ),
     );
@@ -293,10 +188,10 @@ class RecipesList extends Component {
         </div>
         <Snackbar
           autoHideDuration={6000}
-          open={this.state.open}
-          onClose={() => { this.setState({ open: false }); }}
+          open={this.state.createPressed}
+          onClose={() => { this.setState({ createPressed: false }); }}
         >
-          <MuiAlert elevation={6} variant="filled" severity="success" onClose={() => { this.setState({ open: false }); }}>Recipe successfully created!</MuiAlert>
+          <MuiAlert elevation={6} variant="filled" severity="success" onClose={() => { this.setState({ createPressed: false }); }}>Recipe successfully created!</MuiAlert>
         </Snackbar>
         <Snackbar
           open={this.state.createMealPromptIsOpen}
@@ -354,44 +249,6 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps,
 )(RecipesList);
-
-// TODO: check if this makes all these props exist with default values if none is given.
-//       Would have to change the check if preview exists, for example.
-Recipe.propTypes = {
-  onMouseOver: PropTypes.func,
-  onMouseOut: PropTypes.func,
-  checkIfCurrentCard: PropTypes.func,
-  addRecipeToState: PropTypes.func,
-  createMealPromptIsOpen: PropTypes.bool,
-  createMealHandleRecipeSelected: PropTypes.func,
-  createMealHandleRecipeUnselected: PropTypes.func,
-  recipe: PropTypes.shape({
-    _id: Schema.Types.ObjectId.isRequired,
-    preview: PropTypes.shape({
-      key: PropTypes.string,
-      location: PropTypes.string,
-    }),
-    title: PropTypes.string.isRequired,
-    description: PropTypes.string,
-    ratingTotal: PropTypes.number,
-    tags: PropTypes.arrayOf(PropTypes.string),
-  }),
-};
-Recipe.defaultProps = {
-  onMouseOver: () => {},
-  onMouseOut: () => {},
-  checkIfCurrentCard: () => {},
-  addRecipeToState: () => {},
-  createMealPromptIsOpen: () => {},
-  createMealHandleRecipeSelected: () => {},
-  createMealHandleRecipeUnselected: () => {},
-  recipe: PropTypes.shape({
-    preview: null,
-    description: '',
-    ratingTotal: 0,
-    tags: [],
-  }),
-};
 
 RecipesList.propTypes = {
   fetchRecipes: PropTypes.func,

@@ -2,16 +2,19 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { login } from '../actions/session';
+import { fetchRecipes } from '../actions/recipes';
 
-const mapStateToProps = ({ errors }) => ({
+const mapStateToProps = ({ errors, recipes }) => ({
   errors,
+  recipes: recipes.items,
 });
 
 const mapDispatchtoProps = (dispatch) => ({
   login: (user) => dispatch(login(user)),
+  fetchRecipes: () => dispatch(fetchRecipes()),
 });
 
-const Login = ({ errors, login }) => {
+const Login = ({ errors, login, fetchRecipes }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const user = {
@@ -20,6 +23,8 @@ const Login = ({ errors, login }) => {
     };
 
     login(user);
+
+    fetchRecipes();
   };
 
   return (

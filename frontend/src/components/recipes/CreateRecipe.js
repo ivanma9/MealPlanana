@@ -191,7 +191,7 @@ class CreateRecipe extends Component {
         this.props.history.push({
           pathname: '/recipes',
           appState: {
-            open: createSuccessful,
+            createPressed: createSuccessful,
           },
         });
       });
