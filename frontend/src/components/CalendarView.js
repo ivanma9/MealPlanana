@@ -83,8 +83,6 @@ class CalendarView extends Component {
           children={<AddMeal />}
         />
         <h2 className="text-center">
-          NANA
-          {' '}
           {this.props.username}
           {' '}
           Monkeys Schedule 🙉
@@ -145,7 +143,7 @@ class CalendarView extends Component {
               buttonText: 'Day',
             },
             listWeek: {
-              buttonText: 'Todo list',
+              buttonText: 'Meals of the Week',
             },
             dayGridMonth: {
               buttonText: 'Month',

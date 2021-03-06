@@ -27,7 +27,7 @@ const Dashboard = ({ logout, session }) => (
         </div>
 
         <div className="container">
-          <Route path="/dashboard" exact component={CalendarView} />
+          <Route exact path="/dashboard" component={CalendarView} />
           <Route path="/addMeal" component={AddMeal} />
         </div>
 
