@@ -58,6 +58,17 @@ function Navbar({ logout }) {
 
               </Typography>
             </Link>
+            <Link to="/recipes/my-recipes" className="nav-link">
+              <Typography
+                variant="button"
+                style={{
+                  fontSize: 25,
+                }}
+              >
+                My Recipes
+
+              </Typography>
+            </Link>
           </li>
         </ul>
         <ul className="navbar-nav ml-auto">

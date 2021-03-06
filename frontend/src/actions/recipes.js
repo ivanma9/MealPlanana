@@ -75,7 +75,6 @@ export const fetchRecipesFailure = (error) => ({
 });
 
 export const fetchRecipes = () => async (dispatch) => {
-  console.log('fetching');
   dispatch(fetchRecipesBegin());
   const response = await apiUtil.fetchRecipes();
   const data = await response.json();

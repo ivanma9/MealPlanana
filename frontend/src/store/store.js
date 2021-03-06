@@ -12,7 +12,10 @@ const persistConfig = {
 };
 
 const persistedReducer = persistReducer(persistConfig, reducer);
-const middleware = applyMiddleware(thunk, logger);
+const middleware = applyMiddleware(
+  thunk,
+  // logger, //* uncomment if you want to see the logs of what redux is doing
+);
 const store = createStore(persistedReducer, middleware);
 const persistor = persistStore(store);
 
