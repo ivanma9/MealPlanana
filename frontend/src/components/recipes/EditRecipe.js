@@ -161,7 +161,7 @@ class EditRecipe extends Component {
   onChangePreview(picture) {
     if (picture === undefined || picture.length === 0) {
       this.setState({
-        preview: [],
+        preview: {},
         previewChanged: true,
       });
     } else {
@@ -252,6 +252,14 @@ class EditRecipe extends Component {
       return <Typography variant="h2" align="center">Please select a recipe to edit</Typography>;
     }
 
+    const defaultImages = () => {
+      console.log(this.state.preview);
+      if (!this.state.previewChanged) {
+        return [this.state.preview.location];
+      }
+      return undefined;
+    };
+
     return (
       <div className="container" style={{ marginTop: 10 }}>
         <h3>Update Recipe</h3>
@@ -262,7 +270,7 @@ class EditRecipe extends Component {
             <ImageUploader
               onChange={this.onChangePreview}
               withPreview
-              defaultImages={currentRecipe.preview && [currentRecipe.preview.location]}
+              defaultImages={defaultImages()}
               withIcon
               buttonText="Choose image"
               withLabel
