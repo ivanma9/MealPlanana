@@ -13,7 +13,9 @@ import ImageUploader from 'react-images-upload';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Schema } from 'mongoose';
-import { deleteRecipe, updateRecipe, removeRecipeFromStateOnUnselected } from '../../actions/recipes';
+import {
+  deleteRecipe, updateRecipe, removeRecipeFromStateOnUnselected, fetchRecipe,
+} from '../../actions/recipes';
 
 const sanitizeHtml = require('sanitize-html');
 
@@ -72,7 +74,6 @@ class EditRecipe extends Component {
   }
 
   componentWillUnmount() {
-    console.log(this.props.history);
     if (
       this.props.history.action === 'POP'
       || this.props.history.location.appState === undefined
@@ -217,8 +218,10 @@ class EditRecipe extends Component {
       };
     }
 
-    // FIXME: recipe isn't updated when we push to /recipes/view
     this.props.updateRecipe(recipe, this.props.currentRecipe._id)
+      .then(() => {
+        this.props.fetchRecipe(this.props.currentRecipe._id);
+      })
       .then(() => {
         this.props.history.push({
           pathname: '/recipes/view/',
@@ -395,7 +398,9 @@ class EditRecipe extends Component {
 
 export default connect(
   mapStateToProps,
-  { updateRecipe, deleteRecipe, removeRecipeFromStateOnUnselected },
+  {
+    updateRecipe, deleteRecipe, removeRecipeFromStateOnUnselected, fetchRecipe,
+  },
 )(EditRecipe);
 
 EditRecipe.propTypes = {
