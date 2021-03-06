@@ -265,6 +265,7 @@ class ViewRecipe extends Component {
               </Grid>
             </Grid>
 
+            {/* TODO: Add rounded courners to popover */}
             <Popover
               open={this.state.addRatingPopoverOpen || false}
               anchorEl={this.state.addRatingPopoverAnchorElement}
@@ -277,24 +278,31 @@ class ViewRecipe extends Component {
                 vertical: 'bottom',
                 horizontal: 'center',
               }}
+              style={{
+                borderRadius: '50px',
+              }}
             >
-              {/* FIXME: mouse hover on rating isn't aligned properly */}
-              <Rating
-                name="hearts"
-                defaultValue={0}
-                value={Number(this.state.userRating)}
-                precision={0.2}
-                icon={<FavoriteIcon fontSize="inherit" />}
-                onChange={onChangeRating}
+              <div
                 style={{
-                  color: 'red',
-                  marginTop: '2%',
                   paddingLeft: '1rem',
                   paddingRight: '1rem',
                   paddingTop: '0.5rem',
                   paddingBottom: '0.3rem',
+                  marginTop: '2%',
                 }}
-              />
+              >
+                <Rating
+                  name="hearts"
+                  defaultValue={0}
+                  value={Number(this.state.userRating)}
+                  precision={0.2}
+                  icon={<FavoriteIcon fontSize="inherit" />}
+                  onChange={onChangeRating}
+                  style={{
+                    color: 'red',
+                  }}
+                />
+              </div>
             </Popover>
 
             <SimpleReactLightbox>
