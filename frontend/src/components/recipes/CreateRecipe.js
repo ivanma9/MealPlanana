@@ -1,15 +1,14 @@
+import {
+  Button, TextField, Typography,
+} from '@material-ui/core';
 import React, { Component } from 'react';
 
-import Box from '@material-ui/core/Box';
-import ButtonMUI from '@material-ui/core/Button';
 import ChipInput from 'material-ui-chip-input';
 import { Editor } from '@tinymce/tinymce-react';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import { Form } from 'react-bootstrap';
-import Rating from '@material-ui/lab/Rating';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+
 import { createRecipe } from '../../actions/recipes';
 
 const sanitizeHtml = require('sanitize-html');
@@ -34,8 +33,10 @@ class CreateRecipe extends Component {
       directions: '',
       tags: [],
       // recipe_image: '',
-      ratingTotal: 0,
-      authorID: '',
+      author: {
+        id: '',
+        username: '',
+      },
 
       titleIsEmpty: false,
       // directionsIsEmpty: false,
@@ -49,13 +50,15 @@ class CreateRecipe extends Component {
     this.onAddTag = this.onAddTag.bind(this);
     this.onDeleteTag = this.onDeleteTag.bind(this);
     // this.onChangeRecipeImage = this.onChangeRecipeImage.bind(this);
-    this.onChangeRating = this.onChangeRating.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
 
   componentDidMount() {
     this.setState({
-      authorID: this.props.session.userId,
+      author: {
+        id: this.props.session.userId,
+        username: this.props.session.username,
+      },
     });
   }
 
@@ -114,12 +117,6 @@ class CreateRecipe extends Component {
     this.setState({
       directions: content,
     });
-
-    // if (content.length === 0) {
-    //   this.setState({ directionsIsEmpty: true });
-    // } else {
-    //   this.setState({ directionsIsEmpty: false });
-    // }
   }
 
   onAddTag(chip) {
@@ -140,13 +137,7 @@ class CreateRecipe extends Component {
   //   });
   // }
 
-  onChangeRating(e) {
-    this.setState({
-      ratingTotal: e.target.value,
-    });
-  }
-
-  onSubmit(e) {
+  onSubmit() {
     if (!this.handleValidation()) {
       console.log('Form invalid');
       return;
@@ -162,8 +153,8 @@ class CreateRecipe extends Component {
     console.log(`Recipe Directions: ${this.state.directions}`);
     console.log(`Recipe Tags: ${this.state.tags}`);
     // console.log(`Recipe Image: ${this.state.recipe_image}`);
-    console.log(`Recipe Rating: ${this.state.ratingTotal}`);
-    console.log(`Recipe Author: ${this.state.authorID}`);
+    console.log(`Recipe Author ID: ${this.state.author.id}`);
+    console.log(`Recipe Author Username: ${this.state.author.username}`);
 
     // TODO: more advanced sanitizing. Error if user trying to input bad data and don't post to db?
     const newRecipe = {
@@ -173,8 +164,11 @@ class CreateRecipe extends Component {
       directions: this.state.directions,
       tags: this.state.tags,
       // recipe_image: this.state.recipe_image,
-      ratingTotal: this.state.ratingTotal,
-      author: this.state.authorID,
+      ratingTotal: 0,
+      author: {
+        id: this.state.author.id,
+        username: this.state.author.username,
+      },
     };
 
     console.log(newRecipe);
@@ -186,8 +180,10 @@ class CreateRecipe extends Component {
       directions: '',
       tags: [],
       // recipe_image: '',
-      ratingTotal: 0,
-      authorID: '',
+      author: {
+        id: '',
+        username: '',
+      },
     });
 
     this.props.createRecipe(newRecipe)
@@ -320,31 +316,13 @@ class CreateRecipe extends Component {
 
           <br />
 
-          {/* Rating */}
-          <Form.Group controlid="formGroupRecipeRating">
-            <Box component="fieldset" mb={3} borderColor="transparent">
-              <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}>Rating</Typography>
-              <Rating
-                name="hearts"
-                defaultValue={0}
-                value={this.state.ratingTotal}
-                precision={0.5}
-                icon={<FavoriteIcon fontSize="inherit" />}
-                style={{ color: 'red' }}
-                onChange={this.onChangeRating}
-              />
-            </Box>
-          </Form.Group>
-
-          <br />
-
           <div style={{
             justifyContent: 'center',
             alignItems: 'center',
             display: 'flex',
           }}
           >
-            <ButtonMUI variant="contained" color="primary" onClick={this.onSubmit}>Create Recipe</ButtonMUI>
+            <Button variant="contained" color="primary" onClick={this.onSubmit}>Create Recipe</Button>
           </div>
         </Form>
       </div>
@@ -356,3 +334,33 @@ export default connect(
   mapStateToProps,
   { createRecipe },
 )(CreateRecipe);
+
+CreateRecipe.propTypes = {
+  session: PropTypes.shape({
+    email: PropTypes.string,
+    meals: PropTypes.arrayOf(PropTypes.object),
+    ratings: PropTypes.arrayOf(PropTypes.object),
+    recipes: PropTypes.arrayOf(PropTypes.object),
+    userId: PropTypes.string.isRequired,
+    username: PropTypes.string,
+  }).isRequired,
+  createRecipe: PropTypes.func,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+  error(props, propName, componentName) {
+    try {
+      JSON.parse(props[propName]);
+      return null;
+    } catch (e) {
+      return new Error(`Invalid prop \`${propName}\` supplied to \`${componentName}\`. Validation failed.`);
+    }
+  },
+  loading: PropTypes.bool,
+};
+
+CreateRecipe.defaultProps = {
+  createRecipe: () => {},
+  error: null,
+  loading: false,
+};

@@ -1,13 +1,5 @@
 import {
-  Card,
-  CardMedia,
-  Chip,
-  Fab,
-  Grid,
-  Paper,
-  Popover,
-  Snackbar,
-  Typography,
+  Card, CardMedia, Chip, Fab, Grid, Paper, Popover, Snackbar, Typography,
 } from '@material-ui/core';
 import React, { Component } from 'react';
 import SimpleReactLightbox, { SRLWrapper } from 'simple-react-lightbox';
@@ -83,7 +75,7 @@ class ViewRecipe extends Component {
     const checkIfCurrentCard = (currentID) => this.state.activeID === currentID;
 
     const handleEditButtonClicked = (e) => {
-      if (this.props.userID !== this.props.recipe.author) {
+      if (this.props.userID !== this.props.recipe.author.id) {
         this.setState({
           cannotEditPopoverOpen: true,
           cannotEditPopoverAnchorElement: e.currentTarget,

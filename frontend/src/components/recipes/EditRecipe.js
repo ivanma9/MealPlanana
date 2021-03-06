@@ -1,12 +1,8 @@
+/* eslint no-undef: 0 */ // --> OFF
+
 import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  TextField,
-  Typography,
+  Button, Dialog, DialogActions, DialogContent,
+  DialogContentText, DialogTitle, TextField, Typography,
 } from '@material-ui/core';
 import React, { Component } from 'react';
 
@@ -15,6 +11,8 @@ import { Editor } from '@tinymce/tinymce-react';
 import { Form } from 'react-bootstrap';
 import ImageUploader from 'react-images-upload';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { Schema } from 'mongoose';
 import { deleteRecipe, updateRecipe } from '../../actions/recipes';
 
 const sanitizeHtml = require('sanitize-html');
@@ -160,7 +158,7 @@ class EditRecipe extends Component {
     }
   }
 
-  onSubmit(e) {
+  onSubmit() {
     if (!this.handleValidation()) {
       console.log('Form invalid');
       return;
@@ -382,3 +380,41 @@ export default connect(
   mapStateToProps,
   { updateRecipe, deleteRecipe },
 )(EditRecipe);
+
+EditRecipe.propTypes = {
+  recipe: PropTypes.shape({
+    _id: Schema.Types.ObjectId.isRequired,
+    preview: PropTypes.shape({
+      key: PropTypes.string,
+      location: PropTypes.string,
+    }),
+    title: PropTypes.string.isRequired,
+    description: PropTypes.string,
+    tags: PropTypes.arrayOf(PropTypes.string),
+    ingredients: PropTypes.arrayOf(PropTypes.string),
+    directions: PropTypes.string,
+  }),
+  deleteRecipe: PropTypes.func,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+  updateRecipe: PropTypes.func,
+  error: PropTypes.shape({
+    message: PropTypes.string,
+  }),
+  loading: PropTypes.bool,
+};
+
+EditRecipe.defaultProps = {
+  recipe: PropTypes.shape({
+    preview: null,
+    description: '',
+    tags: [],
+    ingredients: [],
+    directions: '',
+  }),
+  deleteRecipe: () => {},
+  updateRecipe: () => {},
+  error: null,
+  loading: false,
+};
