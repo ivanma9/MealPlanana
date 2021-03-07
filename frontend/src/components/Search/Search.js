@@ -23,7 +23,7 @@ export default class Search extends Component {
 
   render() {
     return (
-      <div style={{ display: 'flex', 'justify-content': 'center', marginTop: '1%' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1%' }}>
         <div style={{ width: '20%' }}>
           <ReactSearchAutocomplete
             items={['test1', 'test2', 'testred', 'testblue']}

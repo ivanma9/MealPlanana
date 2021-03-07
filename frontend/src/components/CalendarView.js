@@ -33,7 +33,6 @@ class CalendarView extends Component {
       addModalVisible: false,
       mealSelected: '',
     };
-    this.handleAddMeal = this.handleAddMeal.bind(this);
     // this.handleEditMeal = this.handleEditMeal.bind(this);
     // this.handleChangeView4Day = this.handleChangeView4Day.bind(this);
     // this.handleChangeViewDay = this.handleChangeViewDay.bind(this);
@@ -46,10 +45,6 @@ class CalendarView extends Component {
   changeDate(e) {
     console.log(e);
     this.setState({ dateState: e });
-  }
-
-  handleAddMeal() {
-    this.addModalRef.current.open();
   }
 
   handleEditMeal() {
@@ -72,17 +67,6 @@ class CalendarView extends Component {
 
     return (
       <div>
-        <Modal
-          ref={this.addModalRef}
-          header={(
-            <h3>
-              {'  '}
-              Add Meal
-            </h3>
-          )}
-          contentStyle={{ width: 500, height: 370 }}
-          children={<AddMeal />}
-        />
         <Modal
           ref={this.viewModalRef}
           headerDisabled
@@ -122,9 +106,11 @@ class CalendarView extends Component {
           }
           `}
           </style>
-          <Button variant="flat" size="xxl" onClick={this.handleAddMeal}>
-            Add Meal
-          </Button>
+          <Link to="/recipes">
+            <Button variant="flat" size="xxl">
+              Add Meal
+            </Button>
+          </Link>
 
           {/* <Button className="m-4 p-2" onClick={this.handleChangeViewWeek}>
             Edit Meal

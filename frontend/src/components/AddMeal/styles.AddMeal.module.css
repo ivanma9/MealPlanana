@@ -3,4 +3,5 @@
     flex-direction: row;
     padding-top: 2%;
     padding-bottom: 1%;    
+    justify-content: 'center';
 }

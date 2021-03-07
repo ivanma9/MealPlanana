@@ -77,6 +77,7 @@ class RecipesList extends Component {
 
   handleCreateMealPromptDoneClick = () => {
     this.addModalRef.current.open();
+    this.handleCreateMealPromptClose();
     // TODO: deal with resetting the selected states for each recipe and finishing the
     //       flow to get rid of the prompt after the user adds their meal
   }
@@ -239,10 +240,10 @@ class RecipesList extends Component {
               Add Meal
             </h3>
           )}
-          contentStyle={{ width: '30%', height: '35%' }}
-          children={<AddMeal />}
-          recipes={this.state.createMealSelectedRecipes}
-        />
+          contentStyle={{ width: 500, height: 'fit-content' }}
+        >
+          <AddMeal recipes={this.state.createMealSelectedRecipes} />
+        </Modal>
       </div>
     );
   }
