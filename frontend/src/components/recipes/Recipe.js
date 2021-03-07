@@ -5,11 +5,11 @@ import {
   Chip,
   IconButton,
   Typography,
+  Popover,
 } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 
-import CheckIcon from '@material-ui/icons/Check';
-import AddIcon from '@material-ui/icons/Add';
+import { FaCheck, FaPlus } from 'react-icons/fa';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -19,6 +19,20 @@ import { Schema } from 'mongoose';
 
 export default function Recipe(props) {
   const [isSelected, setSelected] = useState(false);
+  // const [maxRecipesReachedForMealPopoverAnchorEl,
+  //   setMaxRecipesReachedForMealPopoverAnchorEl] = useState(null);
+
+  // const handleMaxRecipesReachedForMealPopoverOpen = (e) => {
+  //   if (props.createMealSelectedRecipesLength >= props.MAX_RECIPES_FOR_MEAL_CREATION) {
+  //     setMaxRecipesReachedForMealPopoverAnchorEl(e.currentTarget);
+  //   }
+  // };
+
+  // const handleMaxRecipesReachedForMealPopoverClose = () => {
+  //   setMaxRecipesReachedForMealPopoverAnchorEl(null);
+  // };
+
+  // const maxRecipesReachedForMealPopoverOpen = Boolean(maxRecipesReachedForMealPopoverAnchorEl);
 
   useEffect(() => {
     if (!props.createMealPromptIsOpen) {
@@ -106,12 +120,19 @@ export default function Recipe(props) {
           />
           {props.createMealPromptIsOpen && !isSelected
             && (
-            <IconButton
-              onClick={(e) => createMealHandleRecipeSelected(e)}
-              style={{ marginTop: '5%', padding: '5%' }}
-            >
-              <AddIcon style={{ stroke: 'dimgray', strokeWidth: 2 }} />
-            </IconButton>
+              <IconButton
+                onClick={(e) => createMealHandleRecipeSelected(e)}
+              // onMouseEnter={handleMaxRecipesReachedForMealPopoverOpen}
+              // onMouseLeave={handleMaxRecipesReachedForMealPopoverClose}
+                disabled={
+                props.createMealSelectedRecipesLength >= props.MAX_RECIPES_FOR_MEAL_CREATION
+              }
+                style={{
+                  marginTop: '5%', padding: '5%', pointerEvents: 'auto',
+                }}
+              >
+                <FaPlus />
+              </IconButton>
             )}
           {props.createMealPromptIsOpen && isSelected
             && (
@@ -120,10 +141,26 @@ export default function Recipe(props) {
               onClick={(e) => createMealHandleRecipeUnselected(e)}
               style={{ marginTop: '5%', padding: '5%' }}
             >
-              <CheckIcon style={{ stroke: 'steelblue', strokeWidth: 2 }} />
+              <FaCheck />
             </IconButton>
             )}
         </div>
+        {/* <Popover
+          open={maxRecipesReachedForMealPopoverOpen}
+          anchorEl={maxRecipesReachedForMealPopoverAnchorEl}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+          transformOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+          onClose={handleMaxRecipesReachedForMealPopoverOpen}
+          disableRestoreFocus
+        >
+          Max recipes reached!
+        </Popover> */}
       </Card>
     </Link>
   );
