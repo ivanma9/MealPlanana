@@ -63,7 +63,7 @@ export default function Recipe(props) {
   return (
     <Link
       to="/recipes/view"
-      style={{ color: 'black', textDecoration: 'none' }}
+      style={{ color: 'black', textDecoration: 'none', margin: '2rem' }}
     >
       <Card
         raised={
@@ -74,7 +74,7 @@ export default function Recipe(props) {
         onMouseLeave={() => props.onMouseOut()}
         onClick={() => props.addRecipeToState(props.recipe._id)}
         style={{
-          width: '18rem', borderRadius: '10px', padding: '1rem', margin: '2rem',
+          width: '18rem', borderRadius: '10px', padding: '1rem',
         }}
       >
         <CardMedia
