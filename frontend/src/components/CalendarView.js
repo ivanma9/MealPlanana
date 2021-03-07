@@ -68,11 +68,10 @@ class CalendarView extends Component {
     for (recipe in (this.props.recipes)) {
       console.log(recipeID + " : " + this.props.recipes[recipe]._id);
       if (recipeID === this.props.recipes[recipe]._id) {
-        console.log('Found');
-        return this.props.recipes.[recipe].description;
+        return this.props.recipes.[recipe];
       }
     }
-    return 'RIP';
+    return "Not Found";
   }
 
   render() {
