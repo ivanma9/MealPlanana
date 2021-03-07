@@ -62,15 +62,15 @@ const addUserRating = (ratings) => ({
   payload: { ratings },
 });
 
-export const updateMeals = (meals) => async (dispatch, getState) => {
-  const user = getState().session;
-  user.meals = meals;
+export const updateMeals = (meal) => async (dispatch, getState) => {
+  const user = JSON.parse(JSON.stringify(getState().session));
+  user.recipes = user.meals.concat(meal);
 
   const response = await apiUtil.updateUser(user);
   const data = await response.json();
 
   if (response.ok) {
-    return dispatch(updateUserMeals(meals));
+    return dispatch(updateUserMeals(user.meals));
   }
   return dispatch(receiveErrors(data));
 };
@@ -88,16 +88,15 @@ export const addRecipe = (recipeID) => async (dispatch, getState) => {
   return dispatch(receiveErrors(data));
 };
 
-export const addRating = (ratings) => async (dispatch, getState) => {
-  const user = getState().session;
-
-  user.ratings = ratings;
+export const addRating = (rating) => async (dispatch, getState) => {
+  const user = JSON.parse(JSON.stringify(getState().session));
+  user.ratings = user.ratings.concat(rating);
 
   const response = await apiUtil.updateUser(user);
   const data = await response.json();
 
   if (response.ok) {
-    return dispatch(addUserRating(ratings));
+    return dispatch(addUserRating(user.ratings));
   }
   return dispatch(receiveErrors(data));
 };
