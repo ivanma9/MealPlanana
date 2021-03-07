@@ -77,7 +77,7 @@ export default class ViewMeal extends Component {
         </div>
         <br />
         <h2>
-          {this.props.recipeInfo.title}
+          {this.props.recipeInfo}
         </h2>
       </div>
     );
