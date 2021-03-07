@@ -64,7 +64,7 @@ const addUserRating = (ratings) => ({
 
 export const updateMeals = (meal) => async (dispatch, getState) => {
   const user = JSON.parse(JSON.stringify(getState().session));
-  user.recipes = user.meals.concat(meal);
+  user.meals = user.meals.concat(meal);
 
   const response = await apiUtil.updateUser(user);
   const data = await response.json();
