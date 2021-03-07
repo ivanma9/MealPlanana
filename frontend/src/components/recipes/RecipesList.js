@@ -8,6 +8,9 @@
 
 // TODO: periodically fetch from the db anyway to ensure data is up to date and nothing went wrong
 
+// TODO: fix mouse hover next to card pushing View with no recipe to view. Change link to directly
+//       be card and not include padding?
+
 import {
   Button,
   Fab,
