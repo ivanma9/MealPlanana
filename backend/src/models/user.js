@@ -20,7 +20,7 @@ const UserSchema = new mongoose.Schema({
   meals: {
     type: [{
       title: String,
-      recipe: mongoose.SchemaTypes.ObjectId,
+      recipes: [mongoose.SchemaTypes.ObjectId],
       start_date: Date,
       end_date: Date,
       days: [Boolean],
