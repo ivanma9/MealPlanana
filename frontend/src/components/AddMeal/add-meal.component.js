@@ -14,8 +14,6 @@ import addMealStyles from './styles.AddMeal.module.css';
 import Modal from '../modal/stdModal.component';
 import { updateMeals } from '../../actions/session';
 
-const mongoose = require('mongoose');
-
 const DEFAULT_COLOR = '#007AFF';
 
 const getFontColor = (backgroundColor) => {
@@ -25,10 +23,6 @@ const getFontColor = (backgroundColor) => {
   const b = parseInt(`0x${backgroundColor[5]}${backgroundColor[6]}`, 16);
   return r + g + b > 400 ? '#000000' : '#FFFFFF';
 };
-
-const mapDispatchToProps = (dispatch) => ({
-  updateMeals: () => dispatch(updateMeals()),
-});
 
 class AddMeal extends Component {
   constructor(props) {
@@ -58,6 +52,7 @@ class AddMeal extends Component {
       duration: 60,
       timeUnits: 'Minutes',
       selectedRecipeTitles: recipeTitles,
+      color: DEFAULT_COLOR,
     };
 
     this.onSubmit = this.onSubmit.bind(this);
@@ -92,11 +87,12 @@ class AddMeal extends Component {
   onSubmit(e) {
     e.preventDefault();
     // TODO RESET ALL STATE
+
+    this.addMeal(this.getMeal());
     this.setState({
       startTime: null,
       color: DEFAULT_COLOR,
     });
-    this.addMeal(this.getMeal());
   }
 
   getMeal() {
@@ -109,8 +105,8 @@ class AddMeal extends Component {
     return (
       {
         title: this.state.mealTitle,
-        recipe: mongoose.Types.ObjectId(this.recipeIDs[0]),
-        // TODO recipes: this.recipeIDs,
+        // recipe: mongoose.Types.ObjectId(this.recipeIDs[0]),
+        recipes: this.recipeIDs,
         start_date: startD,
         end_date: endD,
         days: this.state.weekDays,
@@ -129,7 +125,6 @@ class AddMeal extends Component {
   }
 
   addMeal(meal) {
-    console.log('MEAL: ', meal);
     this.props.updateMeals(meal);
   }
 
@@ -349,5 +344,5 @@ AddMeal.defaultProps = {
 
 export default connect(
   null,
-  mapDispatchToProps,
+  { updateMeals },
 )(AddMeal);
