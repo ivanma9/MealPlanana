@@ -193,7 +193,7 @@ class EditRecipe extends Component {
         // recipe_image: this.state.recipe_image,
         // recipe_author: this.state.recipe_author,
       };
-    } else if (this.state.preview.length !== 0) {
+    } else if (Object.keys(this.state.preview).length !== 0) {
       recipe = {
         title: sanitizeHtml(this.state.title),
         description: this.state.description,
@@ -201,7 +201,7 @@ class EditRecipe extends Component {
         directions: this.state.directions,
         tags: this.state.tags,
         preview: this.state.preview[0],
-        // preview: this.state.preview also seems to work?
+        // `preview: this.state.preview` also seems to work?
         // recipe_image: this.state.recipe_image,
         // recipe_author: this.state.recipe_author,
       };
@@ -212,7 +212,7 @@ class EditRecipe extends Component {
         ingredients: this.state.ingredients,
         directions: this.state.directions,
         tags: this.state.tags,
-        preview: {},
+        preview: null,
         // recipe_image: this.state.recipe_image,
         // recipe_author: this.state.recipe_author,
       };
@@ -254,7 +254,7 @@ class EditRecipe extends Component {
 
     const defaultImages = () => {
       console.log(this.state.preview);
-      if (!this.state.previewChanged) {
+      if (this.state.preview && !this.state.previewChanged) {
         return [this.state.preview.location];
       }
       return undefined;
@@ -274,6 +274,7 @@ class EditRecipe extends Component {
               withIcon
               buttonText="Choose image"
               withLabel
+              label="Please close the image before uploading a new one | Max file size: 5mb | Accepted: jpg, gif, png"
               singleImage
             />
           </Form.Group>
