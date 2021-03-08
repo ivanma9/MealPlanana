@@ -1,4 +1,5 @@
 import * as apiUtil from '../util/recipes';
+import { addRecipe } from './session';
 
 // TODO: reorganize and minimize reducers, actions, and utils used. Look at the user ones as an
 //       example
@@ -125,11 +126,13 @@ export const createRecipeFailure = (error) => ({
   payload: { error },
 });
 
-export const createRecipe = (recipe) => async (dispatch) => {
+export const createRecipe = (recipe) => async (dispatch, getState) => {
   const response = await apiUtil.createRecipe(recipe);
   const data = await response.json();
 
   if (response.ok) {
+    const recipeID = data._id;
+    dispatch(addRecipe(recipeID));
     // dispatch(addCreatedRecipeToRecipes(recipe));
     return dispatch(createRecipeSuccess());
   }

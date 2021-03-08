@@ -5,13 +5,13 @@ import {
   FETCH_RECIPES_SUCCESS,
 } from '../../actions/recipes';
 
-const initialListState = {
+const initialRecipesState = {
   items: [],
   loading: false,
   error: null,
 };
 
-export default function recipesReducer(state = initialListState, action) {
+export default function recipesReducer(state = initialRecipesState, action) {
   Object.freeze(state);
   switch (action.type) {
     // case ADD_CREATED_RECIPE_TO_RECIPES:

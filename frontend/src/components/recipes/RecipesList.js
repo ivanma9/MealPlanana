@@ -8,6 +8,9 @@
 
 // TODO: periodically fetch from the db anyway to ensure data is up to date and nothing went wrong
 
+// TODO: fix mouse hover next to card pushing View with no recipe to view. Change link to directly
+//       be card and not include padding?
+
 import {
   Button,
   Fab,
@@ -42,6 +45,8 @@ const mapDispatchToProps = (dispatch) => ({
   addRecipeToState: (id) => dispatch(addSelectedRecipeToState(id)),
 });
 
+const MAX_RECIPES_FOR_MEAL_CREATION = 20;
+
 class RecipesList extends Component {
   constructor(props) {
     super(props);
@@ -74,6 +79,7 @@ class RecipesList extends Component {
 
   handleCreateMealPromptDoneClick = () => {
     this.addModalRef.current.open();
+    this.handleCreateMealPromptClose();
     // TODO: deal with resetting the selected states for each recipe and finishing the
     //       flow to get rid of the prompt after the user adds their meal
   }
@@ -116,6 +122,8 @@ class RecipesList extends Component {
           createMealPromptIsOpen={this.state.createMealPromptIsOpen}
           createMealHandleRecipeSelected={this.createMealHandleRecipeSelected}
           createMealHandleRecipeUnselected={this.createMealHandleRecipeUnselected}
+          createMealSelectedRecipesLength={this.state.createMealSelectedRecipes.length}
+          MAX_RECIPES_FOR_MEAL_CREATION={MAX_RECIPES_FOR_MEAL_CREATION}
           // fetchRecipes={this.props.fetchRecipes}
         />
       ),
@@ -147,6 +155,7 @@ class RecipesList extends Component {
           alignItems="flex-start"
           justify="space-evenly"
           // spacing={3}
+          style={{ paddingBottom: '10rem' }}
         >
           {this.recipeList()}
         </Grid>
@@ -210,7 +219,6 @@ class RecipesList extends Component {
             )}
             style={{
               width: '68vw',
-              height: '6rem',
               display: 'inline-flex',
               alignItems: 'center',
             }}
@@ -224,7 +232,11 @@ class RecipesList extends Component {
                 fontSize: 30,
               }}
             >
-              Select recipe(s) to add to your meal!
+              Select up to
+              {' '}
+              {MAX_RECIPES_FOR_MEAL_CREATION}
+              {' '}
+              recipe(s) to add to your meal!
             </Typography>
           </MuiAlert>
         </Snackbar>
@@ -236,10 +248,10 @@ class RecipesList extends Component {
               Add Meal
             </h3>
           )}
-          contentStyle={{ width: '30%', height: '35%' }}
-          children={<AddMeal />}
-          recipes={this.state.createMealSelectedRecipes}
-        />
+          contentStyle={{ width: 500, height: 'fit-content' }}
+        >
+          <AddMeal recipes={this.state.createMealSelectedRecipes} />
+        </Modal>
       </div>
     );
   }

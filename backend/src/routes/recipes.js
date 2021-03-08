@@ -61,7 +61,7 @@ recipeRoutes.post('/add', recipeUploader, async (req, res) => {
 
     const newRecipe = new Recipe(update);
     await newRecipe.save();
-    return checkRes(res, newRecipe, false, 'Successfully added recipe!', 'Something went wrong!');
+    return checkRes(res, newRecipe, true, 'Successfully added recipe!', 'Something went wrong!');
   } catch (err) {
     if (err instanceof multer.MulterError) {
       console.log('multer did an oopsie in recipe creation');
