@@ -5,9 +5,11 @@ import ReactDOM from 'react-dom';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import App from './components/App';
 import { checkLoggedIn } from './util/session';
-import { store, persistor } from './store/store';
+import configureStore from './store/store';
 
 const renderApp = (preloadedState) => {
+  const { store, persistor } = configureStore(preloadedState);
+
   ReactDOM.render(
     <Provider store={store}>
       <PersistGate loading={<h1>loading...</h1>} persistor={persistor}>
