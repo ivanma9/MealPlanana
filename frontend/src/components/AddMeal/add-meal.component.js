@@ -24,6 +24,11 @@ const getFontColor = (backgroundColor) => {
   return r + g + b > 400 ? '#000000' : '#FFFFFF';
 };
 
+const mapStateToProps = (state) => ({
+  errors: state.session.errors,
+  meals: state.session.meals,
+});
+
 class AddMeal extends Component {
   constructor(props) {
     super(props);
@@ -125,7 +130,9 @@ class AddMeal extends Component {
   }
 
   addMeal(meal) {
-    this.props.updateMeals(meal);
+    let newMeals = this.props.meals;
+    newMeals = newMeals.concat(meal);
+    this.props.updateMeals(newMeals);
   }
 
   toggleColorPicker() {
@@ -343,6 +350,6 @@ AddMeal.defaultProps = {
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   { updateMeals },
 )(AddMeal);
