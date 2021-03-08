@@ -9,8 +9,12 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { HexColorPicker } from 'react-colorful';
 import Switch from 'react-switch';
 import NumericInput from 'react-numeric-input';
+import { connect } from 'react-redux';
 import addMealStyles from './styles.AddMeal.module.css';
 import Modal from '../modal/stdModal.component';
+import { updateMeals } from '../../actions/session';
+
+const mongoose = require('mongoose');
 
 const DEFAULT_COLOR = '#007AFF';
 
@@ -19,19 +23,23 @@ const getFontColor = (backgroundColor) => {
   const r = parseInt(`0x${backgroundColor[1]}${backgroundColor[2]}`, 16);
   const g = parseInt(`0x${backgroundColor[3]}${backgroundColor[4]}`, 16);
   const b = parseInt(`0x${backgroundColor[5]}${backgroundColor[6]}`, 16);
-  console.log(r, g, b);
   return r + g + b > 400 ? '#000000' : '#FFFFFF';
 };
 
-export default class AddMeal extends Component {
+const mapDispatchToProps = (dispatch) => ({
+  updateMeals: () => dispatch(updateMeals()),
+});
+
+class AddMeal extends Component {
   constructor(props) {
     super(props);
 
     // Get list of selected recipes to list below title
     let recipeTitles = '';
+    this.recipeIDs = [];
     let maxReached = false;
     this.props.recipes.forEach((recipe) => {
-      console.log(recipe.title);
+      this.recipeIDs.push(recipe._id);
       if (recipe.title) {
         if (recipeTitles.length < 140) recipeTitles += ` ${recipe.title},`;
         else if (!maxReached) {
@@ -58,6 +66,7 @@ export default class AddMeal extends Component {
     this.toggleColorPicker = this.toggleColorPicker.bind(this);
     this.handleSelectColor = this.handleSelectColor.bind(this);
     this.handleRepeatSwitch = this.handleRepeatSwitch.bind(this);
+    this.addMeal = this.addMeal.bind(this);
   }
 
   handleSelectColor() {
@@ -82,25 +91,33 @@ export default class AddMeal extends Component {
 
   onSubmit(e) {
     e.preventDefault();
-    const mealObj = {
-
-    };
-    console.log(mealObj);
+    // TODO RESET ALL STATE
     this.setState({
       startTime: null,
       color: DEFAULT_COLOR,
     });
-    this.props.onSubmit();
+    this.addMeal(this.getMeal());
   }
 
   getMeal() {
+    const startD = new Date(this.state.startDate);
+    const endD = new Date(this.state.startDate);
+    this.state.timeUnits === 'Hours'
+      ? endD.setHours(startD.getHours() + this.state.duration)
+      : endD.setMinutes(startD.getMinutes() + this.state.duration);
+
     return (
       {
         title: this.state.mealTitle,
-        daysOfWeek: this.state.weekDays,
-        date: this.state.date,
+        recipe: mongoose.Types.ObjectId(this.recipeIDs[0]),
+        // TODO recipes: this.recipeIDs,
+        start_date: startD,
+        end_date: endD,
+        days: this.state.weekDays,
+        duration: parseInt(this.state.duration, 10),
         color: this.state.color,
-        start_date: this.state.startTime,
+        freqType: this.state.freq.toUpperCase(),
+        interval: parseInt(this.state.interval, 10),
       });
   }
 
@@ -109,6 +126,11 @@ export default class AddMeal extends Component {
       color: this.state.weekDays.includes(day) ? this.state.fontColor : '#000000',
       backgroundColor: this.state.weekDays.includes(day) ? this.state.color : '#FFFFFF',
     };
+  }
+
+  addMeal(meal) {
+    console.log('MEAL: ', meal);
+    this.props.updateMeals(meal);
   }
 
   toggleColorPicker() {
@@ -126,7 +148,6 @@ export default class AddMeal extends Component {
    colorModalRef = React.createRef();
 
    render() {
-     console.log('RECIPES:', this.props.recipes, this.state.recipeTitles);
      const SWITCH_ICON = (
        <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '22%' }}>
          <GiBananaBunch color={this.state.fontColor ? this.state.fontColor : '#000000'} />
@@ -325,3 +346,8 @@ AddMeal.propTypes = {
 AddMeal.defaultProps = {
   onSubmit: () => {},
 };
+
+export default connect(
+  null,
+  mapDispatchToProps,
+)(AddMeal);
