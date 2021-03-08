@@ -8,6 +8,7 @@ import { Editor } from '@tinymce/tinymce-react';
 import { Form } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import ImageUploader from 'react-images-upload';
 
 import { createRecipe } from '../../actions/recipes';
 
@@ -32,6 +33,7 @@ class CreateRecipe extends Component {
       ingredients: [],
       directions: '',
       tags: [],
+      preview: {},
       // recipe_image: '',
       author: {
         id: '',
@@ -49,6 +51,7 @@ class CreateRecipe extends Component {
     this.onChangeDirections = this.onChangeDirections.bind(this);
     this.onAddTag = this.onAddTag.bind(this);
     this.onDeleteTag = this.onDeleteTag.bind(this);
+    this.onChangePreview = this.onChangePreview.bind(this);
     // this.onChangeRecipeImage = this.onChangeRecipeImage.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -66,17 +69,11 @@ class CreateRecipe extends Component {
     let formIsValid = true;
 
     const { title } = this.state;
-    // const { directions } = this.state;
 
     if (title.length === 0) {
       this.setState({ titleIsEmpty: true });
       formIsValid = false;
     } else this.setState({ titleIsEmpty: false });
-
-    // if (directions.length === 0) {
-    //   this.setState({ directionsIsEmpty: true });
-    //   formIsValid = false;
-    // } else this.setState({ directionsIsEmpty: false });
 
     return formIsValid;
   }
@@ -131,6 +128,12 @@ class CreateRecipe extends Component {
     }));
   }
 
+  onChangePreview(picture) {
+    this.setState({
+      preview: picture,
+    });
+  }
+
   // onChangeRecipeImage(e) {
   //   this.setState({
   //     recipe_image: e.target.value,
@@ -152,6 +155,7 @@ class CreateRecipe extends Component {
     console.log(`Recipe Ingredients: ${this.state.ingredients}`);
     console.log(`Recipe Directions: ${this.state.directions}`);
     console.log(`Recipe Tags: ${this.state.tags}`);
+    console.log(`Recipe Preview: ${this.state.preview}`);
     // console.log(`Recipe Image: ${this.state.recipe_image}`);
     console.log(`Recipe Author ID: ${this.state.author.id}`);
     console.log(`Recipe Author Username: ${this.state.author.username}`);
@@ -163,6 +167,7 @@ class CreateRecipe extends Component {
       ingredients: this.state.ingredients,
       directions: this.state.directions,
       tags: this.state.tags,
+      preview: this.state.preview[0],
       // recipe_image: this.state.recipe_image,
       ratingTotal: 0,
       author: {
@@ -218,6 +223,19 @@ class CreateRecipe extends Component {
         <h3>Create New Recipe</h3>
 
         <Form>
+
+          {/* Preview */}
+          <Form.Group controlid="formGroupRecipePreview">
+            <ImageUploader
+              onChange={this.onChangePreview}
+              withPreview
+              withIcon
+              buttonText="Choose image"
+              withLabel
+              label="Max file size: 5mb | Accepted: jpg, gif, png"
+              singleImage
+            />
+          </Form.Group>
 
           {/* Title */}
           {/* TODO: Implement check to make sure something is entered in the field */}
@@ -340,7 +358,7 @@ CreateRecipe.propTypes = {
     email: PropTypes.string,
     meals: PropTypes.arrayOf(PropTypes.object),
     ratings: PropTypes.arrayOf(PropTypes.object),
-    recipes: PropTypes.arrayOf(PropTypes.object),
+    recipes: PropTypes.arrayOf(PropTypes.string),
     userId: PropTypes.string.isRequired,
     username: PropTypes.string,
   }).isRequired,
