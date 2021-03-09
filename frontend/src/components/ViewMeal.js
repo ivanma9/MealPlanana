@@ -1,12 +1,15 @@
 import { MdEdit } from 'react-icons/md';
 import { BsFillTrashFill } from 'react-icons/bs';
 import React, { Component } from 'react';
-import { Button, ButtonGroup, Container } from 'react-bootstrap';
+import { Button, ListGroup, Container } from 'react-bootstrap';
 import ReactHtmlParser from 'react-html-parser';
 
 export default class ViewMeal extends Component {
   constructor(props) {
     super(props);
+    this.mealInfo = {};
+    this.recipeInfo = {};
+    this.header = '';
 
     this.state = {
 
@@ -21,10 +24,14 @@ export default class ViewMeal extends Component {
 
   deleteMeal() {
     // TODO: Delete meal endpt
-    console.log('ko');
+  }
+
+  daysOfWeek() {
+    // TODO daysOfweek Move LISTGROUP
   }
 
   render() {
+    this.daysOfWeek();
     return (
       <div style={{ marginTop: 10, fontSize: 12 }}>
         <Container className="container-fluid">
@@ -62,29 +69,39 @@ export default class ViewMeal extends Component {
         <Container id="Event Calandar Info">
           <label>
             Starts:
+            {' '}
+            { this.props.mealInfo.start_date.slice(11, -5)}
           </label>
           <br />
           <label>
             Ends:
+            {' '}
+            {new Date(Date.parse(this.props.mealInfo.end_date)
+            + (this.props.mealInfo.duration * 60 * 1000)).toISOString().slice(11, -5)}
           </label>
-          <ButtonGroup>
-            <Button variant="outline-primary" value={0}>Sun</Button>
-            <Button variant="outline-primary" value={1}>Mon</Button>
-            <Button variant="outline-primary" value={2}>Tue</Button>
-            <Button variant="outline-primary" value={3}>Wed</Button>
-            <Button variant="outline-primary" value={4}>Thu</Button>
-            <Button variant="outline-primary" value={5}>Fri</Button>
-            <Button variant="outline-primary" value={6}>Sat</Button>
-          </ButtonGroup>
+          <ListGroup horizontal>
+            <ListGroup.Item variant="flat" id="sun">Sun</ListGroup.Item>
+            <ListGroup.Item variant="flat" id="mon">Mon</ListGroup.Item>
+            <ListGroup.Item variant="flat" id="tue">Tue</ListGroup.Item>
+            <ListGroup.Item variant="flat" id="wed">Wed</ListGroup.Item>
+            <ListGroup.Item variant="flat" id="thu">Thu</ListGroup.Item>
+            <ListGroup.Item variant="flat" id="fri">Fri</ListGroup.Item>
+            <ListGroup.Item variant="flat" id="sat">Sat</ListGroup.Item>
+          </ListGroup>
         </Container>
 
         <br />
-        <h2>
-          {this.props.recipeInfo.title}
-        </h2>
-        <h2>
-          {ReactHtmlParser(this.props.recipeInfo.description)}
-        </h2>
+        <Container>
+          <h2>
+            {this.props.recipeInfo.title}
+          </h2>
+          <Container>
+            <p>
+              {ReactHtmlParser(this.props.recipeInfo.description)}
+            </p>
+          </Container>
+
+        </Container>
 
       </div>
     );

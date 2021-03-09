@@ -63,12 +63,21 @@ class CalendarView extends Component {
     this.viewModalRef.current.open();
   }
 
+  searchMeal(mealTitle) {
+    for (let meal of this.props.meals) {
+      if(meal.title == mealTitle) {
+        console.log("Found MEal")
+        return meal;
+      }
+    }
+    return "Not Found";
+  }
+
   searchRecipeID(recipeID) {
     let recipe;
     for (recipe in (this.props.recipes)) {
-      console.log(recipeID + " : " + this.props.recipes[recipe]._id);
       if (recipeID === this.props.recipes[recipe]._id) {
-        return this.props.recipes.[recipe];
+        return this.props.recipes[recipe];
       }
     }
     return "Not Found";
@@ -83,7 +92,11 @@ class CalendarView extends Component {
           ref={this.viewModalRef}
           headerDisabled
           contentStyle={{ width: 500, height: 350 }}
-          children={<ViewMeal header={this.state.mealSelected} recipeInfo={this.searchRecipeID(this.state.recipeInMeal)} />}
+          children={(<ViewMeal 
+            header = {this.state.mealSelected} 
+            mealInfo = {this.searchMeal(this.state.mealSelected)}
+            recipeInfo={this.searchRecipeID(this.state.recipeInMeal)} 
+          />)}
         />
 
         <h2 className="text-center">
