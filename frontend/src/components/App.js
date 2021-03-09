@@ -14,7 +14,7 @@ import MyRecipes from './recipes/MyRecipes';
 
 export default () => (
   <>
-    <ConditionalRoute path="/" />
+    <ConditionalRoute exact path="/" />
     <Switch>
       <AuthRoute path="/login" component={WelcomeLogin} />
       <AuthRoute path="/signup" component={Signup} />

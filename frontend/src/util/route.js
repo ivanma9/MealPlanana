@@ -40,9 +40,10 @@ Protected.propTypes = {
   component: PropTypes.elementType.isRequired,
 };
 
-const Conditional = ({ loggedIn, path }) => (
+const Conditional = ({ loggedIn, path, ...rest }) => (
   <Route
     path={path}
+    {...rest}
     render={() => (
       loggedIn ? <Redirect to="/dashboard" /> : <Redirect to="/login" />
     )}
