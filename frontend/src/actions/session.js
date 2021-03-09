@@ -45,7 +45,8 @@ export const logout = () => async (dispatch) => {
 
 export const UPDATE_MEALS = 'UPDATE_MEALS';
 export const ADD_RECIPE = 'ADD_RECIPE';
-export const ADD_RATING = 'ADD_RATING';
+export const REMOVE_RECIPE = 'REMOVE_RECIPE';
+export const UPDATE_RATINGS = 'ADD_RATING';
 
 const updateUserMeals = (meals) => ({
   type: UPDATE_MEALS,
@@ -57,8 +58,13 @@ const addUserRecipe = (recipes) => ({
   payload: { recipes },
 });
 
-const addUserRating = (ratings) => ({
-  type: ADD_RATING,
+const removeUserRecipe = (recipes) => ({
+  type: REMOVE_RECIPE,
+  payload: { recipes },
+});
+
+const updateUserRatings = (ratings) => ({
+  type: UPDATE_RATINGS,
   payload: { ratings },
 });
 
@@ -88,15 +94,30 @@ export const addRecipe = (recipeID) => async (dispatch, getState) => {
   return dispatch(receiveErrors(data));
 };
 
-export const addRating = (rating) => async (dispatch, getState) => {
+export const removeRecipe = (recipeID) => async (dispatch, getState) => {
   const user = JSON.parse(JSON.stringify(getState().session));
-  user.ratings = user.ratings.concat(rating);
+
+  const index = user.recipes.indexOf(recipeID);
+  user.recipes.splice(index, 1);
 
   const response = await apiUtil.updateUser(user);
   const data = await response.json();
 
   if (response.ok) {
-    return dispatch(addUserRating(user.ratings));
+    return dispatch(removeUserRecipe(user.recipes));
+  }
+  return dispatch(receiveErrors(data));
+};
+
+export const updateRatings = (ratings) => async (dispatch, getState) => {
+  const user = JSON.parse(JSON.stringify(getState().session));
+  user.ratings = ratings;
+
+  const response = await apiUtil.updateUser(user);
+  const data = await response.json();
+
+  if (response.ok) {
+    return dispatch(updateUserRatings(user.ratings));
   }
   return dispatch(receiveErrors(data));
 };

@@ -1,5 +1,6 @@
 import {
-  RECEIVE_CURRENT_USER, LOGOUT_CURRENT_USER, UPDATE_MEALS, ADD_RECIPE, ADD_RATING,
+  RECEIVE_CURRENT_USER, LOGOUT_CURRENT_USER,
+  UPDATE_MEALS, ADD_RECIPE, REMOVE_RECIPE, UPDATE_RATINGS,
 } from '../../actions/session';
 
 const nullSession = { userId: null, username: null };
@@ -24,7 +25,13 @@ export default (state = nullSession, action) => {
         recipes: action.payload.recipes,
       };
 
-    case ADD_RATING:
+    case REMOVE_RECIPE:
+      return {
+        ...state,
+        recipes: action.payload.recipes,
+      };
+
+    case UPDATE_RATINGS:
       return {
         ...state,
         ratings: action.payload.ratings,
