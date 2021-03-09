@@ -23,3 +23,13 @@ export const updateRecipe = (formData, id) => (
 export const deleteRecipe = (id) => (
   fetch(`/api/recipes/delete/${id}`, { method: 'DELETE' })
 );
+
+export const updateRating = (recipeRatingData, id) => (
+  fetch(`/api/recipes/update/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(recipeRatingData),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+);
