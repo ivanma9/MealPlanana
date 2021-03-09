@@ -1,6 +1,6 @@
 import { serialize } from 'object-to-formdata';
 import * as apiUtil from '../util/recipes';
-import { addRecipe, removeRecipe } from './session';
+import { addRecipe, removeRecipe, updateUserRating } from './session';
 
 // TODO: reorganize and minimize reducers, actions, and utils used. Look at the user ones as an
 //       example
@@ -253,4 +253,50 @@ export const deleteRecipe = (id) => async (dispatch) => {
     return dispatch(deleteRecipeSuccess());
   }
   return dispatch(deleteRecipeFailure(data));
+};
+
+export const UPDATE_RATING_SUCCESS = 'UPDATE_RATING_SUCCESS';
+export const UPDATE_RATING_FAILURE = 'UPDATE_RATING_FAILURE';
+
+export const updateRatingSuccess = () => ({
+  type: UPDATE_RATING_SUCCESS,
+});
+export const updateRatingFailure = (error) => ({
+  type: UPDATE_RATING_FAILURE,
+  payload: { error },
+});
+
+export const updateRating = (recipe, newRatingValue, oldRatingValue = null) => async (dispatch) => {
+  let newAvg;
+  let newNumRatings;
+
+  const avg = recipe.ratingTotal;
+  const numRatings = recipe.numRating;
+
+  newAvg = avg;
+  newNumRatings = numRatings;
+  if (oldRatingValue !== null) { // if we're updating an existing rating of the user
+    newNumRatings -= 1;
+    newAvg = ((newAvg * numRatings) - oldRatingValue) / newNumRatings;
+    console.log(newNumRatings);
+    console.log(newAvg);
+  }
+
+  newNumRatings += 1;
+  newAvg += ((newRatingValue - newAvg) / (newNumRatings));
+  console.log(newNumRatings);
+  console.log(newAvg);
+
+  const newRecipeRatingData = {
+    ratingTotal: newAvg,
+    numRating: newNumRatings,
+  };
+
+  const response = await apiUtil.updateRating(newRecipeRatingData, recipe._id);
+  const data = await response.json();
+  if (response.ok) {
+    dispatch(updateUserRating({ recipe: recipe._id, rating: newRatingValue }));
+    return dispatch(updateRatingSuccess());
+  }
+  return dispatch(updateRatingFailure(data));
 };

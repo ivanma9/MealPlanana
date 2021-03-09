@@ -122,7 +122,7 @@ export const updateRatings = (ratings) => async (dispatch, getState) => {
   return dispatch(receiveErrors(data));
 };
 
-export const updateRating = (rating) => async (dispatch, getState) => {
+export const updateUserRating = (rating) => async (dispatch, getState) => {
   const user = JSON.parse(JSON.stringify(getState().session));
 
   if (user.ratings.some((currentRating) => currentRating.recipe === rating.recipe)) {

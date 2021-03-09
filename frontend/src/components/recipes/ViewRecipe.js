@@ -10,8 +10,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 import Rating from '@material-ui/lab/Rating';
 import ReactHtmlParser from 'react-html-parser';
 import { connect } from 'react-redux';
-import { removeRecipeFromStateOnUnselected } from '../../actions/recipes';
-import { updateRating } from '../../actions/session';
+import { removeRecipeFromStateOnUnselected, updateRating } from '../../actions/recipes';
 
 const mapStateToProps = (state) => ({
   recipe: state.currentRecipe.item,
@@ -22,7 +21,9 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   removeRecipeFromStateOnUnselected: () => dispatch(removeRecipeFromStateOnUnselected()),
-  updateRating: (rating) => dispatch(updateRating(rating)),
+  updateRating: (recipe, newRatingValue, oldRatingValue = null) => dispatch(
+    updateRating(recipe, newRatingValue, oldRatingValue),
+  ),
 });
 
 class ViewRecipe extends Component {
@@ -48,13 +49,15 @@ class ViewRecipe extends Component {
   }
 
   componentDidMount() {
-    const foundElement = this.props.user.ratings
-      .find((rating) => rating.recipe === this.props.recipe._id);
+    if (this.props.recipe) {
+      const foundElement = this.props.user.ratings
+        .find((rating) => rating.recipe === this.props.recipe._id);
 
-    if (foundElement) {
-      this.setState({
-        userRating: foundElement.rating,
-      });
+      if (foundElement) {
+        this.setState({
+          userRating: foundElement.rating,
+        });
+      }
     }
   }
 
@@ -139,11 +142,17 @@ class ViewRecipe extends Component {
     };
 
     const onChangeRating = (e) => {
+      const oldRating = this.state.userRating;
+
       this.setState({
         userRating: Number(e.target.value),
       });
 
-      this.props.updateRating({ recipe: recipe._id, rating: e.target.value });
+      if (this.state.userRating === null) {
+        this.props.updateRating(recipe, e.target.value);
+      } else {
+        this.props.updateRating(recipe, e.target.value, oldRating);
+      }
     };
 
     return (
@@ -275,7 +284,7 @@ class ViewRecipe extends Component {
                 <Rating
                   name="hearts"
                   defaultValue={0}
-                  value={Number(recipe.userRating)}
+                  value={Number(recipe.ratingTotal)}
                   precision={0.2}
                   icon={<FavoriteIcon fontSize="inherit" />}
                   readOnly
