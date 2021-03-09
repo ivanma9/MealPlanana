@@ -238,7 +238,7 @@ class CreateRecipe extends Component {
               withIcon
               buttonText="Choose image"
               withLabel
-              label="Max file size: 5mb | Accepted: jpg, gif, png"
+              label="Max file size: 10mb | Accepted: jpg, gif, png"
               singleImage
             />
           </Form.Group>
@@ -349,7 +349,7 @@ class CreateRecipe extends Component {
               withIcon
               buttonText="Choose up to 5 images"
               withLabel
-              label="Max file size: 5mb | Accepted: jpg, gif, png"
+              label="Max file size: 10mb | Accepted: jpg, gif, png"
             />
           </Form.Group>
 

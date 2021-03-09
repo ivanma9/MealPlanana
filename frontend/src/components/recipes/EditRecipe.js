@@ -50,7 +50,6 @@ class EditRecipe extends Component {
       tags: [],
       preview: {},
       // images: [],
-      // recipe_author: '',
 
       titleIsEmpty: false,
       previewChanged: false,
@@ -68,7 +67,6 @@ class EditRecipe extends Component {
         tags: this.props.recipe.tags,
         preview: this.props.recipe.preview,
         // images: this.props.currentRecipe.images,
-        // author: this.props.currentRecipe.author
       });
     }
   }
@@ -180,43 +178,30 @@ class EditRecipe extends Component {
 
     editSuccessful = true;
 
-    let recipe;
+    let preview;
+
+    /**
+     * if preview hasn't been touched, we want to keep it the same
+     * else if preview has been changed and there is a new image, we want to update it
+     * else (preview has been changed and the image was deleted), we want to delete it
+     */
+
     if (this.state.previewChanged === false) {
-      recipe = {
-        title: sanitizeHtml(this.state.title),
-        description: this.state.description,
-        ingredients: this.state.ingredients,
-        directions: this.state.directions,
-        // don't set preview image here. Backend doesn't change
-        // preview if no preview is sent, so this is what we want
-        tags: this.state.tags,
-        // recipe_image: this.state.recipe_image,
-        // recipe_author: this.state.recipe_author,
-      };
+      preview = undefined;
     } else if (Object.keys(this.state.preview).length !== 0) {
-      recipe = {
-        title: sanitizeHtml(this.state.title),
-        description: this.state.description,
-        ingredients: this.state.ingredients,
-        directions: this.state.directions,
-        tags: this.state.tags,
-        preview: this.state.preview[0],
-        // `preview: this.state.preview` also seems to work?
-        // recipe_image: this.state.recipe_image,
-        // recipe_author: this.state.recipe_author,
-      };
+      [preview] = this.state.preview;
     } else {
-      recipe = {
+      preview = null;
+    }
+
+    const recipe = {
         title: sanitizeHtml(this.state.title),
         description: this.state.description,
         ingredients: this.state.ingredients,
         directions: this.state.directions,
         tags: this.state.tags,
-        preview: null,
-        // recipe_image: this.state.recipe_image,
-        // recipe_author: this.state.recipe_author,
+      preview,
       };
-    }
 
     this.props.updateRecipe(recipe, this.props.recipe._id)
       .then(() => {
@@ -276,7 +261,7 @@ class EditRecipe extends Component {
               withIcon
               buttonText="Choose image"
               withLabel
-              label="Please close the image before uploading a new one | Max file size: 5mb | Accepted: jpg, gif, png"
+              label="Please close the image before uploading a new one | Max file size: 10mb | Accepted: jpg, gif, png"
               singleImage
             />
           </Form.Group>

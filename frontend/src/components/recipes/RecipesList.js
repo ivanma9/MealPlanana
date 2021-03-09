@@ -196,9 +196,9 @@ class RecipesList extends Component {
           </Fab>
         </div>
         <Snackbar
-          autoHideDuration={6000}
+          autoHideDuration={3000}
           open={this.state.createPressed}
-          onClose={() => { this.setState({ createPressed: false }); }}
+          onClose={() => this.setState({ createPressed: false })}
         >
           <MuiAlert elevation={6} variant="filled" severity="success" onClose={() => { this.setState({ createPressed: false }); }}>Recipe successfully created!</MuiAlert>
         </Snackbar>

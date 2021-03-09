@@ -384,7 +384,7 @@ class ViewRecipe extends Component {
                 }}
               >
                 <Typography variant="button" component="legend" className="mb-2" align="center" style={{ fontSize: 22 }}>Author</Typography>
-                <Typography variant="h1" align="center" style={{ fontSize: 20, fontWeight: '450' }}>Author Goes Here</Typography>
+                <Typography variant="h1" align="center" style={{ fontSize: 20, fontWeight: '450' }}>{recipe.author && recipe.author.username}</Typography>
               </Paper>
             </Grid>
           </Grid>
