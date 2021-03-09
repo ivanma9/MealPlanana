@@ -95,11 +95,15 @@ recipeRoutes.put('/update/:id', recipeUploader, async (req, res) => {
     if (req.files) {
       const { preview, images } = req.files;
       // Make sure preview exists, and isn't just a string with value 'null'
-      if (preview && typeof preview[0] !== 'string' && preview !== 'null') {
-        update.preview = {
-          location: preview[0].location,
-          key: preview[0].key,
-        };
+      if (preview !== undefined) {
+        if (typeof preview[0] !== 'string' && preview !== 'null') {
+          update.preview = {
+            location: preview[0].location,
+            key: preview[0].key,
+          };
+        } else {
+          update.preview = {};
+        }
         if (oldPreview) {
           s3bucket.deleteObject(
             { Bucket: AWS_BUCKET_NAME, Key: oldPreview.key },
@@ -161,8 +165,8 @@ recipeRoutes.put('/update/:id', recipeUploader, async (req, res) => {
         $set: update,
       },
     );
-    res.status(200).json({ message: 'Successfully updated recipe!' });
     console.log('Successfully added recipe!');
+    return res.status(200).json({ message: 'Successfully updated recipe!' });
   } catch (err) {
     if (err instanceof multer.MulterError) {
       console.log('multer oopie');
@@ -175,7 +179,7 @@ recipeRoutes.put('/update/:id', recipeUploader, async (req, res) => {
         },
       });
     }
-    res.status(500).json({ message: err });
+    return res.status(500).json({ message: err });
   }
 });
 

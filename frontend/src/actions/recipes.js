@@ -187,32 +187,38 @@ export const updateRecipeFailure = (error) => ({
 });
 
 export const updateRecipe = (recipe, id) => async (dispatch) => {
-  const formData = new FormData();
-  formData.append('title', recipe.title);
-  formData.append('description', recipe.description);
-  formData.append('directions', recipe.directions);
+  const options = {
+    indices: false,
+    nullsAsUndefineds: false,
+    booleansAsIntegers: false,
+    allowEmptyArrays: false,
+  };
 
-  if (recipe.preview !== undefined) {
-    formData.append('preview', recipe.preview);
-  }
+  // const imagesFd = new FormData();
+  // if (recipe.images && recipe.images.length !== 0) {
+  //   recipe.images.forEach((item) => imagesFd.append('images', item));
+  // }
+
+  const object = {
+    title: recipe.title,
+    description: recipe.description,
+    directions: recipe.directions,
+    preview: recipe.preview,
+    ingredients: recipe.ingredients,
+    tags: recipe.tags,
+  };
+
+  const formData = serialize(
+    object,
+    options,
+    // imagesFd,
+  );
 
   // if (recipe.images && recipe.images.length !== 0) {
   //   recipe.images.forEach((item) => formData.append('images[]', item));
   // } else {
   //   formData.append('images[]', []);
   // }
-
-  if (recipe.ingredients.length !== 0) {
-    recipe.ingredients.forEach((item) => formData.append('ingredients[]', item));
-  } else {
-    formData.append('ingredients[]', []);
-  }
-
-  if (recipe.tags.length !== 0) {
-    recipe.tags.forEach((item) => formData.append('tags[]', item));
-  } else {
-    formData.append('tags[]', []);
-  }
 
   const response = await apiUtil.updateRecipe(formData, id);
   const data = await response.json();

@@ -355,10 +355,13 @@ class CreateRecipe extends Component {
 
           <br />
 
+          <br />
+
           <div style={{
             justifyContent: 'center',
             alignItems: 'center',
             display: 'flex',
+            marginBottom: '10rem',
           }}
           >
             <Button variant="contained" color="primary" onClick={this.onSubmit}>Create Recipe</Button>
