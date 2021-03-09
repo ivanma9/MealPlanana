@@ -94,7 +94,8 @@ recipeRoutes.put('/update/:id', recipeUploader, async (req, res) => {
     // only if files/images involved
     if (req.files) {
       const { preview, images } = req.files;
-      if (preview) {
+      // Make sure preview exists, and isn't just a string with value 'null'
+      if (preview && typeof preview[0] !== 'string' && preview !== 'null') {
         update.preview = {
           location: preview[0].location,
           key: preview[0].key,
@@ -112,14 +113,18 @@ recipeRoutes.put('/update/:id', recipeUploader, async (req, res) => {
         }
       }
       if (images) {
-        if (images.length === 0 || !images[0]) {
+        if (images.length === 0 || (images.length === 1 && (!images[0] || images[0] === 'null'))) {
           update.images = [];
         } else {
           const imgUrls = images
-            .map((image) => ({
-              location: image.location,
-              key: image.key,
-            }));
+            .map((image) => {
+              if (image && typeof image !== 'string' && image !== 'null') {
+                return {
+                  location: image.location,
+                  key: image.key,
+                };
+              }
+            });
           update.images = imgUrls;
         }
         if (oldImages) {
