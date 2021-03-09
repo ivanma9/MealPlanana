@@ -1,7 +1,8 @@
 import { MdEdit } from 'react-icons/md';
 import { BsFillTrashFill } from 'react-icons/bs';
 import React, { Component } from 'react';
-import { Button, Container } from 'react-bootstrap';
+import { Button, ButtonGroup, Container } from 'react-bootstrap';
+import ReactHtmlParser from 'react-html-parser';
 
 export default class ViewMeal extends Component {
   constructor(props) {
@@ -26,8 +27,8 @@ export default class ViewMeal extends Component {
   render() {
     return (
       <div style={{ marginTop: 10, fontSize: 12 }}>
-        <div>
-          <h3>
+        <Container className="container-fluid">
+          <h1>
             {this.props.header}
             <span className="float-right">
               <style type="text/css">
@@ -56,29 +57,35 @@ export default class ViewMeal extends Component {
                 <BsFillTrashFill className="d-flex align-items-center" color="#eb4511" />
               </Button>
             </span>
-          </h3>
-        </div>
+          </h1>
+        </Container>
+        <Container id="Event Calandar Info">
+          <label>
+            Starts:
+          </label>
+          <br />
+          <label>
+            Ends:
+          </label>
+          <ButtonGroup>
+            <Button variant="outline-primary" value={0}>Sun</Button>
+            <Button variant="outline-primary" value={1}>Mon</Button>
+            <Button variant="outline-primary" value={2}>Tue</Button>
+            <Button variant="outline-primary" value={3}>Wed</Button>
+            <Button variant="outline-primary" value={4}>Thu</Button>
+            <Button variant="outline-primary" value={5}>Fri</Button>
+            <Button variant="outline-primary" value={6}>Sat</Button>
+          </ButtonGroup>
+        </Container>
 
-        <label>
-          Starts:
-        </label>
-        <br />
-        <label>
-          Ends:
-        </label>
-        <div>
-          <Button variant="outline-primary" value={0}>Sun</Button>
-          <Button variant="outline-primary" value={1}>Mon</Button>
-          <Button variant="outline-primary" value={2}>Tue</Button>
-          <Button variant="outline-primary" value={3}>Wed</Button>
-          <Button variant="outline-primary" value={4}>Thu</Button>
-          <Button variant="outline-primary" value={5}>Fri</Button>
-          <Button variant="outline-primary" value={6}>Sat</Button>
-        </div>
         <br />
         <h2>
           {this.props.recipeInfo.title}
         </h2>
+        <h2>
+          {ReactHtmlParser(this.props.recipeInfo.description)}
+        </h2>
+
       </div>
     );
   }

@@ -30,8 +30,8 @@ class CalendarView extends Component {
     super(props);
     this.state = {
       dateState: new Date(), // Can just Use state in Component
-      addModalVisible: false,
       mealSelected: '',
+      recipeInMeal: '',
     };
     // this.handleEditMeal = this.handleEditMeal.bind(this);
     // this.handleChangeView4Day = this.handleChangeView4Day.bind(this);
@@ -57,9 +57,21 @@ class CalendarView extends Component {
     console.log(info.event._def.extendedProps.recipes);
     this.setState({
       mealSelected: info.event._def.title,
+      recipeInMeal: info.event._def.extendedProps.recipes,
     });
     console.log(this.state.mealSelected);
     this.viewModalRef.current.open();
+  }
+
+  searchRecipeID(recipeID) {
+    let recipe;
+    for (recipe in (this.props.recipes)) {
+      console.log(recipeID + " : " + this.props.recipes[recipe]._id);
+      if (recipeID === this.props.recipes[recipe]._id) {
+        return this.props.recipes.[recipe];
+      }
+    }
+    return "Not Found";
   }
 
   render() {
@@ -71,7 +83,7 @@ class CalendarView extends Component {
           ref={this.viewModalRef}
           headerDisabled
           contentStyle={{ width: 500, height: 350 }}
-          children={<ViewMeal header={this.state.mealSelected} recipeInfo={this.props.recipe} />}
+          children={<ViewMeal header={this.state.mealSelected} recipeInfo={this.searchRecipeID(this.state.recipeInMeal)} />}
         />
 
         <h2 className="text-center">
@@ -122,7 +134,7 @@ class CalendarView extends Component {
           height={screen.height - 50}
           // aspectRatio={1}
           headerToolbar={{
-            center: 'dayGridMonth,dayGridWeek,timeGridFourDay,timeGridDay,listWeek', // buttons for switching between views
+            center: 'dayGridMonth,dayGridWeek,timeGridFourDay,timeGridDay,listWeek, listDay', // buttons for switching between views
           }}
           plugins={[rrulePlugin, dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin]}
           initialView="timeGridDay"
@@ -145,20 +157,14 @@ class CalendarView extends Component {
             dayGridWeek: {
               buttonText: 'Week',
             },
+            listDay: {
+              buttonText: 'Today\'s Meals',
+            },
           }}
           fixedWeekCount={false}
           selectable
           dateClick={(e) => this.changeDate(e)}
-          eventClick={(info) => this.handleViewMeal(info)
-            // function (info) {
-            //   info.jsEvent.preventDefault(); // don't let the browser navigate
-
-            //   alert(`Event: ${info.event.title}`);
-            //   this.handleViewMeal();
-            //   // change the border color just for fun
-            //   info.el.style.borderColor = 'red';
-            // }
-          }
+          eventClick={(info) => this.handleViewMeal(info)}
         />
 
         <p>
@@ -175,7 +181,7 @@ class CalendarView extends Component {
 const mapStateToProps = (state) => ({
   username: state.session.username,
   meals: state.session.meals,
-  recipe: state.currentRecipe.item,
+  recipes: state.recipes.items,
 });
 
 export default connect(
