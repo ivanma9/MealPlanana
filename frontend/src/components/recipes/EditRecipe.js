@@ -20,7 +20,7 @@ import {
 const sanitizeHtml = require('sanitize-html');
 
 const mapStateToProps = (state) => ({
-  currentRecipe: state.currentRecipe.item,
+  recipe: state.currentRecipe.item,
   loading: state.currentRecipe.loading,
   error: state.currentRecipe.error,
 });
@@ -59,14 +59,16 @@ class EditRecipe extends Component {
   }
 
   componentDidMount() {
-    if (this.props.currentRecipe) {
+    if (this.props.recipe === null) {
+      this.props.history.push({ pathname: '/recipes' });
+    } else if (this.props.recipe) {
       this.setState({
-        title: this.props.currentRecipe.title,
-        description: this.props.currentRecipe.description,
-        ingredients: this.props.currentRecipe.ingredients,
-        directions: this.props.currentRecipe.directions,
-        tags: this.props.currentRecipe.tags,
-        preview: this.props.currentRecipe.preview,
+        title: this.props.recipe.title,
+        description: this.props.recipe.description,
+        ingredients: this.props.recipe.ingredients,
+        directions: this.props.recipe.directions,
+        tags: this.props.recipe.tags,
+        preview: this.props.recipe.preview,
         // images: this.props.currentRecipe.images,
         // author: this.props.currentRecipe.author
       });
@@ -98,7 +100,7 @@ class EditRecipe extends Component {
 
   handleDeleteDialogYes = () => {
     this.setState({ deleteDialogOpen: false });
-    this.props.deleteRecipe(this.props.currentRecipe._id);
+    this.props.deleteRecipe(this.props.recipe._id);
     this.props.history.push({
       pathname: '/recipes',
     });
@@ -218,9 +220,9 @@ class EditRecipe extends Component {
       };
     }
 
-    this.props.updateRecipe(recipe, this.props.currentRecipe._id)
+    this.props.updateRecipe(recipe, this.props.recipe._id)
       .then(() => {
-        this.props.fetchRecipe(this.props.currentRecipe._id);
+        this.props.fetchRecipe(this.props.recipe._id);
       })
       .then(() => {
         this.props.history.push({
@@ -233,7 +235,7 @@ class EditRecipe extends Component {
   }
 
   render() {
-    const { error, loading, currentRecipe } = this.props;
+    const { error, loading, recipe } = this.props;
 
     if (error) {
       return (
@@ -244,16 +246,16 @@ class EditRecipe extends Component {
         </Typography>
       );
     }
+
     if (loading) {
       return <Typography variant="h2" align="center">Loading...</Typography>;
     }
 
-    if (currentRecipe === null) {
+    if (recipe === null) {
       return <Typography variant="h2" align="center">Please select a recipe to edit</Typography>;
     }
 
     const defaultImages = () => {
-      console.log(this.state.preview);
       if (this.state.preview && !this.state.previewChanged) {
         return [this.state.preview.location];
       }
@@ -302,7 +304,7 @@ class EditRecipe extends Component {
           <Form.Group controlid="formGroupRecipeDescription">
             <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}>Description</Typography>
             <Editor
-              initialValue={currentRecipe.description}
+              initialValue={recipe.description}
               init={{
                 height: 300,
                 menubar: false,
@@ -341,7 +343,7 @@ class EditRecipe extends Component {
           <Form.Group controlid="formGroupRecipeDirections">
             <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}>Directions</Typography>
             <Editor
-              initialValue={currentRecipe.directions}
+              initialValue={recipe.directions}
               init={{
                 height: 300,
                 menubar: false,
@@ -415,7 +417,7 @@ export default connect(
 )(EditRecipe);
 
 EditRecipe.propTypes = {
-  currentRecipe: PropTypes.shape({
+  recipe: PropTypes.shape({
     _id: Schema.Types.ObjectId.isRequired,
     preview: PropTypes.shape({
       key: PropTypes.string,
@@ -439,7 +441,7 @@ EditRecipe.propTypes = {
 };
 
 EditRecipe.defaultProps = {
-  currentRecipe: PropTypes.shape({
+  recipe: PropTypes.shape({
     preview: null,
     description: '',
     tags: [],

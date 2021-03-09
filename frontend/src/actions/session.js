@@ -46,7 +46,7 @@ export const logout = () => async (dispatch) => {
 export const UPDATE_MEALS = 'UPDATE_MEALS';
 export const ADD_RECIPE = 'ADD_RECIPE';
 export const REMOVE_RECIPE = 'REMOVE_RECIPE';
-export const UPDATE_RATINGS = 'ADD_RATING';
+export const UPDATE_RATINGS = 'UPDATE_RATINGS';
 
 const updateUserMeals = (meals) => ({
   type: UPDATE_MEALS,
@@ -120,4 +120,17 @@ export const updateRatings = (ratings) => async (dispatch, getState) => {
     return dispatch(updateUserRatings(user.ratings));
   }
   return dispatch(receiveErrors(data));
+};
+
+export const updateRating = (rating) => async (dispatch, getState) => {
+  const user = JSON.parse(JSON.stringify(getState().session));
+
+  if (user.ratings.some((currentRating) => currentRating.recipe === rating.recipe)) {
+    user.ratings
+      .find((currentRating) => currentRating.recipe === rating.recipe).rating = rating.rating;
+  } else {
+    user.ratings.push(rating);
+  }
+
+  dispatch(updateRatings(user.ratings));
 };

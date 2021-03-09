@@ -11,34 +11,54 @@ import Rating from '@material-ui/lab/Rating';
 import ReactHtmlParser from 'react-html-parser';
 import { connect } from 'react-redux';
 import { removeRecipeFromStateOnUnselected } from '../../actions/recipes';
+import { updateRating } from '../../actions/session';
 
 const mapStateToProps = (state) => ({
   recipe: state.currentRecipe.item,
   loading: state.currentRecipe.loading,
   error: state.currentRecipe.error,
-  userID: state.session.userId,
+  user: state.session,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  removeRecipeFromStateOnUnselected: () => dispatch(removeRecipeFromStateOnUnselected()),
+  updateRating: (rating) => dispatch(updateRating(rating)),
 });
 
 class ViewRecipe extends Component {
   constructor(props) {
     super(props);
-    if (this.props.location.appState !== undefined) {
-      this.state = {
-        updateRecipePressed: this.props.location.appState.updateRecipePressed,
-        activeID: '',
 
-        cannotEditPopoverOpen: false,
-        cannotEditPopoverAnchorElement: null,
+    const updateRecipePressed = this.props.location.appState !== undefined
+      ? this.props.location.appState.updateRecipePressed
+      : false;
 
-        addRatingPopoverOpen: false,
-        addRatingPopoverAnchorElement: null,
+    this.state = {
+      updateRecipePressed,
+      activeID: '',
 
-        userRating: null,
-      };
+      cannotEditPopoverOpen: false,
+      cannotEditPopoverAnchorElement: null,
+
+      updateRatingPopoverOpen: false,
+      updateRatingPopoverAnchorElement: null,
+
+      userRating: null,
+    };
+  }
+
+  componentDidMount() {
+    if (this.props.recipe === null) {
+      this.props.history.push({ pathname: '/recipes' });
     } else {
-      this.state = {
-        updateRecipePressed: false,
-      };
+      const foundElement = this.props.user.ratings
+        .find((rating) => rating.recipe === this.props.recipe._id);
+
+      if (foundElement) {
+        this.setState({
+          userRating: foundElement.rating,
+        });
+      }
     }
   }
 
@@ -63,9 +83,11 @@ class ViewRecipe extends Component {
         </Typography>
       );
     }
+
     if (loading) {
       return <Typography variant="h2" align="center">Loading...</Typography>;
     }
+
     if (recipe === null) {
       return <Typography variant="h2" align="center">Please select a recipe to view</Typography>;
     }
@@ -84,8 +106,10 @@ class ViewRecipe extends Component {
 
     const checkIfCurrentCard = (currentID) => this.state.activeID === currentID;
 
+    const ratingButtonLabel = this.state.userRating === null ? 'Add Rating' : 'Change Rating';
+
     const handleEditButtonClicked = (e) => {
-      if (!this.props.recipe.author || this.props.userID !== this.props.recipe.author.id) {
+      if (!this.props.recipe.author || this.props.user.userId !== this.props.recipe.author.id) {
         this.setState({
           cannotEditPopoverOpen: true,
           cannotEditPopoverAnchorElement: e.currentTarget,
@@ -107,14 +131,14 @@ class ViewRecipe extends Component {
       });
     };
 
-    const handleAddRatingButtonClicked = (e) => {
-      this.setState({ addRatingPopoverOpen: true, addRatingPopoverAnchorElement: e.currentTarget });
+    const handleupdateRatingButtonClicked = (e) => {
+      this.setState({ updateRatingPopoverOpen: true, updateRatingPopoverAnchorElement: e.currentTarget });
     };
 
-    const handleAddRatingPopoverClosed = () => {
+    const handleupdateRatingPopoverClosed = () => {
       this.setState({
-        addRatingPopoverOpen: false,
-        addRatingPopoverAnchorElement: null,
+        updateRatingPopoverOpen: false,
+        updateRatingPopoverAnchorElement: null,
       });
     };
 
@@ -122,6 +146,8 @@ class ViewRecipe extends Component {
       this.setState({
         userRating: Number(e.target.value),
       });
+
+      this.props.updateRating({ recipe: recipe._id, rating: e.target.value });
     };
 
     return (
@@ -261,15 +287,15 @@ class ViewRecipe extends Component {
                 />
               </Grid>
               <Grid item md={2}>
-                <Chip label="Add rating" icon={<FavoriteIcon />} clickable color="secondary" onClick={handleAddRatingButtonClicked} style={{ marginTop: '1%' }} />
+                <Chip label={ratingButtonLabel} icon={<FavoriteIcon />} clickable color="secondary" onClick={handleupdateRatingButtonClicked} style={{ marginTop: '1%' }} />
               </Grid>
             </Grid>
 
             {/* TODO: Add rounded courners to popover */}
             <Popover
-              open={this.state.addRatingPopoverOpen || false}
-              anchorEl={this.state.addRatingPopoverAnchorElement}
-              onClose={handleAddRatingPopoverClosed}
+              open={this.state.updateRatingPopoverOpen || false}
+              anchorEl={this.state.updateRatingPopoverAnchorElement}
+              onClose={handleupdateRatingPopoverClosed}
               anchorOrigin={{
                 vertical: 'top',
                 horizontal: 'center',
@@ -365,5 +391,5 @@ class ViewRecipe extends Component {
 
 export default connect(
   mapStateToProps,
-  { removeRecipeFromStateOnUnselected },
+  mapDispatchToProps,
 )(ViewRecipe);
