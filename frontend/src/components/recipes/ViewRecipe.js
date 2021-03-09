@@ -48,17 +48,13 @@ class ViewRecipe extends Component {
   }
 
   componentDidMount() {
-    if (this.props.recipe === null) {
-      this.props.history.push({ pathname: '/recipes' });
-    } else {
-      const foundElement = this.props.user.ratings
-        .find((rating) => rating.recipe === this.props.recipe._id);
+    const foundElement = this.props.user.ratings
+      .find((rating) => rating.recipe === this.props.recipe._id);
 
-      if (foundElement) {
-        this.setState({
-          userRating: foundElement.rating,
-        });
-      }
+    if (foundElement) {
+      this.setState({
+        userRating: foundElement.rating,
+      });
     }
   }
 

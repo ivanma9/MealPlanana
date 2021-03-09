@@ -1,6 +1,6 @@
 import { serialize } from 'object-to-formdata';
 import * as apiUtil from '../util/recipes';
-import { addRecipe } from './session';
+import { addRecipe, removeRecipe } from './session';
 
 // TODO: reorganize and minimize reducers, actions, and utils used. Look at the user ones as an
 //       example
@@ -249,6 +249,7 @@ export const deleteRecipe = (id) => async (dispatch) => {
   const response = await apiUtil.deleteRecipe(id);
   const data = await response.json();
   if (response.ok) {
+    dispatch(removeRecipe(id));
     return dispatch(deleteRecipeSuccess());
   }
   return dispatch(deleteRecipeFailure(data));

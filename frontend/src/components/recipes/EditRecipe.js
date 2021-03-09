@@ -59,9 +59,7 @@ class EditRecipe extends Component {
   }
 
   componentDidMount() {
-    if (this.props.recipe === null) {
-      this.props.history.push({ pathname: '/recipes' });
-    } else if (this.props.recipe) {
+    if (this.props.recipe) {
       this.setState({
         title: this.props.recipe.title,
         description: this.props.recipe.description,
