@@ -266,7 +266,9 @@ class EditRecipe extends Component {
 
         <Form>
 
+          {/* Preview */}
           <Form.Group controlid="formGroupRecipePreview">
+            <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}>Preview Image</Typography>
             <ImageUploader
               onChange={this.onChangePreview}
               withPreview

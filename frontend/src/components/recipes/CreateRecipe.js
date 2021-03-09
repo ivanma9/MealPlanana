@@ -34,7 +34,7 @@ class CreateRecipe extends Component {
       directions: '',
       tags: [],
       preview: {},
-      // recipe_image: '',
+      images: [],
       author: {
         id: '',
         username: '',
@@ -52,7 +52,7 @@ class CreateRecipe extends Component {
     this.onAddTag = this.onAddTag.bind(this);
     this.onDeleteTag = this.onDeleteTag.bind(this);
     this.onChangePreview = this.onChangePreview.bind(this);
-    // this.onChangeRecipeImage = this.onChangeRecipeImage.bind(this);
+    this.onChangeImages = this.onChangeImages.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
 
@@ -134,11 +134,16 @@ class CreateRecipe extends Component {
     });
   }
 
-  // onChangeRecipeImage(e) {
-  //   this.setState({
-  //     recipe_image: e.target.value,
-  //   });
-  // }
+  // TODO: check for duplicate images and don't allow
+  onChangeImages(pictureFiles) {
+    if (pictureFiles.length > 5) {
+      // do something
+    } else {
+      this.setState({
+        images: pictureFiles,
+      });
+    }
+  }
 
   onSubmit() {
     if (!this.handleValidation()) {
@@ -156,7 +161,7 @@ class CreateRecipe extends Component {
     console.log(`Recipe Directions: ${this.state.directions}`);
     console.log(`Recipe Tags: ${this.state.tags}`);
     console.log(`Recipe Preview: ${this.state.preview}`);
-    // console.log(`Recipe Image: ${this.state.recipe_image}`);
+    console.log(`Recipe Images: ${this.state.images}`);
     console.log(`Recipe Author ID: ${this.state.author.id}`);
     console.log(`Recipe Author Username: ${this.state.author.username}`);
 
@@ -168,7 +173,7 @@ class CreateRecipe extends Component {
       directions: this.state.directions,
       tags: this.state.tags,
       preview: this.state.preview[0],
-      // recipe_image: this.state.recipe_image,
+      images: this.state.images,
       ratingTotal: 0,
       author: {
         id: this.state.author.id,
@@ -184,7 +189,7 @@ class CreateRecipe extends Component {
       ingredients: [],
       directions: '',
       tags: [],
-      // recipe_image: '',
+      images: [],
       author: {
         id: '',
         username: '',
@@ -205,15 +210,15 @@ class CreateRecipe extends Component {
   render() {
     const { error, loading, session } = this.props;
 
-    if (error) {
-      return (
-        <Typography variant="h1" align="center">
-          Error!
-          {' '}
-          {error.message}
-        </Typography>
-      );
-    }
+    // if (error) {
+    //   return (
+    //     <Typography variant="h1" align="center">
+    //       Error!
+    //       {' '}
+    //       {error.message}
+    //     </Typography>
+    //   );
+    // }
     if (loading) {
       return <Typography variant="h1" align="center">Loading...</Typography>;
     }
@@ -226,6 +231,7 @@ class CreateRecipe extends Component {
 
           {/* Preview */}
           <Form.Group controlid="formGroupRecipePreview">
+            <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}>Preview Image</Typography>
             <ImageUploader
               onChange={this.onChangePreview}
               withPreview
@@ -334,6 +340,21 @@ class CreateRecipe extends Component {
 
           <br />
 
+          {/* Images */}
+          <Form.Group controlid="formGroupRecipeImages">
+            <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}>Images</Typography>
+            <ImageUploader
+              onChange={this.onChangeImages}
+              withPreview
+              withIcon
+              buttonText="Choose up to 5 images"
+              withLabel
+              label="Max file size: 5mb | Accepted: jpg, gif, png"
+            />
+          </Form.Group>
+
+          <br />
+
           <div style={{
             justifyContent: 'center',
             alignItems: 'center',
@@ -366,19 +387,19 @@ CreateRecipe.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
-  error(props, propName, componentName) {
-    try {
-      JSON.parse(props[propName]);
-      return null;
-    } catch (e) {
-      return new Error(`Invalid prop \`${propName}\` supplied to \`${componentName}\`. Validation failed.`);
-    }
-  },
+  // error(props, propName, componentName) {
+  //   try {
+  //     JSON.parse(props[propName]);
+  //     return null;
+  //   } catch (e) {
+  //     return new Error(`Invalid prop \`${propName}\` supplied to \`${componentName}\`. Validation failed.`);
+  //   }
+  // },
   loading: PropTypes.bool,
 };
 
 CreateRecipe.defaultProps = {
   createRecipe: () => {},
-  error: null,
+  // error: null,
   loading: false,
 };

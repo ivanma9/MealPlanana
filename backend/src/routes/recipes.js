@@ -37,7 +37,6 @@ recipeRoutes.get('/:id', async (req, res) => {
 recipeRoutes.post('/add', recipeUploader, async (req, res) => {
   try {
     const update = req.body;
-    const { ingredients, tags } = req.body;
 
     // only add files/pics if there are any
     if (req.files) {
@@ -57,18 +56,6 @@ recipeRoutes.post('/add', recipeUploader, async (req, res) => {
             key: image.key,
           }));
         update.images = imgUrls;
-      }
-    }
-
-    if (ingredients) {
-      if (ingredients.length === 0 || !ingredients[0]) {
-        update.ingredients = [];
-      }
-    }
-
-    if (tags) {
-      if (tags.length === 0 || !tags[0]) {
-        update.tags = [];
       }
     }
 

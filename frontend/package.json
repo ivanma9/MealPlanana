@@ -23,6 +23,7 @@
     "material-ui-chip-input": "^2.0.0-beta.2",
     "moment": "^2.29.1",
     "mongoose": "^5.11.18",
+    "object-to-formdata": "^4.1.0",
     "prop-types": "^15.7.2",
     "react": "^17.0.1",
     "react-bootstrap": "^1.5.0",
