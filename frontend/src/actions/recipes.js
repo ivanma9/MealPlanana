@@ -1,3 +1,4 @@
+import { serialize } from 'object-to-formdata';
 import * as apiUtil from '../util/recipes';
 import { addRecipe } from './session';
 
@@ -126,8 +127,39 @@ export const createRecipeFailure = (error) => ({
   payload: { error },
 });
 
-export const createRecipe = (recipe) => async (dispatch, getState) => {
-  const response = await apiUtil.createRecipe(recipe);
+export const createRecipe = (recipe) => async (dispatch) => {
+  const options = {
+    indices: false,
+    nullsAsUndefineds: false,
+    booleansAsIntegers: false,
+    allowEmptyArrays: false,
+  };
+
+  const imagesFd = new FormData();
+  if (recipe.images && recipe.images.length !== 0) {
+    recipe.images.forEach((item) => imagesFd.append('images', item));
+  }
+
+  const object = {
+    title: recipe.title,
+    description: recipe.description,
+    directions: recipe.directions,
+    preview: recipe.preview,
+    ingredients: recipe.ingredients,
+    tags: recipe.tags,
+    author: {
+      id: recipe.author.id,
+      username: recipe.author.username,
+    },
+  };
+
+  const formData = serialize(
+    object,
+    options,
+    imagesFd,
+  );
+
+  const response = await apiUtil.createRecipe(formData);
   const data = await response.json();
 
   if (response.ok) {
@@ -164,11 +196,11 @@ export const updateRecipe = (recipe, id) => async (dispatch) => {
     formData.append('preview', recipe.preview);
   }
 
-  if (recipe.images && recipe.images.length !== 0) {
-    recipe.images.forEach((item) => formData.append('images[]', item));
-  } else {
-    formData.append('images[]', []);
-  }
+  // if (recipe.images && recipe.images.length !== 0) {
+  //   recipe.images.forEach((item) => formData.append('images[]', item));
+  // } else {
+  //   formData.append('images[]', []);
+  // }
 
   if (recipe.ingredients.length !== 0) {
     recipe.ingredients.forEach((item) => formData.append('ingredients[]', item));

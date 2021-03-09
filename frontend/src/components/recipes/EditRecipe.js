@@ -13,7 +13,9 @@ import ImageUploader from 'react-images-upload';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Schema } from 'mongoose';
-import { deleteRecipe, updateRecipe, removeRecipeFromStateOnUnselected } from '../../actions/recipes';
+import {
+  deleteRecipe, updateRecipe, removeRecipeFromStateOnUnselected, fetchRecipe,
+} from '../../actions/recipes';
 
 const sanitizeHtml = require('sanitize-html');
 
@@ -72,7 +74,6 @@ class EditRecipe extends Component {
   }
 
   componentWillUnmount() {
-    console.log(this.props.history);
     if (
       this.props.history.action === 'POP'
       || this.props.history.location.appState === undefined
@@ -160,7 +161,7 @@ class EditRecipe extends Component {
   onChangePreview(picture) {
     if (picture === undefined || picture.length === 0) {
       this.setState({
-        preview: [],
+        preview: {},
         previewChanged: true,
       });
     } else {
@@ -192,7 +193,7 @@ class EditRecipe extends Component {
         // recipe_image: this.state.recipe_image,
         // recipe_author: this.state.recipe_author,
       };
-    } else if (this.state.preview.length !== 0) {
+    } else if (Object.keys(this.state.preview).length !== 0) {
       recipe = {
         title: sanitizeHtml(this.state.title),
         description: this.state.description,
@@ -200,7 +201,7 @@ class EditRecipe extends Component {
         directions: this.state.directions,
         tags: this.state.tags,
         preview: this.state.preview[0],
-        // preview: this.state.preview also seems to work?
+        // `preview: this.state.preview` also seems to work?
         // recipe_image: this.state.recipe_image,
         // recipe_author: this.state.recipe_author,
       };
@@ -211,14 +212,16 @@ class EditRecipe extends Component {
         ingredients: this.state.ingredients,
         directions: this.state.directions,
         tags: this.state.tags,
-        preview: {},
+        preview: null,
         // recipe_image: this.state.recipe_image,
         // recipe_author: this.state.recipe_author,
       };
     }
 
-    // FIXME: recipe isn't updated when we push to /recipes/view
     this.props.updateRecipe(recipe, this.props.currentRecipe._id)
+      .then(() => {
+        this.props.fetchRecipe(this.props.currentRecipe._id);
+      })
       .then(() => {
         this.props.history.push({
           pathname: '/recipes/view/',
@@ -249,20 +252,31 @@ class EditRecipe extends Component {
       return <Typography variant="h2" align="center">Please select a recipe to edit</Typography>;
     }
 
+    const defaultImages = () => {
+      console.log(this.state.preview);
+      if (this.state.preview && !this.state.previewChanged) {
+        return [this.state.preview.location];
+      }
+      return undefined;
+    };
+
     return (
       <div className="container" style={{ marginTop: 10 }}>
         <h3>Update Recipe</h3>
 
         <Form>
 
+          {/* Preview */}
           <Form.Group controlid="formGroupRecipePreview">
+            <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}>Preview Image</Typography>
             <ImageUploader
               onChange={this.onChangePreview}
               withPreview
-              defaultImages={currentRecipe.preview && [currentRecipe.preview.location]}
+              defaultImages={defaultImages()}
               withIcon
               buttonText="Choose image"
               withLabel
+              label="Please close the image before uploading a new one | Max file size: 5mb | Accepted: jpg, gif, png"
               singleImage
             />
           </Form.Group>
@@ -395,7 +409,9 @@ class EditRecipe extends Component {
 
 export default connect(
   mapStateToProps,
-  { updateRecipe, deleteRecipe, removeRecipeFromStateOnUnselected },
+  {
+    updateRecipe, deleteRecipe, removeRecipeFromStateOnUnselected, fetchRecipe,
+  },
 )(EditRecipe);
 
 EditRecipe.propTypes = {

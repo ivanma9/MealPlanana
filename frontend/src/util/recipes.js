@@ -6,13 +6,10 @@ export const fetchRecipe = (id) => (
   fetch(`/api/recipes/${id}`)
 );
 
-export const createRecipe = (recipe) => (
+export const createRecipe = (formData) => (
   fetch('/api/recipes/add', {
     method: 'POST',
-    body: JSON.stringify(recipe),
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    body: formData,
   })
 );
 
