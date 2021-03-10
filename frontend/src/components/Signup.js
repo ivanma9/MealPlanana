@@ -5,8 +5,17 @@ import {
   Grid, Typography, TextField, Button,
 } from '@material-ui/core';
 import { Form } from 'react-bootstrap';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { signup } from '../actions/session';
 import { fetchRecipes } from '../actions/recipes';
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#ffe135',
+    },
+  },
+});
 
 const mapStateToProps = ({ errors, recipes }) => ({
   errors,
@@ -33,7 +42,7 @@ const Signup = ({ errors, signup, fetchRecipes }) => {
   };
 
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <Grid container spacing={5} direction="column" justify="center" alignItems="center" className="mt-3">
         <Grid item>
           <Typography variant="h1">Welcome to MealPlanana!</Typography>
@@ -48,19 +57,19 @@ const Signup = ({ errors, signup, fetchRecipes }) => {
         <Grid container>
           <Form onSubmit={handleSubmit} style={{ width: '100%' }}>
             <Form.Group className="text-center" controlid="formGroupUsername">
-              <TextField placeholder="Username" type="username" style={{ width: '20%' }} />
+              <TextField label="Username" type="username" style={{ width: '20%' }} />
             </Form.Group>
 
             <br />
 
             <Form.Group className="text-center" controlid="formGroupEmail">
-              <TextField placeholder="Email" type="email" style={{ width: '20%' }} />
+              <TextField label="Email" type="email" style={{ width: '20%' }} />
             </Form.Group>
 
             <br />
 
             <Form.Group className="text-center" controlid="formGroupPassword">
-              <TextField placeholder="Password" type="password" style={{ width: '20%' }} />
+              <TextField label="Password" type="password" style={{ width: '20%' }} />
             </Form.Group>
 
             <br />
@@ -73,7 +82,7 @@ const Signup = ({ errors, signup, fetchRecipes }) => {
                 display: 'flex',
               }}
             >
-              <Button type="submit" variant="contained" color="primary">
+              <Button type="submit" variant="contained" style={{ backgroundColor: '#ffe135', color: 'black' }}>
                 Sign Up
               </Button>
             </div>
@@ -83,11 +92,11 @@ const Signup = ({ errors, signup, fetchRecipes }) => {
         <Grid container direction="row" justify="center" alignItems="baseline" className="mt-5">
           <Typography variant="h6">Already have an account?</Typography>
           <Link to="/login">
-            <Button color="primary" size="medium">Log In</Button>
+            <Button size="large" style={{ color: '#709255', fontWeight: 'bold' }}>Log In</Button>
           </Link>
         </Grid>
       </Grid>
-    </>
+    </ThemeProvider>
   );
 };
 

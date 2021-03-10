@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { Button } from 'react-bootstrap';
+import { Button, Navbar, Nav } from 'react-bootstrap';
 import { GiBananaBunch } from 'react-icons/gi';
 import { Link } from 'react-router-dom';
 import { Typography } from '@material-ui/core';
@@ -15,38 +15,45 @@ const mapDispatchToProps = (dispatch) => ({
   logout: () => dispatch(lg()),
 });
 
-function Navbar({ logout }) {
+function NavBar({ logout }) {
   return (
-    <nav
-      className="navbar navbar-expand-lg navbar-light bg"
-    >
-      <Link
-        to="/dashboard"
-        className="navbar-brand"
-        style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-        }}
-      >
-        <Typography
-          variant="button"
+    <Navbar expand="lg">
+      <Navbar.Brand>
+        <Link
+          to="/dashboard"
+          className="navbar-brand"
           style={{
-            fontSize: 30,
-            paddingRight: '0.2em',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}
         >
-          Meal Planana
-
-        </Typography>
-        <GiBananaBunch color="#edc80c" size="2em" />
-      </Link>
-      <div className="collapse navbar-collapse">
-        <ul className="navbar-nav mr-auto">
-          <li
-            className="navbar-item"
+          <Typography
+            variant="button"
             style={{
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 30,
+              paddingRight: '0.2em',
             }}
           >
+            Meal Planana
+          </Typography>
+          <GiBananaBunch color="#edc80c" size="2em" />
+        </Link>
+      </Navbar.Brand>
+      <Navbar.Toggle />
+      <Navbar.Collapse>
+        <Nav className="mr-auto">
+          <Nav.Link>
+            <Link to="/dashboard" className="nav-link">
+              <Typography
+                variant="button"
+                style={{
+                  fontSize: 25,
+                }}
+              >
+                Dashboard
+              </Typography>
+            </Link>
+          </Nav.Link>
+          <Nav.Link>
             <Link to="/recipes" className="nav-link">
               <Typography
                 variant="button"
@@ -55,9 +62,10 @@ function Navbar({ logout }) {
                 }}
               >
                 Recipes
-
               </Typography>
             </Link>
+          </Nav.Link>
+          <Nav.Link>
             <Link to="/recipes/my-recipes" className="nav-link">
               <Typography
                 variant="button"
@@ -66,29 +74,26 @@ function Navbar({ logout }) {
                 }}
               >
                 My Recipes
-
               </Typography>
             </Link>
-          </li>
-        </ul>
-        <ul className="navbar-nav ml-auto">
-          <li
-            className="navbar-item"
-            style={{
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}
-          >
-            <Button className="mr-2 p-2" onClick={logout} style={{ backgroundColor: 'darkolivegreen' }}>
-              Logout
-            </Button>
-          </li>
-        </ul>
-      </div>
-    </nav>
+          </Nav.Link>
+        </Nav>
+        <div
+          className="navbar-item"
+          style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}
+        >
+          <Button className="mr-2 p-2" onClick={logout} style={{ backgroundColor: 'darkolivegreen' }}>
+            Logout
+          </Button>
+        </div>
+      </Navbar.Collapse>
+    </Navbar>
   );
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Navbar);
+)(NavBar);

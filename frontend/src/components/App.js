@@ -4,7 +4,7 @@ import { AuthRoute, ProtectedRoute, ConditionalRoute } from '../util/route';
 
 import CreateRecipe from './recipes/CreateRecipe';
 import Dashboard from './Dashboard';
-import Navbar from './Navbar';
+import NavBar from './Navbar';
 import RecipesList from './recipes/RecipesList';
 import Signup from './Signup';
 import ViewRecipe from './recipes/ViewRecipe';
@@ -19,7 +19,7 @@ export default () => (
       <AuthRoute path="/login" component={WelcomeLogin} />
       <AuthRoute path="/signup" component={Signup} />
       <>
-        <Navbar />
+        <NavBar />
         <ProtectedRoute path="/dashboard" component={Dashboard} />
         <Route
           path="/recipes"

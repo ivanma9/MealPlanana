@@ -2,9 +2,6 @@ import { serialize } from 'object-to-formdata';
 import * as apiUtil from '../util/recipes';
 import { addRecipe, removeRecipe, updateUserRating } from './session';
 
-// TODO: reorganize and minimize reducers, actions, and utils used. Look at the user ones as an
-//       example
-
 export const ADD_SELECTED_RECIPE_TO_STATE = 'ADD_SELECTED_RECIPE';
 
 export function addSelectedRecipeToState(id) {
@@ -112,13 +109,9 @@ export const fetchRecipe = (id) => async (dispatch) => {
   return dispatch(fetchRecipeFailure(data));
 };
 
-export const CREATE_RECIPE_BEGIN = 'CREATE_RECIPE_BEGIN';
 export const CREATE_RECIPE_SUCCESS = 'CREATE_RECIPE_SUCCESS';
 export const CREATE_RECIPE_FAILURE = 'CREATE_RECIPE_FAILURE';
 
-export const createRecipeBegin = () => ({
-  type: CREATE_RECIPE_BEGIN,
-});
 export const createRecipeSuccess = () => ({
   type: CREATE_RECIPE_SUCCESS,
 });

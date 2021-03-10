@@ -5,8 +5,17 @@ import {
   Grid, Typography, TextField, Button,
 } from '@material-ui/core';
 import { Form } from 'react-bootstrap';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { login } from '../actions/session';
 import { fetchRecipes } from '../actions/recipes';
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#ffe135',
+    },
+  },
+});
 
 const mapStateToProps = ({ errors, recipes }) => ({
   errors,
@@ -32,7 +41,7 @@ const WelcomeLogin = ({ errors, login }) => {
   };
 
   return (
-    <div>
+    <ThemeProvider theme={theme}>
       <Grid container spacing={5} direction="column" justify="center" alignItems="center" className="mt-3">
         <Grid item>
           <Typography variant="h1">Welcome to MealPlanana!</Typography>
@@ -47,13 +56,13 @@ const WelcomeLogin = ({ errors, login }) => {
         <Grid container>
           <Form onSubmit={handleSubmit} style={{ width: '100%' }}>
             <Form.Group className="text-center" controlid="formGroupEmail">
-              <TextField placeholder="Email" type="email" style={{ width: '20%' }} />
+              <TextField label="Email" type="email" style={{ width: '20%' }} />
             </Form.Group>
 
             <br />
 
             <Form.Group className="text-center" controlid="formGroupPassword">
-              <TextField placeholder="Password" type="password" style={{ width: '20%' }} />
+              <TextField label="Password" type="password" style={{ width: '20%' }} />
             </Form.Group>
 
             <br />
@@ -66,7 +75,7 @@ const WelcomeLogin = ({ errors, login }) => {
                 display: 'flex',
               }}
             >
-              <Button type="submit" variant="contained" color="primary">
+              <Button type="submit" variant="contained" style={{ backgroundColor: '#ffe135', color: 'black' }}>
                 Log In
               </Button>
             </div>
@@ -76,12 +85,12 @@ const WelcomeLogin = ({ errors, login }) => {
         <Grid container direction="row" justify="center" alignItems="baseline" className="mt-5">
           <Typography variant="h6">Don&apos;t have an account?</Typography>
           <Link to="/signup">
-            <Button color="primary" size="medium">Sign Up</Button>
+            <Button size="large" style={{ color: '#709255', fontWeight: 'bold' }}>Sign Up</Button>
           </Link>
         </Grid>
 
       </Grid>
-    </div>
+    </ThemeProvider>
   );
 };
 
