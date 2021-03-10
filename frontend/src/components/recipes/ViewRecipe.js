@@ -59,6 +59,7 @@ class ViewRecipe extends Component {
         });
       }
     }
+    window.scrollTo(0, 0);
   }
 
   componentWillUnmount() {

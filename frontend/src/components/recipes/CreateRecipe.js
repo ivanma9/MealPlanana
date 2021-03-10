@@ -66,6 +66,7 @@ class CreateRecipe extends Component {
         username: this.props.session.username,
       },
     });
+    window.scrollTo(0, 0);
   }
 
   // TODO: add checking for correct number of images here

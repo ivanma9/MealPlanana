@@ -77,6 +77,7 @@ class EditRecipe extends Component {
         // images: this.props.currentRecipe.images,
       });
     }
+    window.scrollTo(0, 0);
   }
 
   // TODO: fix when refresh and want to go back?
