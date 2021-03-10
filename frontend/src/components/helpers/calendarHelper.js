@@ -44,7 +44,6 @@ const rrule = (meal) => {
   rruleArray.until = meal.end_date;
   // rruleArray.tzid = "America/Anchorage";
 
-
   return rruleArray;
 };
 

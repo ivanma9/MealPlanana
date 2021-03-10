@@ -63,21 +63,20 @@ export class ViewMeal extends Component {
     // TODO daysOfweek Move LISTGROUP
 
     const array = [];
-    console.log(days);
     // array.push(<ListGroup.Item className="text-center" variant={color}>sun</ListGroup.Item>)
     for (const ind in days) {
       let color = 'item';
       if (days[ind - 1]) {
         color = 'chosen';
       }
-      array.push(<ListGroup.Item className="text-center" variant={color}>{daysOfWeekDict[ind]}</ListGroup.Item>);
+      array.push(<ListGroup.Item key="{ind}" className="text-center" variant={color}>{daysOfWeekDict[ind]}</ListGroup.Item>);
     }
     return array;
   }
 
   displayRecipes(recipeList) {
     return recipeList.map((recipe) => (
-      <div>
+      <div key={recipe.title}>
         <h2>{recipe.title}</h2>
         <p>
           {ReactHtmlParser(recipe.description)}
@@ -91,40 +90,48 @@ export class ViewMeal extends Component {
     if (
       this.props.deletedRecipes.length !== 0
     ) {
-      console.log(this.props.deletedRecipes.length);
       // TODO search through this.props.meals using this.props.header to get meal index
       let currentMealIndex = -1;
       const currentMeals = this.props.meals;
       for (const i in currentMeals) {
         if (this.props.header === currentMeals[i].title) {
           currentMealIndex = i;
-          console.log('found meal index');
           break;
         }
       }
-      const newRecipes = currentMeals[currentMealIndex];
-      console.log(newRecipes);
+      const currentMeal = currentMeals[currentMealIndex];
+      const newRecipes = currentMeal.recipes;
+      // console.log(newRecipes);
+      // console.log(currentMeals[currentMealIndex]);
 
+      let deletedIndices = [];
       for (const recipeID of this.props.deletedRecipes) {
-        console.log(recipeID);
-
+        for (const index in newRecipes){
+          if(recipeID === newRecipes[index]){
+            deletedIndices.push(index); // add index to deleted indices
+          }
+        }
       }
-      // const meal = {
-      //   title: this.state.mealTitle,
-      //   // recipe: mongoose.Types.ObjectId(this.recipeIDs[0]),
-      //   recipes: newRecipes,
-      //   start_date: startD,
-      //   end_date: endD,
-      //   days: this.state.weekDays,
-      //   duration: parseInt(this.state.duration, 10),
-      //   color: this.state.color,
-      //   freqType: this.state.freq.toUpperCase(),
-      //   interval: parseInt(this.state.interval, 10),
-      // };
+      // console.log(deletedIndices);
+      for (const deleteIndex of deletedIndices){
+        newRecipes.splice(deleteIndex,1);
+      }
+      const meal = {
+        title: currentMeal.title,
+        recipes: newRecipes,
+        start_date: currentMeal.start_date,
+        end_date: currentMeal.start_date,
+        days: currentMeal.days,
+        duration: currentMeal.duration,
+        color: currentMeal.color,
+        freqType: currentMeal.freqType,
+        interval: currentMeal.interval,
+      };
 
-      // let newMeals = this.props.meals;
-      // newMeals = newMeals.concat(meal);
-      // this.props.updateMeals(newMeals);
+      let newMeals = this.props.meals;
+      newMeals.splice(currentMealIndex, 1);
+      newMeals = newMeals.concat(meal);
+      this.props.updateMeals(newMeals);
     }
   }
 
