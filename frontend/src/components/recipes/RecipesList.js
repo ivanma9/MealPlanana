@@ -255,7 +255,7 @@ class RecipesList extends Component {
           )}
           contentStyle={{ width: 500, height: 'fit-content' }}
         >
-          <AddMeal recipes={this.state.createMealSelectedRecipes} />
+          <AddMeal buttonTitle="Add Meal" recipes={this.state.createMealSelectedRecipes} />
         </Modal>
       </div>
     );

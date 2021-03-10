@@ -5,6 +5,9 @@ import { Button, ListGroup, Container } from 'react-bootstrap';
 import ReactHtmlParser from 'react-html-parser';
 import { connect } from 'react-redux';
 import { updateMeals } from '../actions/session';
+import Modal from './modal/stdModal.component';
+import AddMeal from './AddMeal/add-meal.component';
+
 
 const daysOfWeekDict = {
   0: 'Sun',
@@ -18,9 +21,7 @@ const daysOfWeekDict = {
 export class ViewMeal extends Component {
   constructor(props) {
     super(props);
-    this.mealInfo = {};
-    this.recipeInfo = [];
-    this.header = '';
+
 
     this.state = {
 
@@ -29,8 +30,12 @@ export class ViewMeal extends Component {
     this.deleteMeal = this.deleteMeal.bind(this);
   }
 
+  editModalRef = React.createRef();
+
+
   editMeal() {
     // TODO: Add Meal Extension
+    this.editModalRef.current.open();
   }
 
   deleteMeal() {
@@ -138,6 +143,19 @@ export class ViewMeal extends Component {
   render() {
     return (
       <div style={{ marginTop: 10, fontSize: 12 }}>
+        <Modal
+          ref={this.editModalRef}
+          header={(
+            <h3>
+              {'  '}
+              Edit Meal
+            </h3>
+          )}
+          contentStyle={{ width: 500, height: 'fit-content' }}
+        >
+          <AddMeal buttonTitle="Edit Meal" recipes={this.state.createMealSelectedRecipes} />
+        </Modal>
+
         <Container className="container-fluid">
           <h1>
             {this.props.header}
@@ -175,7 +193,7 @@ export class ViewMeal extends Component {
                   }
               `}
               </style>
-              <Button variant="flat" size="icon" onClick={this.deleteMeal}>
+              <Button variant="flat" size="icon" onClick={this.editMeal}>
                 <MdEdit className="d-flex align-items-center" />
               </Button>
               <Button variant="flat" size="icon" onClick={this.deleteMeal}>

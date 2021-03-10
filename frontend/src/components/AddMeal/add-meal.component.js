@@ -37,6 +37,7 @@ class AddMeal extends Component {
     let recipeTitles = '';
     this.recipeIDs = [];
     let maxReached = false;
+
     this.props.recipes.forEach((recipe) => {
       this.recipeIDs.push(recipe._id);
       if (recipe.title) {
@@ -333,7 +334,7 @@ class AddMeal extends Component {
              <input
                style={{ backgroundColor: this.state.color, color: this.state.fontColor }}
                type="submit"
-               value="Add Meal"
+               value={this.props.buttonTitle}
                className="btn btn-primary"
              />
            </div>
