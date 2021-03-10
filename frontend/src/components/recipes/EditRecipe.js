@@ -58,6 +58,10 @@ class EditRecipe extends Component {
   }
 
   componentDidMount() {
+    if (this.props.history.location.appState !== undefined) {
+      this.setState({ appState: this.props.history.location.appState });
+    }
+
     if (this.props.recipe) {
       this.setState({
         title: this.props.recipe.title,
@@ -71,16 +75,19 @@ class EditRecipe extends Component {
     }
   }
 
+  // TODO: fix when refresh and want to go back?
+  // TODO: fix when you go back to View but then go forward to Edit.
   componentWillUnmount() {
     if (
-      this.props.history.action === 'POP'
-      || this.props.history.location.appState === undefined
-      || !this.props.history.location.appState.updatePressed
+      this.props.history.action !== 'POP'
+      || this.state.appState === undefined
+      || !this.state.appState.editPressed
     ) {
       this.props.removeRecipeFromStateOnUnselected();
     }
   }
 
+  // TODO: add checking for correct number of images here
   handleValidation() {
     let formIsValid = true;
 
@@ -178,14 +185,13 @@ class EditRecipe extends Component {
 
     editSuccessful = true;
 
-    let preview;
-
     /**
      * if preview hasn't been touched, we want to keep it the same
      * else if preview has been changed and there is a new image, we want to update it
      * else (preview has been changed and the image was deleted), we want to delete it
      */
 
+    let preview;
     if (this.state.previewChanged === false) {
       preview = undefined;
     } else if (Object.keys(this.state.preview).length !== 0) {
@@ -238,7 +244,7 @@ class EditRecipe extends Component {
       return <Typography variant="h2" align="center">Please select a recipe to edit</Typography>;
     }
 
-    const defaultImages = () => {
+    const defaultPreviewImage = () => {
       if (this.state.preview && !this.state.previewChanged) {
         return [this.state.preview.location];
       }
@@ -257,7 +263,7 @@ class EditRecipe extends Component {
             <ImageUploader
               onChange={this.onChangePreview}
               withPreview
-              defaultImages={defaultImages()}
+              defaultImages={defaultPreviewImage()}
               withIcon
               buttonText="Choose image"
               withLabel

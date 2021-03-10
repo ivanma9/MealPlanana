@@ -65,6 +65,7 @@ class CreateRecipe extends Component {
     });
   }
 
+  // TODO: add checking for correct number of images here
   handleValidation() {
     let formIsValid = true;
 
