@@ -3,6 +3,8 @@ import { BsFillTrashFill } from 'react-icons/bs';
 import React, { Component } from 'react';
 import { Button, ListGroup, Container } from 'react-bootstrap';
 import ReactHtmlParser from 'react-html-parser';
+import { connect } from 'react-redux';
+import { updateMeals } from '../actions/session';
 
 const daysOfWeekDict = {
   0: 'Sun',
@@ -13,7 +15,7 @@ const daysOfWeekDict = {
   5: 'Fri', // 'sa',
   6: 'Sat', // 'su',
 };
-export default class ViewMeal extends Component {
+export class ViewMeal extends Component {
   constructor(props) {
     super(props);
     this.mealInfo = {};
@@ -35,26 +37,26 @@ export default class ViewMeal extends Component {
     // TODO: Delete meal endpt
   }
 
-  militaryToStandardTime(time){
-    time = time.split(':'); // convert to array
+  militaryToStandardTime(time) {
+    time = time.split(':');
 
     // fetch
-    var hours = Number(time[0]);
-    var minutes = Number(time[1]);
+    const hours = Number(time[0]);
+    const minutes = Number(time[1]);
 
     // calculate
-    var timeValue;
+    let timeValue;
 
     if (hours > 0 && hours <= 12) {
-      timeValue= "" + hours;
+      timeValue = `${hours}`;
     } else if (hours > 12) {
-      timeValue= "" + (hours - 12);
+      timeValue = `${hours - 12}`;
     } else if (hours == 0) {
-      timeValue= "12";
+      timeValue = '12';
     }
-    
-    timeValue += (minutes < 10) ? ":0" + minutes : ":" + minutes;  // get minutes
-    timeValue += (hours >= 12) ? " P.M." : " A.M.";  // get AM/PM
+
+    timeValue += (minutes < 10) ? `:0${minutes}` : `:${minutes}`; // get minutes
+    timeValue += (hours >= 12) ? ' P.M.' : ' A.M.'; // get AM/PM
     return timeValue;
   }
 
@@ -62,7 +64,7 @@ export default class ViewMeal extends Component {
     // TODO daysOfweek Move LISTGROUP
 
     const array = [];
-    console.log(days)
+    console.log(days);
     // array.push(<ListGroup.Item className="text-center" variant={color}>sun</ListGroup.Item>)
     for (const ind in days) {
       let color = 'item';
@@ -78,9 +80,53 @@ export default class ViewMeal extends Component {
     return recipeList.map((recipe) => (
       <div>
         <h2>{recipe.title}</h2>
-        <p>{ReactHtmlParser(recipe.description)} </p>
+        <p>
+          {ReactHtmlParser(recipe.description)}
+          {' '}
+        </p>
       </div>
     ));
+  }
+
+  componentWillUnmount() {
+    if (
+      this.props.deletedRecipes.length !== 0
+    ) {
+      console.log(this.props.deletedRecipes.length);
+      // TODO search through this.props.meals using this.props.header to get meal index
+      let currentMealIndex = -1;
+      const currentMeals = this.props.meals;
+      for (const i in currentMeals) {
+        if (this.props.header === currentMeals[i].title) {
+          currentMealIndex = i;
+          console.log('found meal index');
+          break;
+        }
+      }
+      const newRecipes = currentMeals[currentMealIndex];
+      console.log(newRecipes);
+
+      for (const recipeID of this.props.deletedRecipes) {
+        console.log(recipeID);
+
+      }
+      // const meal = {
+      //   title: this.state.mealTitle,
+      //   // recipe: mongoose.Types.ObjectId(this.recipeIDs[0]),
+      //   recipes: newRecipes,
+      //   start_date: startD,
+      //   end_date: endD,
+      //   days: this.state.weekDays,
+      //   duration: parseInt(this.state.duration, 10),
+      //   color: this.state.color,
+      //   freqType: this.state.freq.toUpperCase(),
+      //   interval: parseInt(this.state.interval, 10),
+      // };
+
+      // let newMeals = this.props.meals;
+      // newMeals = newMeals.concat(meal);
+      // this.props.updateMeals(newMeals);
+    }
   }
 
   render() {
@@ -152,7 +198,7 @@ export default class ViewMeal extends Component {
         <br />
         <Container>
           <div>
-            {console.log(this.props.recipeInfo)}
+            {console.log(this.props.deletedRecipes)}
             {this.displayRecipes(this.props.recipeInfo)}
           </div>
 
@@ -162,3 +208,13 @@ export default class ViewMeal extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  meals: state.session.meals,
+});
+
+
+export default connect(
+  mapStateToProps,
+  { updateMeals },
+)(ViewMeal);

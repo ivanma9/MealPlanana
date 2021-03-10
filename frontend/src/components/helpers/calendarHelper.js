@@ -52,7 +52,7 @@ const convMeal = (meal) => {
   mealDict.rrule = rrule(meal);
   // mealDict.startTime = new Date(meal.start_date);
   // mealDict.endTime = moment(meal.start_date).add(meal.duration+100, 'm').toDate();
-  mealDict.duration = meal.duration;
+  mealDict.duration = {minutes:meal.duration};
   mealDict.color = meal.color;
   mealDict.recipes = meal.recipes;
 

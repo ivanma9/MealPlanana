@@ -34,6 +34,7 @@ class CalendarView extends Component {
       mealSelected: '',
       recipeInMeal: '',
       deletedRecipes: [],
+      mealID: '',
     };
     // this.handleEditMeal = this.handleEditMeal.bind(this);
     // this.handleChangeView4Day = this.handleChangeView4Day.bind(this);
@@ -94,6 +95,7 @@ class CalendarView extends Component {
     return array;
   }
 
+
   render() {
     // const { username } = this.props;
 
@@ -107,6 +109,7 @@ class CalendarView extends Component {
             header = {this.state.mealSelected} 
             mealInfo = {this.searchMeal(this.state.mealSelected)}
             recipeInfo={this.searchRecipeID(this.state.recipeInMeal)} 
+            deletedRecipes={this.state.deletedRecipes}
           />)}
         />
 
@@ -144,9 +147,6 @@ class CalendarView extends Component {
             </Button>
           </Link>
 
-          {/* <Button className="m-4 p-2" onClick={this.handleChangeViewWeek}>
-            Edit Meal
-          </Button> */}
         </Container>
 
         <FullCalendar
@@ -158,6 +158,7 @@ class CalendarView extends Component {
           }}
           plugins={[rrulePlugin, dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin]}
           initialView="timeGridDay"
+          timeZone= {'local'}
           events={parseMeals(this.props.meals)}
           views={{
             timeGridFourDay: {
@@ -206,4 +207,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(
   mapStateToProps,
+  { updateMeals },
 )(CalendarView);
