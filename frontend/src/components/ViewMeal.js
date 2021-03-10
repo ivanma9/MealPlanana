@@ -4,11 +4,20 @@ import React, { Component } from 'react';
 import { Button, ListGroup, Container } from 'react-bootstrap';
 import ReactHtmlParser from 'react-html-parser';
 
+const daysOfWeekDict = {
+  0: 'Sun',
+  1: 'Mon', // 'tu',
+  2: 'Tue', // 'we',
+  3: 'Wed', // 'th',
+  4: 'Thu', // 'fr',
+  5: 'Fri', // 'sa',
+  6: 'Sat', // 'su',
+};
 export default class ViewMeal extends Component {
   constructor(props) {
     super(props);
     this.mealInfo = {};
-    this.recipeInfo = {};
+    this.recipeInfo = [];
     this.header = '';
 
     this.state = {
@@ -26,12 +35,32 @@ export default class ViewMeal extends Component {
     // TODO: Delete meal endpt
   }
 
-  daysOfWeek() {
+  daysOfWeekListGroup(days) {
     // TODO daysOfweek Move LISTGROUP
+
+    const array = [];
+    console.log(days)
+    // array.push(<ListGroup.Item className="text-center" variant={color}>sun</ListGroup.Item>)
+    for (const ind in days.slice()) {
+      let color = 'item';
+      if (days[ind - 1]) {
+        color = 'chosen';
+      }
+      array.push(<ListGroup.Item className="text-center" variant={color}>{daysOfWeekDict[ind]}</ListGroup.Item>);
+    }
+    return array;
+  }
+
+  displayRecipes(recipeList) {
+    return recipeList.map((recipe) => (
+      <div>
+        <h2>{recipe.title}</h2>
+        <p>{ReactHtmlParser(recipe.description)} </p>
+      </div>
+    ));
   }
 
   render() {
-    this.daysOfWeek();
     return (
       <div style={{ marginTop: 10, fontSize: 12 }}>
         <Container className="container-fluid">
@@ -44,7 +73,18 @@ export default class ViewMeal extends Component {
                     background-color: #eaf4f4;
                     color: black;
                   }
-
+               
+                  .list-group-mine {
+                    background-color: #eaf4f4;
+                  }
+                  .list-group-item{
+                    min-width: 6.5em;
+                    background-color: #eaf4f4;
+                  }
+                  .list-group-item-chosen{
+                    background-color: #ffe135;
+                  }
+               
                   .btn-icon {
                     padding: 0.9rem 0.9rem;
                     font-size: 1.5rem;
@@ -54,6 +94,9 @@ export default class ViewMeal extends Component {
                   }
                   .btn:hover {
                     padding: 1.1rem 1.1rem;
+                  }
+                  #timeinfo{
+                    font-size: 16px;
                   }
               `}
               </style>
@@ -67,39 +110,28 @@ export default class ViewMeal extends Component {
           </h1>
         </Container>
         <Container id="Event Calandar Info">
-          <label>
+          <p id="timeinfo">
             Starts:
             {' '}
-            { this.props.mealInfo.start_date.slice(11, -5)}
-          </label>
+            <em>
+              { this.props.mealInfo.start_date.slice(11, -8)}
+              {' - '}
+              {new Date(Date.parse(this.props.mealInfo.end_date)
+            + (this.props.mealInfo.duration * 60 * 1000)).toISOString().slice(11, -8)}
+            </em>
+          </p>
           <br />
-          <label>
-            Ends:
-            {' '}
-            {new Date(Date.parse(this.props.mealInfo.end_date)
-            + (this.props.mealInfo.duration * 60 * 1000)).toISOString().slice(11, -5)}
-          </label>
-          <ListGroup horizontal>
-            <ListGroup.Item variant="flat" id="sun">Sun</ListGroup.Item>
-            <ListGroup.Item variant="flat" id="mon">Mon</ListGroup.Item>
-            <ListGroup.Item variant="flat" id="tue">Tue</ListGroup.Item>
-            <ListGroup.Item variant="flat" id="wed">Wed</ListGroup.Item>
-            <ListGroup.Item variant="flat" id="thu">Thu</ListGroup.Item>
-            <ListGroup.Item variant="flat" id="fri">Fri</ListGroup.Item>
-            <ListGroup.Item variant="flat" id="sat">Sat</ListGroup.Item>
+          <ListGroup horizontal variant="mine">
+            {this.daysOfWeekListGroup(this.props.mealInfo.days)}
           </ListGroup>
         </Container>
-
+        <br />
         <br />
         <Container>
-          <h2>
-            {this.props.recipeInfo.title}
-          </h2>
-          <Container>
-            <p>
-              {ReactHtmlParser(this.props.recipeInfo.description)}
-            </p>
-          </Container>
+          <div>
+            {console.log(this.props.recipeInfo)}
+            {this.displayRecipes(this.props.recipeInfo)}
+          </div>
 
         </Container>
 

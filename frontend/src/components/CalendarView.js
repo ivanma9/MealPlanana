@@ -16,6 +16,7 @@ import AddMeal from './AddMeal/add-meal.component';
 import ViewMeal from './ViewMeal';
 
 import { parseMeals } from './helpers/calendarHelper';
+import { updateMeals } from '../actions/session';
 
 // import axios from 'axios';
 
@@ -66,21 +67,29 @@ class CalendarView extends Component {
   searchMeal(mealTitle) {
     for (let meal of this.props.meals) {
       if(meal.title == mealTitle) {
-        console.log("Found MEal")
         return meal;
       }
     }
     return "Not Found";
   }
 
-  searchRecipeID(recipeID) {
+  searchRecipeID(recipeIDs) {
     let recipe;
-    for (recipe in (this.props.recipes)) {
-      if (recipeID === this.props.recipes[recipe]._id) {
-        return this.props.recipes[recipe];
+    let array = [];
+    for (let recipeID of recipeIDs){
+      let found = false;
+      for (recipe in (this.props.recipes)) {
+        if (recipeID === this.props.recipes[recipe]._id) {
+          console.log("Found")
+          array.push(this.props.recipes[recipe]);
+          found = true;
+        }
+      }
+      if (!found){
+        console.log("not found");
       }
     }
-    return "Not Found";
+    return array;
   }
 
   render() {
@@ -91,7 +100,7 @@ class CalendarView extends Component {
         <Modal
           ref={this.viewModalRef}
           headerDisabled
-          contentStyle={{ width: 500, height: 350 }}
+          contentStyle={{ width: 600, height: 500 }}
           children={(<ViewMeal 
             header = {this.state.mealSelected} 
             mealInfo = {this.searchMeal(this.state.mealSelected)}
@@ -107,10 +116,6 @@ class CalendarView extends Component {
 
         <div>
           {console.log(parseMeals(this.props.meals))}
-        </div>
-
-        <div>
-          {console.log(this.props.meals)}
         </div>
 
         <Container className="text-center">
