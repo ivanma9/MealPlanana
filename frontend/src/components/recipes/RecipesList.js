@@ -3,13 +3,7 @@
 // TODO: Check to see if global state is updated upon creation or updating of a recipe and if you
 //       can avoid fetching all recipes each time you go to this page
 
-// TODO: load recipes to global state initially when the user logs in instead of waiting until they
-//       reach this page
-
 // TODO: periodically fetch from the db anyway to ensure data is up to date and nothing went wrong
-
-// TODO: fix mouse hover next to card pushing View with no recipe to view. Change link to directly
-//       be card and not include padding?
 
 import {
   Button,

@@ -41,15 +41,18 @@ class CreateRecipe extends Component {
       },
 
       titleIsEmpty: false,
-      // directionsIsEmpty: false,
+      ingredientIsDuplicate: false,
+      tagIsDuplicate: false,
     };
 
     this.onChangeTitle = this.onChangeTitle.bind(this);
     this.onChangeDescription = this.onChangeDescription.bind(this);
     this.onAddIngredient = this.onAddIngredient.bind(this);
+    this.onBeforeAddIngredient = this.onBeforeAddIngredient.bind(this);
     this.onDeleteIngredient = this.onDeleteIngredient.bind(this);
     this.onChangeDirections = this.onChangeDirections.bind(this);
     this.onAddTag = this.onAddTag.bind(this);
+    this.onBeforeAddTag = this.onBeforeAddTag.bind(this);
     this.onDeleteTag = this.onDeleteTag.bind(this);
     this.onChangePreview = this.onChangePreview.bind(this);
     this.onChangeImages = this.onChangeImages.bind(this);
@@ -98,6 +101,17 @@ class CreateRecipe extends Component {
     });
   }
 
+  onBeforeAddIngredient(chip) {
+    if (this.state.ingredients.some(
+      (ingredient) => ingredient.toLowerCase() === chip.toLowerCase(),
+    )) {
+      this.setState({ ingredientIsDuplicate: true });
+      return false;
+    }
+    this.setState({ ingredientIsDuplicate: false });
+    return true;
+  }
+
   onAddIngredient(chip) {
     this.setState((prevState) => ({
       ingredients: [...prevState.ingredients, chip],
@@ -115,6 +129,17 @@ class CreateRecipe extends Component {
     this.setState({
       directions: content,
     });
+  }
+
+  onBeforeAddTag(chip) {
+    if (this.state.tags.some(
+      (tag) => tag.toLowerCase() === chip.toLowerCase(),
+    )) {
+      this.setState({ tagIsDuplicate: true });
+      return false;
+    }
+    this.setState({ tagIsDuplicate: false });
+    return true;
   }
 
   onAddTag(chip) {
@@ -247,7 +272,6 @@ class CreateRecipe extends Component {
           </Form.Group>
 
           {/* Title */}
-          {/* TODO: Implement check to make sure something is entered in the field */}
           <Form.Group controlid="formGroupRecipeTitle">
             <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}>Title</Typography>
             <TextField
@@ -295,15 +319,18 @@ class CreateRecipe extends Component {
               // TODO: add "dataSource" array for autocompletion
               fullWidth
               value={this.state.ingredients}
+              onBeforeAdd={(chip) => this.onBeforeAddIngredient(chip)}
               onAdd={(chip) => this.onAddIngredient(chip)}
               onDelete={(chip, index) => this.onDeleteIngredient(chip, index)}
+              helperText={this.state.ingredientIsDuplicate
+                ? <Typography variant="caption" color="secondary">Ingredient is a duplicate!</Typography>
+                : null}
             />
           </Form.Group>
 
           <br />
 
           {/* Directions */}
-          {/* TODO: Implement check to make sure something is entered in the field */}
           <Form.Group controlid="formGroupRecipeDirections">
             <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}>Directions</Typography>
             <Editor
@@ -335,11 +362,14 @@ class CreateRecipe extends Component {
               // TODO: add "dataSource" array for autocompletion
               fullWidth
               value={this.state.tags}
+              onBeforeAdd={(chip) => this.onBeforeAddTag(chip)}
               onAdd={(chip) => this.onAddTag(chip)}
               onDelete={(chip, index) => this.onDeleteTag(chip, index)}
+              helperText={this.state.tagIsDuplicate
+                ? <Typography variant="caption" color="secondary">Tag is a duplicate!</Typography>
+                : null}
             />
           </Form.Group>
-          {/* TODO: add image preview and upload ability */}
 
           <br />
 
