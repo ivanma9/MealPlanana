@@ -42,6 +42,8 @@ const rrule = (meal) => {
   rruleArray.byweekday = daysOfWeek(meal.days);
   rruleArray.dtstart = meal.start_date;
   rruleArray.until = meal.end_date;
+  // rruleArray.tzid = "America/Anchorage";
+
 
   return rruleArray;
 };

@@ -39,9 +39,8 @@ export class ViewMeal extends Component {
 
   militaryToStandardTime(time) {
     time = time.split(':');
-
     // fetch
-    const hours = Number(time[0]);
+    const hours = Number(time[0]); // UTC => PST
     const minutes = Number(time[1]);
 
     // calculate
@@ -183,10 +182,10 @@ export class ViewMeal extends Component {
             Time:
             {' '}
             <em>
-              {this.militaryToStandardTime(this.props.mealInfo.start_date.slice(11, -8))}
+              {this.militaryToStandardTime((new Date(this.props.mealInfo.start_date)).toString().slice(16))}
               {' - '}
-              {this.militaryToStandardTime(new Date(Date.parse(this.props.mealInfo.end_date)
-            + (this.props.mealInfo.duration * 60 * 1000)).toISOString().slice(11, -8))}
+              {this.militaryToStandardTime(new Date(Date.parse(this.props.mealInfo.start_date)
+            + (this.props.mealInfo.duration * 60 * 1000)).toString().slice(16))}
             </em>
           </p>
           <br />
