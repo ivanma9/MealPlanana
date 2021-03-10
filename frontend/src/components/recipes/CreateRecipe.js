@@ -240,6 +240,8 @@ class CreateRecipe extends Component {
               buttonText="Choose image"
               withLabel
               label="Max file size: 10mb | Accepted: jpg, gif, png"
+              maxFileSize={10485760} // 10 MiB in Bytes
+              fileTypeError=" is not a supported file extension"
               singleImage
             />
           </Form.Group>
@@ -351,6 +353,8 @@ class CreateRecipe extends Component {
               buttonText="Choose up to 5 images"
               withLabel
               label="Max file size: 10mb | Accepted: jpg, gif, png"
+              maxFileSize={10485760} // 10 MiB in Bytes
+              fileTypeError=" is not a supported file extension"
             />
           </Form.Group>
 

@@ -201,13 +201,13 @@ class EditRecipe extends Component {
     }
 
     const recipe = {
-        title: sanitizeHtml(this.state.title),
-        description: this.state.description,
-        ingredients: this.state.ingredients,
-        directions: this.state.directions,
-        tags: this.state.tags,
+      title: sanitizeHtml(this.state.title),
+      description: this.state.description,
+      ingredients: this.state.ingredients,
+      directions: this.state.directions,
+      tags: this.state.tags,
       preview,
-      };
+    };
 
     this.props.updateRecipe(recipe, this.props.recipe._id)
       .then(() => {
@@ -268,6 +268,8 @@ class EditRecipe extends Component {
               buttonText="Choose image"
               withLabel
               label="Please close the image before uploading a new one | Max file size: 10mb | Accepted: jpg, gif, png"
+              maxFileSize={10485760} // 10 MiB in Bytes
+              fileTypeError=" is not a supported file extension"
               singleImage
             />
           </Form.Group>
