@@ -33,6 +33,7 @@ class CalendarView extends Component {
       dateState: new Date(), // Can just Use state in Component
       mealSelected: '',
       recipeInMeal: '',
+      deletedRecipes: [],
     };
     // this.handleEditMeal = this.handleEditMeal.bind(this);
     // this.handleChangeView4Day = this.handleChangeView4Day.bind(this);
@@ -86,7 +87,8 @@ class CalendarView extends Component {
         }
       }
       if (!found){
-        console.log("not found");
+        console.log(recipeID + " not found");
+        this.state.deletedRecipes.push(recipeID);
       }
     }
     return array;

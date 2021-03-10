@@ -35,13 +35,36 @@ export default class ViewMeal extends Component {
     // TODO: Delete meal endpt
   }
 
+  militaryToStandardTime(time){
+    time = time.split(':'); // convert to array
+
+    // fetch
+    var hours = Number(time[0]);
+    var minutes = Number(time[1]);
+
+    // calculate
+    var timeValue;
+
+    if (hours > 0 && hours <= 12) {
+      timeValue= "" + hours;
+    } else if (hours > 12) {
+      timeValue= "" + (hours - 12);
+    } else if (hours == 0) {
+      timeValue= "12";
+    }
+    
+    timeValue += (minutes < 10) ? ":0" + minutes : ":" + minutes;  // get minutes
+    timeValue += (hours >= 12) ? " P.M." : " A.M.";  // get AM/PM
+    return timeValue;
+  }
+
   daysOfWeekListGroup(days) {
     // TODO daysOfweek Move LISTGROUP
 
     const array = [];
     console.log(days)
     // array.push(<ListGroup.Item className="text-center" variant={color}>sun</ListGroup.Item>)
-    for (const ind in days.slice()) {
+    for (const ind in days) {
       let color = 'item';
       if (days[ind - 1]) {
         color = 'chosen';
@@ -111,13 +134,13 @@ export default class ViewMeal extends Component {
         </Container>
         <Container id="Event Calandar Info">
           <p id="timeinfo">
-            Starts:
+            Time:
             {' '}
             <em>
-              { this.props.mealInfo.start_date.slice(11, -8)}
+              {this.militaryToStandardTime(this.props.mealInfo.start_date.slice(11, -8))}
               {' - '}
-              {new Date(Date.parse(this.props.mealInfo.end_date)
-            + (this.props.mealInfo.duration * 60 * 1000)).toISOString().slice(11, -8)}
+              {this.militaryToStandardTime(new Date(Date.parse(this.props.mealInfo.end_date)
+            + (this.props.mealInfo.duration * 60 * 1000)).toISOString().slice(11, -8))}
             </em>
           </p>
           <br />
