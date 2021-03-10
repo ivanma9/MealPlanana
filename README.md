@@ -1,24 +1,25 @@
+# MealPlanana
+
+MealPlanana is a MERN Stack web app that allows users to share recipes and plan out their meals on a calendar.  
+It is currently being hosted [here](https://mealplanana.herokuapp.com/).
+
 # Table of contents
 
----
-
-- [Introduction](#mealplanana)
+- [Features](#features)
 - [Technologies](#technologies)
-- [Setup](#setup)
+- [Local Setup](#setup)
 - [Credit](#credit)
 - [More info](#more-info)
 
-# MealPlanana
+# Features
 
----
-
-MealPlanana is a web app that allows users to share recipes and plan out their meals.
+- View recipes + search via recipe title, tag, or authorå
+- Create new recipes
+- Rate recipes
+- Add recipes to a meal + customize meal details
+- View all meals in calendar
 
 # Technologies
-
----
-
-This project uses:
 
 - React v17.0.1
 - Redux v4.0.5 (to store state)
@@ -27,47 +28,39 @@ This project uses:
 - MongoDB Atlas (to store data)
 - ESLint v7.20.0 (to keep code clean)
 - AWS S3 bucket (to store images)
-- Heroku (to deploy app online)
+- Heroku (to host/deploy app online)
 
 # Setup
-
----
 
 If you haven't already, download [node](https://nodejs.org/en/download/).
 
 > Node comes with npm (Node Package Manager) which is used to download necessary packages/dependencies, and allows you to run the program.
 
-#### Installing packages to your local machine
+### Installing packages to your local machine
 
-#
-
-First [clone](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository) the repository to your local machine, and install the necessary packages with the `npm ci` command.
+First [clone](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository) the repository to your local machine, and install the necessary packages with the `npm i` command. (`npm i` is short for _npm install_. If `npm i` doesn't work, try using `npm ci`)
 
 > You may find it easier to have two terminals open at once so you can run the frontend and backend at the same time.
 
-##### For the frontend:
-
-#
+#### For the frontend:
 
 ```shell
 $ cd MealPlanana/frontend
-$ npm ci
+$ npm i
 ```
 
-##### And likewise for the backend:
-
-#
+#### And likewise for the backend:
 
 ```shell
 $ cd MealPlanana/backend
-$ npm ci
+$ npm i
 ```
 
-#### Adding the config file
+### Adding the config file
 
 At this point, you should have all the packages needed to run the program.
 
-However, you will still need to create the file `MealPlanana/backend/src/config.js`. The contents of this file contains Redux variables as well as the credentials for the _MongoDB Cluster_ and _AWS Bucket_. The file might look something like this:
+However, you will still need to create/edit the file `MealPlanana/backend/src/config.js`. The contents of this file contains [Redux](https://www.smashingmagazine.com/2018/07/redux-designers-guide/) variables as well as the credentials for the _MongoDB Cluster_ and _AWS Bucket_. The file might look something like this:
 
 ```js
 export const {
@@ -76,9 +69,9 @@ export const {
 
   MONGO_URI = "mongodb+srv://<username>:<password>@<host>[:port]/<db>[?options]",
 
-  SESS_NAME = "sid",
-  SESS_SECRET = "secret!session",
-  SESS_LIFETIME = 1000 * 60 * 60 * 2,
+  SESS_NAME = "<sid>",
+  SESS_SECRET = "<secret!session>",
+  SESS_LIFETIME = <time>,
 
   AWS_BUCKET_NAME = "<bucket>",
   AWS_ACCESS_KEY_ID = "<key-id>",
@@ -90,25 +83,21 @@ export const {
 
 For security purposes, the `config.js` file does not include our actual database credientials. Only authorized users are given this information.
 
-A workaround would be to create your own [cluster](https://docs.atlas.mongodb.com/tutorial/create-new-cluster/) and [bucket](https://docs.aws.amazon.com/AmazonS3/latest/userguide/create-bucket-overview.html), and to update the credentials to the `config.js` file.
+A workaround would be to create your own [cluster](https://docs.atlas.mongodb.com/tutorial/create-new-cluster/) and [bucket](https://docs.aws.amazon.com/AmazonS3/latest/userguide/create-bucket-overview.html), and to insert your credentials to the `config.js` file.
 
 > Note: Another alternative is to store all data locally, which would involve changing some code.
 
-#### Run the program
+### Run the program
 
 Now we are ready to start running!
 
-#
-
-##### In the backend folder, we can run
-
-#
+#### In the backend folder, run
 
 ```shell
 $ npm run dev
 ```
 
-which is equivalent to
+which, according to our `package.json` file, is equivalent to
 
 ```shell
 $ nodemon index.js
@@ -116,9 +105,7 @@ $ nodemon index.js
 
 > (For more info about nodemon, click [here](https://www.npmjs.com/package/nodemon))
 
-##### In the frontend folder, we run
-
-#
+#### In the frontend folder, run
 
 ```shell
 $ npm start
@@ -128,8 +115,8 @@ This should open a page on your default web browser, and after everything loads,
 
 # Credit
 
-This is a Winter 2021 CS 97 project, taught by Professor Eggert at UCLA.
-Created by: Joshua Aymett, Alex Haddad, Joshua Lee, Ivan Ma, and Bryce Stulman
+A Winter 2021 CS 97 project, taught by Professor Eggert at UCLA.  
+Made by: Joshua Aymett, Alex Haddad, Joshua Lee, Ivan Ma, and Bryce Stulman
 
 # More info
 

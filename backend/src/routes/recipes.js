@@ -96,7 +96,7 @@ recipeRoutes.put('/update/:id', recipeUploader, async (req, res) => {
       const { preview, images } = req.files;
       // Make sure preview exists, and isn't just a string with value 'null'
       if (preview !== undefined) {
-        if (typeof preview[0] !== 'string' && preview !== 'null') {
+        if (typeof preview[0] !== 'string' && preview[0] !== 'null') {
           update.preview = {
             location: preview[0].location,
             key: preview[0].key,
