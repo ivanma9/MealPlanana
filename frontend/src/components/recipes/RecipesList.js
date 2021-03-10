@@ -54,6 +54,7 @@ class RecipesList extends Component {
       activeCardID: '',
       createMealPromptIsOpen: false,
       createMealSelectedRecipes: [],
+      searchResults: [],
     };
   }
 
@@ -88,6 +89,8 @@ class RecipesList extends Component {
 
   addModalRef = React.createRef();
 
+  searchRef = React.createRef();
+
   checkIfCurrentCard = (currentID) => this.state.activeCardID === currentID;
 
   createMealHandleRecipeSelected = (recipe) => {
@@ -104,7 +107,11 @@ class RecipesList extends Component {
   };
 
   recipeList() {
-    return this.props.recipes.map(
+    let { searchResults } = this.state;
+    if (!searchResults || searchResults.length === 0) {
+      searchResults = this.props.recipes;
+    }
+    return searchResults.map(
       (currentRecipe) => (
         <Recipe
           recipe={currentRecipe}
@@ -143,7 +150,11 @@ class RecipesList extends Component {
     return (
       <div>
         <Typography variant="h1" align="center">Recipes List</Typography>
-        <Search />
+        <Search
+          ref={this.searchRef}
+          recipes={this.props.recipes}
+          updateParent={(searchResults) => { this.setState({ searchResults }); }}
+        />
         <Grid
           container
           alignItems="flex-start"

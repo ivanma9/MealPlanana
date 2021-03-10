@@ -1,38 +1,131 @@
 import React, { Component } from 'react';
-import { ReactSearchAutocomplete } from 'react-search-autocomplete';
+import Dropdown from 'react-bootstrap/Dropdown';
+import Autosuggest from 'react-autosuggest';
+import { GiMeal } from 'react-icons/gi';
 
 export default class Search extends Component {
   constructor(props) {
     super(props);
-    this.handleOnFocus = this.handleOnFocus.bind(this);
-    this.handleOnSelect = this.handleOnSelect.bind(this);
-    this.handleOnSearch = this.handleOnSearch.bind(this);
+    this.onSuggestionsClearRequested = this.onSuggestionsClearRequested.bind(this);
+    this.onSuggestionsFetchRequested = this.onSuggestionsFetchRequested.bind(this);
+    this.getSuggestions = this.getSuggestions.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.getTestStr = this.getTestStr.bind(this);
+    this.state = {
+      selectedKeySet: 'Title',
+      results: [],
+      currentSearch: '',
+      suggestions: [],
+      value: '',
+    };
   }
 
-  handleOnFocus() {
-
+  onSuggestionsFetchRequested({ value }) {
+    const suggestions = this.getSuggestions(value);
+    this.props.updateParent(suggestions);
+    this.setState({
+      suggestions,
+    });
   }
 
-  handleOnSearch() {
-
+  onSuggestionsClearRequested() {
+    this.props.updateParent([]);
+    this.setState({
+      suggestions: [],
+    });
   }
 
-  handleOnSelect() {
+  onChange(event, { newValue }) {
+    this.setState({
+      value: newValue,
+    });
+  }
 
+  getTestStr(recipe) {
+    if (this.state.selectedKeySet === 'Title') {
+      return `${recipe.title}`;
+    }
+    if (this.state.selectedKeySet === 'Description') {
+      return `${recipe.description}`;
+    }
+    return `${recipe.tags.toString()}`;
+  }
+
+  getSuggestions(value) {
+    const escapedValue = value.toString().trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+    if (escapedValue === '') {
+      return [];
+    }
+
+    const regex = new RegExp(`\\b${escapedValue}`, 'i');
+
+    return this.props.recipes.filter((recipe) => regex.test(
+      `${this.getTestStr(recipe)}`,
+    ));
   }
 
   render() {
+    const inputProps = {
+      placeholder: 'Enter a recipe keyword',
+      value: this.state.value,
+      onChange: this.onChange,
+      onBlur: () => { this.setState({ value: '' }); },
+    };
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1%' }}>
-        <div style={{ width: '20%' }}>
-          <ReactSearchAutocomplete
-            items={['test1', 'test2', 'testred', 'testblue']}
-            onSearch={this.handleOnSearch}
-            onSelect={this.handleOnSelect}
-            onFocus={this.handleOnFocus}
-            autoFocus
-          />
+      <div style={{
+        display: 'flex', width: '100%', justifyContent: 'center', marginTop: '1%', flexDirection: 'row',
+      }}
+      >
+        <div style={{ display: 'flex', flexDirection: 'row', width: 'fit-content' }}>
+          <div>
+            {' '}
+            <Dropdown>
+              <Dropdown.Toggle
+                style={{
+                  backgroundColor: '#FFFFFF',
+                  color: '#000000',
+                  width: 120,
+                  height: 37,
+                }}
+                id="dropdown-basic"
+              >
+                {this.state.selectedKeySet}
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item onClick={() => this.setState({ selectedKeySet: 'Title', value: '' })} href="#/Title">Title</Dropdown.Item>
+                <Dropdown.Item onClick={() => this.setState({ selectedKeySet: 'Tag', value: '' })} href="#/Tag">Tag</Dropdown.Item>
+                <Dropdown.Item onClick={() => this.setState({ selectedKeySet: 'Description', value: '' })} href="#/Description">Description</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+            {' '}
+            {this.state.currentSearch}
+          </div>
+          <div style={{ width: '20%', paddingLeft: '2%' }}>
+            <Autosuggest
+              theme={{
+                inputFocused: {
+                  width: 400,
+                  height: 37,
+                  color: this.state.suggestions.length === 0 ? 'red' : 'black',
+                  borderWidth: 2,
+                },
+                input: {
+                  width: 400,
+                  height: 37,
+                },
+              }}
+              suggestions={this.state.suggestions}
+              onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+              onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+              getSuggestionValue={(suggestion) => suggestion.name}
+              inputProps={inputProps}
+              renderSuggestionsContainer={() => false}
+            />
+
+          </div>
         </div>
+
       </div>
     );
   }
