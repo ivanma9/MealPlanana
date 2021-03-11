@@ -32,7 +32,7 @@ const Dashboard = ({
         <div className="w-100">
           <div className="container-fluid bg-dark text-white w-100 p-2 mb-5">
             <h1 className="text-center p-5">
-              Hi fi
+              Hello {' '}
               {session.username}
             </h1>
           </div>
