@@ -5,7 +5,7 @@
   "main": "./backend/src/index.js",
   "module": "./backend/src/server.js",
   "scripts": {
-    "start": "node backend/src/index.js",
+    "start": "cd backend && npm install && node src/index.js",
     "dev": "nodemon backend/src/index.js",
     "front": "cd frontend && npm start",
     "stack": "concurrently --kill-others-on-fail \"npm run dev\" \"npm run front\"",
