@@ -102,6 +102,10 @@ export class ViewMeal extends Component {
         break;
       }
     }
+    let newMeals = this.props.meals;
+    newMeals.splice(currentMealIndex, 1);
+    console.log(newMeals);
+    this.props.updateMeals(newMeals);
 
     this.props.parentCallback(true);
     
@@ -243,8 +247,6 @@ export class ViewMeal extends Component {
         <Container>
           <div>
             {this.displayRecipes(this.props.recipeInfo)}
-            {console.log(this.props.history)}
-            {console.log(this.props.location)}
           </div>
 
         </Container>
