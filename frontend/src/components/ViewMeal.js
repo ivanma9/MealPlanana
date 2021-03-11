@@ -4,14 +4,16 @@ import React, { Component } from 'react';
 import { Button, ListGroup, Container } from 'react-bootstrap';
 import ReactHtmlParser from 'react-html-parser';
 import { connect } from 'react-redux';
+import {
+  Dialog, DialogActions, DialogContent,
+  DialogContentText, DialogTitle,
+} from '@material-ui/core';
 import { updateMeals } from '../actions/session';
 import Modal from './modal/stdModal.component';
-import AddMeal from './AddMeal/add-meal.component';
-import { Dialog, DialogActions, DialogContent,
-  DialogContentText, DialogTitle} from '@material-ui/core';
+import EditMeal from './AddMeal/add-meal.component';
 
 const daysOfWeekDict = {
-  0: 'Sun',
+  0: 'Sun', // 'mo',
   1: 'Mon', // 'tu',
   2: 'Tue', // 'we',
   3: 'Wed', // 'th',
@@ -31,7 +33,6 @@ export class ViewMeal extends Component {
   }
 
   editModalRef = React.createRef();
-
 
   editMeal() {
     // TODO: Add Meal Extension
@@ -67,7 +68,6 @@ export class ViewMeal extends Component {
 
   daysOfWeekListGroup(days) {
     // TODO daysOfweek Move LISTGROUP
-
     const array = [];
     // array.push(<ListGroup.Item className="text-center" variant={color}>sun</ListGroup.Item>)
     for (const ind in days) {
@@ -102,13 +102,12 @@ export class ViewMeal extends Component {
         break;
       }
     }
-    let newMeals = this.props.meals;
+    const newMeals = this.props.meals;
     newMeals.splice(currentMealIndex, 1);
     console.log(newMeals);
     this.props.updateMeals(newMeals);
 
     this.props.parentCallback(true);
-    
   }
 
   handleDeleteDialogNo = () => {
@@ -133,17 +132,17 @@ export class ViewMeal extends Component {
       // console.log(newRecipes);
       // console.log(currentMeals[currentMealIndex]);
 
-      let deletedIndices = [];
+      const deletedIndices = [];
       for (const recipeID of this.props.deletedRecipes) {
-        for (const index in newRecipes){
-          if(recipeID === newRecipes[index]){
+        for (const index in newRecipes) {
+          if (recipeID === newRecipes[index]) {
             deletedIndices.push(index); // add index to deleted indices
           }
         }
       }
       // console.log(deletedIndices);
-      for (const deleteIndex of deletedIndices){
-        newRecipes.splice(deleteIndex,1);
+      for (const deleteIndex of deletedIndices) {
+        newRecipes.splice(deleteIndex, 1);
       }
       const meal = {
         title: currentMeal.title,
@@ -177,7 +176,7 @@ export class ViewMeal extends Component {
           )}
           contentStyle={{ width: 500, height: 'fit-content' }}
         >
-          <AddMeal buttonTitle="Edit Meal" recipes={this.state.createMealSelectedRecipes} />
+          <EditMeal buttonTitle="Edit Meal" recipes={this.props.recipeInfo} />
         </Modal>
 
         <Container className="container-fluid">
@@ -246,26 +245,27 @@ export class ViewMeal extends Component {
         <br />
         <Container>
           <div>
+            {console.log(this.props.recipeInfo)}
             {this.displayRecipes(this.props.recipeInfo)}
           </div>
 
         </Container>
         <Dialog
-            open={this.state.deleteDialogOpen}
-            onClose={() => this.setState({ 
-              deleteDialogOpen: false,
-              deleteSuccessful: true,
-            })}
-          >
-            <DialogTitle>Delete this meal</DialogTitle>
-            <DialogContent>
-              <DialogContentText>Are you sure you want to delete this meal?</DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={this.handleDeleteDialogNo}>No</Button>
-              <Button color="secondary" onClick={this.handleDeleteDialogYes}>Yes</Button>
-            </DialogActions>
-          </Dialog>
+          open={this.state.deleteDialogOpen}
+          onClose={() => this.setState({
+            deleteDialogOpen: false,
+            deleteSuccessful: true,
+          })}
+        >
+          <DialogTitle>Delete this meal</DialogTitle>
+          <DialogContent>
+            <DialogContentText>Are you sure you want to delete this meal?</DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleDeleteDialogNo}>No</Button>
+            <Button color="secondary" onClick={this.handleDeleteDialogYes}>Yes</Button>
+          </DialogActions>
+        </Dialog>
 
       </div>
     );
@@ -275,7 +275,6 @@ export class ViewMeal extends Component {
 const mapStateToProps = (state) => ({
   meals: state.session.meals,
 });
-
 
 export default connect(
   mapStateToProps,
