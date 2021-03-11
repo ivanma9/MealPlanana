@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import { Button, Navbar, Nav } from 'react-bootstrap';
-import { GiBananaBunch } from 'react-icons/gi';
 import { Link } from 'react-router-dom';
 import { Typography } from '@material-ui/core';
 import { connect } from 'react-redux';

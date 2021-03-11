@@ -6,16 +6,17 @@ import {
   IconButton,
   Typography,
   Popover,
+  Icon,
 } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 
 import { FaCheck, FaPlus } from 'react-icons/fa';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Rating from '@material-ui/lab/Rating';
 import ReactHtmlParser from 'react-html-parser';
 import { Schema } from 'mongoose';
+import { ReactComponent as Banana } from '../../assets/banana.svg';
 
 export default function Recipe(props) {
   const [isSelected, setSelected] = useState(false);
@@ -111,12 +112,19 @@ export default function Recipe(props) {
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <Rating
             name="hearts"
-            defaultValue={0}
             value={props.recipe.ratingTotal}
             precision={0.2}
-            icon={<FavoriteIcon fontSize="inherit" />}
+            icon={<Icon style={{ width: '1.2em', height: 'auto', padding: '4%' }}><Banana /></Icon>}
+            emptyIcon={(
+              <Icon style={{
+                width: '1.2em', height: 'auto', padding: '4%', opacity: 0.3,
+              }}
+              >
+                <Banana />
+              </Icon>
+)}
             readOnly
-            style={{ color: 'red', marginTop: '5%', padding: '5%' }}
+            style={{ color: 'yellow', padding: '5%' }}
           />
           {props.createMealPromptIsOpen && !isSelected
             && (

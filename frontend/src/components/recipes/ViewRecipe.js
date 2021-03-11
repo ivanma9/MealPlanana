@@ -1,5 +1,5 @@
 import {
-  Card, CardMedia, Chip, Fab, Grid, Paper, Popover, Snackbar, Typography,
+  Card, CardMedia, Chip, Fab, Grid, Paper, Popover, Snackbar, Typography, Icon,
 } from '@material-ui/core';
 import React, { Component } from 'react';
 import SimpleReactLightbox, { SRLWrapper } from 'simple-react-lightbox';
@@ -11,6 +11,8 @@ import Rating from '@material-ui/lab/Rating';
 import ReactHtmlParser from 'react-html-parser';
 import { connect } from 'react-redux';
 import { removeRecipeFromStateOnUnselected, updateRating } from '../../actions/recipes';
+import { ReactComponent as Banana } from '../../assets/banana.svg';
+import { ReactComponent as BananaOutline } from '../../assets/banana-blackoutline.svg';
 
 const mapStateToProps = (state) => ({
   recipe: state.currentRecipe.item,
@@ -269,7 +271,7 @@ class ViewRecipe extends Component {
                     label={tag}
                     key={i}
                     style={{
-                      marginRight: '1rem', paddingLeft: '0.2rem', paddingRight: '0.2rem', backgroundColor: 'lawngreen', fontSize: 16, fontWeight: '500',
+                      marginRight: '1rem', paddingLeft: '0.2rem', paddingRight: '0.2rem', backgroundColor: '#a5e6ba', fontSize: 16, fontWeight: '500',
                     }}
                   />
                 ))}
@@ -287,13 +289,21 @@ class ViewRecipe extends Component {
                   defaultValue={0}
                   value={Number(recipe.ratingTotal)}
                   precision={0.2}
-                  icon={<FavoriteIcon fontSize="inherit" />}
+                  icon={<Icon style={{ width: '1.2em', height: 'auto', padding: '4%' }}><Banana /></Icon>}
+                  emptyIcon={(
+                    <Icon style={{
+                      width: '1.2em', height: 'auto', padding: '4%', opacity: 0.3,
+                    }}
+                    >
+                      <Banana />
+                    </Icon>
+                  )}
                   readOnly
-                  style={{ color: 'red', marginTop: '2%' }}
+                  style={{ marginBottom: '15%', bottom: '0.3rem' }}
                 />
               </Grid>
               <Grid item md={2}>
-                <Chip label={ratingButtonLabel} icon={<FavoriteIcon />} clickable color="secondary" onClick={handleupdateRatingButtonClicked} style={{ marginTop: '1%' }} />
+                <Chip label={ratingButtonLabel} clickable onClick={handleupdateRatingButtonClicked} style={{ marginTop: '3%', backgroundColor: '#ffe135', marginLeft: '20%' }} />
               </Grid>
             </Grid>
 
@@ -328,11 +338,23 @@ class ViewRecipe extends Component {
                   defaultValue={0}
                   value={Number(this.state.userRating)}
                   precision={0.2}
-                  icon={<FavoriteIcon fontSize="inherit" />}
+                  icon={(
+                    <Icon style={{
+                      width: '1.2em', height: 'auto', padding: '4%', opacity: 1,
+                    }}
+                    >
+                      <Banana />
+                    </Icon>
+                  )}
+                  emptyIcon={(
+                    <Icon style={{
+                      width: '1.2em', height: 'auto', padding: '4%', opacity: 0.3,
+                    }}
+                    >
+                      <Banana />
+                    </Icon>
+                  )}
                   onChange={onChangeRating}
-                  style={{
-                    color: 'red',
-                  }}
                 />
               </div>
             </Popover>
