@@ -10,6 +10,7 @@ import { HexColorPicker } from 'react-colorful';
 import Switch from 'react-switch';
 import NumericInput from 'react-numeric-input';
 import { connect } from 'react-redux';
+import { Container } from 'react-bootstrap';
 import addMealStyles from './styles.AddMeal.module.css';
 import Modal from '../modal/stdModal.component';
 import { updateMeals } from '../../actions/session';
@@ -27,6 +28,7 @@ const getFontColor = (backgroundColor) => {
 const mapStateToProps = (state) => ({
   errors: state.session.errors,
   meals: state.session.meals,
+  recipes: state.recipes.items,
 });
 
 class EditMeal extends Component {
@@ -339,8 +341,24 @@ class EditMeal extends Component {
              />
            </div>
          </form>
+         <Container>
+           {this.viewRecipeList(this.props.recipes)}
+         </Container>
        </div>
      );
+     
+   }
+
+   viewRecipeList(recipeList){
+    return recipeList.map((recipe) => (
+      <div key={recipe.title}>
+        <h3>{recipe.title}</h3>
+        <p>
+          {ReactHtmlParser(recipe.description)}
+          {' '}
+        </p>
+      </div>
+    ));
    }
 }
 EditMeal.propTypes = {
