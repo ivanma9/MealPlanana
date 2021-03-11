@@ -23,7 +23,7 @@ function NavBar({ logout }) {
         <Navbar.Brand
           className="bg-dark"
           style={{
-            paddingRight: '1em', paddingLeft: '1em', marginRight: '-0.5em',
+            paddingRight: '1em', paddingLeft: '1em', marginRight: '-0.5em', paddingTop: '0.5em',
           }}
         >
           <Link
@@ -44,7 +44,7 @@ function NavBar({ logout }) {
             >
               Meal Planana
             </Typography>
-            <img src={BananaBunch} alt="Logo" style={{ width: '2em' }} />
+            <img src={BananaBunch} alt="Logo" style={{ width: '2em', marginBottom: '0.6em' }} />
             {/* <img src={BananaBunchBlackOutline} alt="Logo" style={{ width: '2em' }} /> */}
           </Link>
         </Navbar.Brand>
