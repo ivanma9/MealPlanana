@@ -253,9 +253,9 @@ class RecipesList extends Component {
               Add Meal
             </h3>
           )}
-          contentStyle={{ width: 500, height: 'fit-content' }}
+          contentStyle={{ width: 500, height: 'fit-content', overflow: 'visible' }}
         >
-          <AddMeal buttonTitle="Add Meal" recipes={this.state.createMealSelectedRecipes} />
+          <AddMeal onSubmit={() => this.addModalRef.current.close()} buttonTitle="Add Meal" recipes={this.state.createMealSelectedRecipes} />
         </Modal>
       </div>
     );

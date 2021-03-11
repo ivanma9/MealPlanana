@@ -29,10 +29,14 @@ const mapStateToProps = (state) => ({
   meals: state.session.meals,
 });
 
-const convertWeekDays = (arr) => {
-  console.log('ARRAY:', arr);
-};
+const convertWeekdays = (arr) => {
+  const convertedArr = [false, false, false, false, false, false, false];
 
+  arr.forEach((num) => {
+    convertedArr[num] = true;
+  });
+  return convertedArr;
+};
 class AddMeal extends Component {
   constructor(props) {
     super(props);
@@ -56,22 +60,26 @@ class AddMeal extends Component {
     this.state = {
       colorPickerVisible: false,
       repeat: false,
-      weekDays: [],
+      weekdays: [],
       freq: 'Weekly',
       interval: 1,
       duration: 60,
       timeUnits: 'Minutes',
       selectedRecipeTitles: recipeTitles,
       color: DEFAULT_COLOR,
+      addError: false,
+      startDate: new Date(),
     };
 
-    this.onSubmit = this.onSubmit.bind(this);
+    this.onSubmitValid = this.onSubmitValid.bind(this);
+    this.onSubmitInvalid = this.onSubmitInvalid.bind(this);
     this.getMeal = this.getMeal.bind(this);
     this.onChangeRecipeTitle = this.onChangeRecipeTitle.bind(this);
     this.toggleColorPicker = this.toggleColorPicker.bind(this);
     this.handleSelectColor = this.handleSelectColor.bind(this);
     this.handleRepeatSwitch = this.handleRepeatSwitch.bind(this);
     this.addMeal = this.addMeal.bind(this);
+    this.isValidEntry = this.isValidEntry.bind(this);
   }
 
   handleSelectColor() {
@@ -82,11 +90,13 @@ class AddMeal extends Component {
     this.setState((state) => ({
       colorPickerVisible: state.colorPickerVisible,
       repeat: !state.repeat,
-      weekDays: state.weekDays,
+      weekdays: state.weekdays,
       freq: state.freq,
       interval: state.interval,
       duration: state.duration,
       timeUnits: state.timeUnits,
+      mealTitle: state.mealTitle,
+      startDate: new Date(),
     }));
   }
 
@@ -94,17 +104,45 @@ class AddMeal extends Component {
     this.setState({ mealTitle: e.target.value });
   }
 
-  onSubmit(e) {
+  isValidEntry() {
+    console.log(this.state.mealTitle && this.state.mealTitle.length > 0,
+      this.state.startDate,
+      (this.state.repeatUntil || !this.state.repeat),
+      (this.state.weekdays || !this.state.repeat),
+      this.state.duration,
+      this.state.color,
+      this.state.freq,
+      this.state.interval);
+    return (this.state.mealTitle && this.state.mealTitle.length > 0)
+    && this.state.startDate
+    && (this.state.repeatUntil || !this.state.repeat)
+    && (this.state.weekdays || !this.state.repeat)
+    && this.state.duration
+    && this.state.color
+    && this.state.freq
+    && this.state.interval;
+  }
+
+  onSubmitValid(e) {
     e.preventDefault();
     this.addMeal(this.getMeal());
+    this.props.onSubmit();
+  }
+
+  onSubmitInvalid(e) {
+    e.preventDefault();
+    this.setState({ addError: true });
+    setTimeout(() => { this.setState({ addError: false }); }, 2500);
   }
 
   getMeal() {
     const startD = new Date(this.state.startDate);
-    const endD = new Date(this.state.startDate);
+    const endD = this.state.repeat ? this.state.repeatUntil : new Date(this.state.startDate);
     this.state.timeUnits === 'Hours'
       ? endD.setHours(startD.getHours() + this.state.duration)
       : endD.setMinutes(startD.getMinutes() + this.state.duration);
+    const noWeeklyArr = [false, false, false, false, false, false, false];
+    noWeeklyArr[startD.getDay()] = true;
 
     return (
       this.state.repeat
@@ -113,19 +151,18 @@ class AddMeal extends Component {
           recipes: this.recipeIDs,
           start_date: startD,
           end_date: endD,
-          days: convertWeekDays(this.state.weekDays),
+          days: this.state.freq === 'Weekly' ? convertWeekdays(this.state.weekdays) : noWeeklyArr,
           duration: parseInt(this.state.duration, 10),
           color: this.state.color,
           freqType: this.state.freq.toUpperCase(),
           interval: parseInt(this.state.interval, 10),
-          count: 1,
         }
         : {
           title: this.state.mealTitle,
           recipes: this.recipeIDs,
           start_date: startD,
           end_date: endD,
-          days: convertWeekDays(this.state.weekDays),
+          days: noWeeklyArr,
           duration: parseInt(this.state.duration, 10),
           color: this.state.color,
           freqType: 'Daily',
@@ -137,8 +174,8 @@ class AddMeal extends Component {
 
   getDaySelectorColor(day) {
     return {
-      color: this.state.weekDays.includes(day) ? this.state.fontColor : '#000000',
-      backgroundColor: this.state.weekDays.includes(day) ? this.state.color : '#FFFFFF',
+      color: this.state.weekdays.includes(day) ? this.state.fontColor : '#000000',
+      backgroundColor: this.state.weekdays.includes(day) ? this.state.color : '#FFFFFF',
     };
   }
 
@@ -152,7 +189,7 @@ class AddMeal extends Component {
     this.setState((state) => ({
       colorPickerVisible: !state.colorPickerVisible,
       repeat: state.repeat,
-      weekDays: state.weekDays,
+      weekdays: state.weekdays,
       freq: state.freq,
       interval: state.interval,
       duration: state.duration,
@@ -170,7 +207,7 @@ class AddMeal extends Component {
      );
      return (
        <div style={{ margin: '1%', fontSize: 12 }}>
-         <form onSubmit={this.onSubmit}>
+         <form onSubmit={this.isValidEntry() ? this.onSubmitValid : this.onSubmitInvalid}>
            <div className="form-group">
              Title
              <input
@@ -250,8 +287,8 @@ class AddMeal extends Component {
                <div>
                  <ToggleButtonGroup
                    type="checkbox"
-                   value={this.state.weekDays}
-                   onChange={(weekDays) => this.setState({ weekDays })}
+                   value={this.state.weekdays}
+                   onChange={(weekdays) => this.setState({ weekdays })}
                  >
                    <ToggleButton style={this.getDaySelectorColor(0)} variant="outline-primary" value={0}>Sun</ToggleButton>
                    <ToggleButton style={this.getDaySelectorColor(1)} variant="outline-primary" value={1}>Mon</ToggleButton>
@@ -275,8 +312,6 @@ class AddMeal extends Component {
                  dateFormat="MM/dd/yyyy h:mm aa"
                  showTimeInput
                  selectsStart
-                 startDate={this.state.startDate}
-                 endDate={this.state.endDate}
                />
              </div>
              <label style={{ justifyContent: 'center', marginLeft: '5%', marginRight: '5%' }}>
@@ -314,9 +349,24 @@ class AddMeal extends Component {
                </Dropdown.Menu>
              </Dropdown>
            </div>
+           {this.state.repeat ? (
+             <div>
+               Repeat Until
+               <br />
+               <DatePicker
+                 selected={this.state.repeatUntil}
+                 onChange={(repeatUntil) => this.setState({ repeatUntil })}
+                 timeInputLabel="Start Time:"
+                 dateFormat="MM/dd/yyyy h:mm aa"
+                 showTimeInput
+                 minDate={this.state.startDate}
+               />
+             </div>
+           ) : null}
            <br />
            <button
              onClick={this.handleSelectColor}
+             type="button"
              style={{
                backgroundColor: this.state.color
                  ? this.state.color : DEFAULT_COLOR,
@@ -329,8 +379,9 @@ class AddMeal extends Component {
              ref={this.colorModalRef}
              contentStyle={{
                width: 'fit-content',
-               'block-size': 'fit-content',
-               'background-color': 'transparent',
+               height: 'fit-content',
+               backgroundColor: 'transparent',
+               overflow: 'visible',
              }}
              headerDisabled
            >
@@ -342,13 +393,22 @@ class AddMeal extends Component {
              />
            </Modal>
            <br />
-           <div className="form-group">
+           <div className="form-group" style={{ display: 'flex', flexDirection: 'row' }}>
              <input
-               style={{ backgroundColor: this.state.color, color: this.state.fontColor }}
+               style={{ backgroundColor: this.state.addError ? 'red' : this.state.color, color: this.state.fontColor }}
                type="submit"
                value={this.props.buttonTitle}
                className="btn btn-primary"
              />
+             {this.state.addError ? (
+               <div style={{
+                 marginLeft: '4%', color: 'red', fontWeight: 20, fontSize: 18, textAlign: 'center',
+               }}
+               >
+                 {' '}
+                 Error: Please fill out all fields
+               </div>
+             ) : null}
            </div>
          </form>
        </div>

@@ -9,7 +9,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import rrulePlugin from '@fullcalendar/rrule';
 import { Button, Container } from 'react-bootstrap';
 import moment from 'moment';
-import { Snackbar} from '@material-ui/core';
+import { Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 import { GiMeal } from 'react-icons/gi';
 import { connect } from 'react-redux';
@@ -66,36 +66,36 @@ class CalendarView extends Component {
   }
 
   searchMeal(mealTitle) {
-    for (let meal of this.props.meals) {
-      if(meal.title == mealTitle) {
+    for (const meal of this.props.meals) {
+      if (meal.title == mealTitle) {
         return meal;
       }
     }
-    return "Not Found";
+    return 'Not Found';
   }
 
   searchRecipeID(recipeIDs) {
     let recipe;
-    let array = [];
-    for (let recipeID of recipeIDs){
+    const array = [];
+    for (const recipeID of recipeIDs) {
       let found = false;
       for (recipe in (this.props.recipes)) {
         if (recipeID === this.props.recipes[recipe]._id) {
-          console.log("Found")
+          console.log('Found');
           array.push(this.props.recipes[recipe]);
           found = true;
         }
       }
-      if (!found){
-        console.log(recipeID + " not found");
+      if (!found) {
+        console.log(`${recipeID} not found`);
         this.state.deletedRecipes.push(recipeID);
       }
     }
     return array;
   }
 
-  handleCallback = (childData) =>{
-    this.setState({deletePressed: childData})
+  handleCallback = (childData) => {
+    this.setState({ deletePressed: childData });
   }
 
   render() {
@@ -107,13 +107,15 @@ class CalendarView extends Component {
           ref={this.viewModalRef}
           headerDisabled
           contentStyle={{ width: 600, height: 500 }}
-          children={(<ViewMeal 
-            header = {this.state.mealSelected} 
-            mealInfo = {this.searchMeal(this.state.mealSelected)}
-            recipeInfo={this.searchRecipeID(this.state.recipeInMeal)} 
-            deletedRecipes={this.state.deletedRecipes}
-            parentCallback = {this.handleCallback}
-          />)}
+          children={(
+            <ViewMeal
+              header={this.state.mealSelected}
+              mealInfo={this.searchMeal(this.state.mealSelected)}
+              recipeInfo={this.searchRecipeID(this.state.recipeInMeal)}
+              deletedRecipes={this.state.deletedRecipes}
+              parentCallback={this.handleCallback}
+            />
+)}
         />
 
         <h2 className="text-center">
@@ -144,11 +146,7 @@ class CalendarView extends Component {
           }
           `}
           </style>
-          <Link to="/recipes">
-            <Button variant="flat" size="xxl">
-              Add Meal
-            </Button>
-          </Link>
+          <br />
 
         </Container>
 
@@ -161,7 +159,7 @@ class CalendarView extends Component {
           }}
           plugins={[rrulePlugin, dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin]}
           initialView="timeGridDay"
-          timeZone= {'local'}
+          timeZone="local"
           events={parseMeals(this.props.meals)}
           views={{
             timeGridFourDay: {
@@ -199,7 +197,7 @@ class CalendarView extends Component {
         <Snackbar
           autoHideDuration={3000}
           open={this.state.deletePressed}
-          onClose={() => {this.viewModalRef.current.close(); this.setState({ deletePressed: false }); }}
+          onClose={() => { this.viewModalRef.current.close(); this.setState({ deletePressed: false }); }}
         >
           <MuiAlert elevation={6} variant="filled" severity="error" onClose={() => { this.setState({ deletePressed: false }); }}> Meal successfully Deleted! </MuiAlert>
         </Snackbar>
