@@ -16,6 +16,7 @@ import { Schema } from 'mongoose';
 import {
   deleteRecipe, updateRecipe, removeRecipeFromStateOnUnselected, fetchRecipe,
 } from '../../actions/recipes';
+import LoadingPage from '../LoadingPage';
 
 const sanitizeHtml = require('sanitize-html');
 
@@ -264,7 +265,7 @@ class EditRecipe extends Component {
     }
 
     if (loading) {
-      return <Typography variant="h2" align="center">Loading...</Typography>;
+      return <LoadingPage />;
     }
 
     if (recipe === null) {

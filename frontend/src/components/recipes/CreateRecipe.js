@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import ImageUploader from 'react-images-upload';
 
 import { createRecipe } from '../../actions/recipes';
+import LoadingPage from '../LoadingPage';
 
 const sanitizeHtml = require('sanitize-html');
 
@@ -247,7 +248,7 @@ class CreateRecipe extends Component {
     //   );
     // }
     if (loading) {
-      return <Typography variant="h1" align="center">Loading...</Typography>;
+      return <LoadingPage />;
     }
 
     return (

@@ -16,6 +16,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 import { connect } from 'react-redux';
 import { fetchRecipes, addSelectedRecipeToState } from '../../actions/recipes';
 import Recipe from './Recipe';
+import LoadingPage from '../LoadingPage';
 
 const mapStateToProps = (state) => ({
   // * recipes comes from the root reducer definition
@@ -88,7 +89,7 @@ class MyRecipes extends Component {
       );
     }
     if (loading) {
-      return <Typography variant="h1" align="center">Loading...</Typography>;
+      return <LoadingPage />;
     }
 
     return (

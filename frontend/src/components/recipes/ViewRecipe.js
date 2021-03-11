@@ -13,6 +13,7 @@ import { connect } from 'react-redux';
 import { removeRecipeFromStateOnUnselected, updateRating } from '../../actions/recipes';
 import { ReactComponent as Banana } from '../../assets/banana.svg';
 import { ReactComponent as BananaOutline } from '../../assets/banana-blackoutline.svg';
+import LoadingPage from '../LoadingPage';
 
 const mapStateToProps = (state) => ({
   recipe: state.currentRecipe.item,
@@ -87,7 +88,7 @@ class ViewRecipe extends Component {
     }
 
     if (loading) {
-      return <Typography variant="h2" align="center">Loading...</Typography>;
+      return <LoadingPage />;
     }
 
     if (recipe === null) {

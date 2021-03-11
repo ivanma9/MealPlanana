@@ -26,6 +26,7 @@ import Modal from '../modal/stdModal.component';
 import Recipe from './Recipe';
 import Search from '../Search/Search';
 import { addSelectedRecipeToState, fetchRecipes } from '../../actions/recipes';
+import LoadingPage from '../LoadingPage';
 
 const mapStateToProps = (state) => ({
   // * recipes comes from the root reducer definition
@@ -144,7 +145,7 @@ class RecipesList extends Component {
       );
     }
     if (loading) {
-      return <Typography variant="h1" align="center">Loading...</Typography>;
+      return <LoadingPage />;
     }
 
     return (
