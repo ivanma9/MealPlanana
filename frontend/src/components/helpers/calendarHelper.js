@@ -38,7 +38,9 @@ const rrule = (meal) => {
 
   rruleArray.freq = meal.freqType;
   rruleArray.interval = meal.interval;
-  rruleArray.byweekday = daysOfWeek(meal.days);
+  if (meal.freqType == "WEEKLY") {
+    rruleArray.byweekday = daysOfWeek(meal.days);
+  }
   rruleArray.dtstart = meal.start_date;
   rruleArray.until = meal.end_date;
   // rruleArray.tzid = "America/Anchorage";
