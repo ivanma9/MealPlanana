@@ -69,6 +69,7 @@
 */.yarn-integrity
 
 # dotenv environment variables file
+.env
 */.env
 */.env.test
 
@@ -180,3 +181,4 @@ $RECYCLE.BIN/
 
 # Config file with private info
 backend/src/config.js
+node_modules

@@ -7,6 +7,8 @@ import {
   PORT, NODE_ENV, MONGO_URI, SESS_NAME, SESS_SECRET, SESS_LIFETIME,
 } from './config';
 
+const path = require('path');
+
 (async () => {
   try {
     await mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -41,6 +43,12 @@ import {
     apiRouter.use('/users', userRoutes);
     apiRouter.use('/session', sessionRoutes);
     apiRouter.use('/recipes', recipeRoutes);
+
+    app.use(express.static(path.join(__dirname, '../../client', 'build')));
+
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(__dirname, '../../client', 'build', 'index.html'));
+    });
 
     app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
   } catch (err) {
