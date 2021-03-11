@@ -248,7 +248,6 @@ export class ViewMeal extends Component {
             {console.log(this.props.recipeInfo)}
             {this.displayRecipes(this.props.recipeInfo)}
           </div>
-
         </Container>
         <Dialog
           open={this.state.deleteDialogOpen}

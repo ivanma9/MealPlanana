@@ -1,15 +1,14 @@
 import moment from 'moment';
 
-
 // one day off so 'tu' actually menas Monday
 const daysOfWeekDict = {
-  0: 'tu', //'mo', 
-  1: 'we', //'tu',
-  2: 'th', //'we',
-  3: 'fr', //'th',
-  4: 'sa', //'fr',
-  5: 'su', //'sa',
-  6: 'mo', //'su',
+  0: 'su', // 'mo',
+  1: 'mo', // 'tu',
+  2: 'tu', // 'we',
+  3: 'we', // 'th',
+  4: 'th', // 'fr',
+  5: 'fr', // 'sa',
+  6: 'sa', // 'su',
 };
 
 const daysOfWeek = (dow) => {
@@ -53,7 +52,7 @@ const convMeal = (meal) => {
   mealDict.rrule = rrule(meal);
   // mealDict.startTime = new Date(meal.start_date);
   // mealDict.endTime = moment(meal.start_date).add(meal.duration+100, 'm').toDate();
-  mealDict.duration = {minutes:meal.duration};
+  mealDict.duration = { minutes: meal.duration };
   mealDict.color = meal.color;
   mealDict.recipes = meal.recipes;
 
