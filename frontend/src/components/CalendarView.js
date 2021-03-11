@@ -9,6 +9,8 @@ import interactionPlugin from '@fullcalendar/interaction';
 import rrulePlugin from '@fullcalendar/rrule';
 import { Button, Container } from 'react-bootstrap';
 import moment from 'moment';
+import { Snackbar} from '@material-ui/core';
+import MuiAlert from '@material-ui/lab/Alert';
 import { GiMeal } from 'react-icons/gi';
 import { connect } from 'react-redux';
 import Modal from './modal/stdModal.component';
@@ -29,12 +31,13 @@ class CalendarView extends Component {
 
   constructor(props) {
     super(props);
+
     this.state = {
       dateState: new Date(), // Can just Use state in Component
       mealSelected: '',
       recipeInMeal: '',
       deletedRecipes: [],
-      mealID: '',
+      deletePressed: false,
     };
     // this.handleEditMeal = this.handleEditMeal.bind(this);
     // this.handleChangeView4Day = this.handleChangeView4Day.bind(this);
@@ -48,10 +51,6 @@ class CalendarView extends Component {
   changeDate(e) {
     console.log(e);
     this.setState({ dateState: e });
-  }
-
-  handleEditMeal() {
-
   }
 
   handleViewMeal(info) {
@@ -95,6 +94,9 @@ class CalendarView extends Component {
     return array;
   }
 
+  handleCallback = (childData) =>{
+    this.setState({deletePressed: childData})
+  }
 
   render() {
     // const { username } = this.props;
@@ -110,6 +112,7 @@ class CalendarView extends Component {
             mealInfo = {this.searchMeal(this.state.mealSelected)}
             recipeInfo={this.searchRecipeID(this.state.recipeInMeal)} 
             deletedRecipes={this.state.deletedRecipes}
+            parentCallback = {this.handleCallback}
           />)}
         />
 
@@ -193,6 +196,13 @@ class CalendarView extends Component {
           {' '}
           <b>{moment(this.state.dateState.dateStr).format('MMMM Do YYYY')}</b>
         </p>
+        <Snackbar
+          autoHideDuration={3000}
+          open={this.state.deletePressed}
+          onClose={() => {this.viewModalRef.current.close(); this.setState({ deletePressed: false }); }}
+        >
+          <MuiAlert elevation={6} variant="filled" severity="error" onClose={() => { this.setState({ deletePressed: false }); }}> Meal successfully Deleted! </MuiAlert>
+        </Snackbar>
 
       </div>
     );

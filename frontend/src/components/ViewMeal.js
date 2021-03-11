@@ -7,7 +7,8 @@ import { connect } from 'react-redux';
 import { updateMeals } from '../actions/session';
 import Modal from './modal/stdModal.component';
 import AddMeal from './AddMeal/add-meal.component';
-
+import { Dialog, DialogActions, DialogContent,
+  DialogContentText, DialogTitle} from '@material-ui/core';
 
 const daysOfWeekDict = {
   0: 'Sun',
@@ -21,10 +22,9 @@ const daysOfWeekDict = {
 export class ViewMeal extends Component {
   constructor(props) {
     super(props);
-
-
     this.state = {
-
+      deleteDialogOpen: false,
+      deleteSuccessful: false,
     };
     this.editMeal = this.editMeal.bind(this);
     this.deleteMeal = this.deleteMeal.bind(this);
@@ -40,6 +40,7 @@ export class ViewMeal extends Component {
 
   deleteMeal() {
     // TODO: Delete meal endpt
+    this.setState({ deleteDialogOpen: true });
   }
 
   militaryToStandardTime(time) {
@@ -89,6 +90,25 @@ export class ViewMeal extends Component {
         </p>
       </div>
     ));
+  }
+
+  handleDeleteDialogYes = (e) => {
+    this.setState({ deleteDialogOpen: false });
+    let currentMealIndex = -1;
+    const currentMeals = this.props.meals;
+    for (const i in currentMeals) {
+      if (this.props.header === currentMeals[i].title) {
+        currentMealIndex = i;
+        break;
+      }
+    }
+
+    this.props.parentCallback(true);
+    
+  }
+
+  handleDeleteDialogNo = () => {
+    this.setState({ deleteDialogOpen: false });
   }
 
   componentWillUnmount() {
@@ -222,11 +242,28 @@ export class ViewMeal extends Component {
         <br />
         <Container>
           <div>
-            {console.log(this.props.deletedRecipes)}
             {this.displayRecipes(this.props.recipeInfo)}
+            {console.log(this.props.history)}
+            {console.log(this.props.location)}
           </div>
 
         </Container>
+        <Dialog
+            open={this.state.deleteDialogOpen}
+            onClose={() => this.setState({ 
+              deleteDialogOpen: false,
+              deleteSuccessful: true,
+            })}
+          >
+            <DialogTitle>Delete this meal</DialogTitle>
+            <DialogContent>
+              <DialogContentText>Are you sure you want to delete this meal?</DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={this.handleDeleteDialogNo}>No</Button>
+              <Button color="secondary" onClick={this.handleDeleteDialogYes}>Yes</Button>
+            </DialogActions>
+          </Dialog>
 
       </div>
     );
