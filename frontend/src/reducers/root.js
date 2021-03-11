@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import { loadingBarReducer } from 'react-redux-loading-bar';
 import errors from './errors/errors';
 import currentRecipe from './recipes/currentRecipeReducer';
 import recipes from './recipes/recipesReducer';
@@ -15,4 +16,5 @@ export default combineReducers({
   createRecipe,
   updateRecipe,
   ratings,
+  loadingBar: loadingBarReducer,
 });

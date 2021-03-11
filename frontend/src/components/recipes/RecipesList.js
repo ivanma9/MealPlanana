@@ -21,6 +21,7 @@ import MenuBookIcon from '@material-ui/icons/MenuBook';
 import MuiAlert from '@material-ui/lab/Alert';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import LoadingBar from 'react-redux-loading-bar';
 import AddMeal from '../AddMeal/add-meal.component';
 import Modal from '../modal/stdModal.component';
 import Recipe from './Recipe';
@@ -133,7 +134,6 @@ class RecipesList extends Component {
 
   render() {
     const { error, loading } = this.props;
-
     if (error) {
       return (
         <Typography variant="h1" align="center">
@@ -144,11 +144,26 @@ class RecipesList extends Component {
       );
     }
     if (loading) {
-      return <Typography variant="h1" align="center">Loading...</Typography>;
+      return (
+        <div>
+          <LoadingBar
+            style={{ backgroundColor: 'blue', height: '5px' }}
+            showFastActions
+            direction="ltr"
+            updateTime={10}
+            progressIncrease={90}
+            maxProgress={91}
+          />
+
+          <Typography variant="h1" align="center">Loading...</Typography>
+
+        </div>
+      );
     }
 
     return (
       <div>
+
         <Typography variant="h1" align="center">Recipes List</Typography>
         <Search
           ref={this.searchRef}

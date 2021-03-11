@@ -10,6 +10,8 @@ import ChipInput from 'material-ui-chip-input';
 import { Editor } from '@tinymce/tinymce-react';
 import { Form } from 'react-bootstrap';
 import ImageUploader from 'react-images-upload';
+import LoadingBar from 'react-redux-loading-bar';
+
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Schema } from 'mongoose';
@@ -263,7 +265,20 @@ class EditRecipe extends Component {
     }
 
     if (loading) {
-      return <Typography variant="h2" align="center">Loading...</Typography>;
+      return (
+        <div>
+          <LoadingBar
+            style={{ backgroundColor: 'blue', height: '5px' }}
+            showFastActions
+            direction="ltr"
+            updateTime={10}
+            progressIncrease={90}
+            maxProgress={91}
+          />
+          <Typography variant="h1" align="center">Loading...</Typography>
+          ;
+        </div>
+      );
     }
 
     if (recipe === null) {

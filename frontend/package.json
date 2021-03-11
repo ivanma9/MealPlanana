@@ -36,6 +36,8 @@
     "react-images-upload": "^1.2.8",
     "react-numeric-input": "^2.2.3",
     "react-redux": "^7.2.2",
+    "react-redux-loading-bar": "^5.0.0",
+    "react-redux-progress": "^2.1.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.2",
     "react-switch": "^6.0.0",

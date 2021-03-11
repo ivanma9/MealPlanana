@@ -1,4 +1,5 @@
 import { serialize } from 'object-to-formdata';
+import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import * as apiUtil from '../util/recipes';
 import { addRecipe, removeRecipe, updateUserRating } from './session';
 
@@ -77,13 +78,15 @@ export const fetchRecipesFailure = (error) => ({
 });
 
 export const fetchRecipes = () => async (dispatch) => {
+  dispatch(showLoading());
   dispatch(fetchRecipesBegin());
   const response = await apiUtil.fetchRecipes();
   const data = await response.json();
   if (response.ok) {
     return dispatch(fetchRecipesSuccess(data));
   }
-  return dispatch(fetchRecipesFailure(data));
+  return dispatch(fetchRecipesFailure(data))
+    .then(dispatch(hideLoading()));
 };
 
 export const FETCH_RECIPE_BEGIN = 'FETCH_RECIPE_BEGIN';
@@ -106,6 +109,7 @@ export const fetchRecipe = (id) => async (dispatch) => {
   dispatch(fetchRecipeBegin());
   const response = await apiUtil.fetchRecipe(id);
   const data = await response.json();
+
   if (response.ok) {
     return dispatch(fetchRecipeSuccess(data));
   }
@@ -158,9 +162,10 @@ export const createRecipe = (recipe) => async (dispatch) => {
     options,
     imagesFd,
   );
-
+  dispatch(showLoading());
   const response = await apiUtil.createRecipe(formData);
   const data = await response.json();
+  dispatch(hideLoading());
 
   if (response.ok) {
     const recipeID = data._id;
@@ -219,10 +224,10 @@ export const updateRecipe = (recipe, id) => async (dispatch) => {
   // } else {
   //   formData.append('images[]', []);
   // }
-
+  dispatch(showLoading());
   const response = await apiUtil.updateRecipe(formData, id);
   const data = await response.json();
-
+  dispatch(hideLoading());
   if (response.ok) {
     return dispatch(updateRecipeSuccess());
   }
