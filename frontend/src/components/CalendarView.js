@@ -98,6 +98,10 @@ class CalendarView extends Component {
     this.setState({ deletePressed: childData });
   }
 
+  componentDidMount() {
+
+  }
+
   render() {
     // const { username } = this.props;
 
