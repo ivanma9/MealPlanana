@@ -44,10 +44,10 @@ const path = require('path');
     apiRouter.use('/session', sessionRoutes);
     apiRouter.use('/recipes', recipeRoutes);
 
-    app.use(express.static(path.join(__dirname, 'client', 'build')));
+    app.use(express.static(path.join(__dirname, '../../frontend', 'src')));
 
     app.get('*', (req, res) => {
-      res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+      res.sendFile(path.join(__dirname, '../../frontend', 'src', 'index.html'));
     });
 
     app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
