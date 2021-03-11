@@ -197,7 +197,8 @@ class CalendarView extends Component {
         <Snackbar
           autoHideDuration={3000}
           open={this.state.deletePressed}
-          onClose={() => { this.viewModalRef.current.close(); this.setState({ deletePressed: false }); }}
+          onEnter={()=> this.viewModalRef.current.close()}
+          onClose={() => this.setState({ deletePressed: false })}
         >
           <MuiAlert elevation={6} variant="filled" severity="error" onClose={() => { this.setState({ deletePressed: false }); }}> Meal successfully Deleted! </MuiAlert>
         </Snackbar>
