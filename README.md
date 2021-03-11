@@ -13,7 +13,7 @@ It is currently being hosted [here](https://mealplanana.herokuapp.com/).
 
 # Features
 
-- View recipes + search via recipe title, tag, or authorå
+- View recipes + search via recipe title, tag, or author
 - Create new recipes
 - Rate recipes
 - Add recipes to a meal + customize meal details
@@ -69,8 +69,8 @@ export const {
 
   MONGO_URI = "mongodb+srv://<username>:<password>@<host>[:port]/<db>[?options]",
 
-  SESS_NAME = "<sid>",
-  SESS_SECRET = "<secret!session>",
+  SESS_NAME = "<sessionName>",
+  SESS_SECRET = "<sessionPassword>",
   SESS_LIFETIME = <time>,
 
   AWS_BUCKET_NAME = "<bucket>",
@@ -81,7 +81,7 @@ export const {
 } = process.env;
 ```
 
-For security purposes, the `config.js` file does not include our actual database credientials. Only authorized users are given this information.
+For security purposes, the `config.js` file does not include our actual database credentials. Only authorized users are given this information.
 
 A workaround would be to create your own [cluster](https://docs.atlas.mongodb.com/tutorial/create-new-cluster/) and [bucket](https://docs.aws.amazon.com/AmazonS3/latest/userguide/create-bucket-overview.html), and to insert your credentials to the `config.js` file.
 
