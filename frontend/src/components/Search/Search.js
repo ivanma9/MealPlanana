@@ -29,13 +29,16 @@ export default class Search extends Component {
   }
 
   onSuggestionsClearRequested() {
-    this.props.updateParent([]);
-    this.setState({
-      suggestions: [],
-    });
+
   }
 
   onChange(event, { newValue }) {
+    if (newValue === '') {
+      this.props.updateParent([]);
+      this.setState({
+        suggestions: [],
+      });
+    }
     this.setState({
       value: newValue,
     });
@@ -70,7 +73,6 @@ export default class Search extends Component {
       placeholder: 'Enter a recipe keyword',
       value: this.state.value,
       onChange: this.onChange,
-      onBlur: () => { this.setState({ value: '' }); },
     };
     return (
       <div style={{

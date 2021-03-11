@@ -63,7 +63,7 @@ class RecipesList extends Component {
     this.props.fetchRecipes();
   }
 
-  handleCreateMealClick = () => this.setState({ createMealPromptIsOpen: true });
+  handleCreateMealClick = () => this.setState({ createMealPromptIsOpen: true, createMealSelectedRecipes: [] });
 
   handleCreateMealPromptClose = (event, reason) => {
     if (reason === 'clickaway') {

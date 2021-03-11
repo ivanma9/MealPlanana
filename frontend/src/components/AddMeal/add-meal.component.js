@@ -154,7 +154,7 @@ class AddMeal extends Component {
           days: this.state.freq === 'Weekly' ? convertWeekdays(this.state.weekdays) : noWeeklyArr,
           duration: parseInt(this.state.duration, 10),
           color: this.state.color,
-          freqType: this.state.freq.toUpperCase(),
+          freqType: this.state.freq.toLowerCase(),
           interval: parseInt(this.state.interval, 10),
         }
         : {
