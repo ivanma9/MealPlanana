@@ -105,14 +105,6 @@ class AddMeal extends Component {
   }
 
   isValidEntry() {
-    console.log(this.state.mealTitle && this.state.mealTitle.length > 0,
-      this.state.startDate,
-      (this.state.repeatUntil || !this.state.repeat),
-      (this.state.weekdays || !this.state.repeat),
-      this.state.duration,
-      this.state.color,
-      this.state.freq,
-      this.state.interval);
     return (this.state.mealTitle && this.state.mealTitle.length > 0)
     && this.state.startDate
     && (this.state.repeatUntil || !this.state.repeat)
@@ -143,7 +135,6 @@ class AddMeal extends Component {
       : endD.setMinutes(startD.getMinutes() + this.state.duration);
     const noWeeklyArr = [false, false, false, false, false, false, false];
     noWeeklyArr[startD.getDay()] = true;
-
     return (
       this.state.repeat
         ? {
@@ -154,7 +145,7 @@ class AddMeal extends Component {
           days: this.state.freq === 'Weekly' ? convertWeekdays(this.state.weekdays) : noWeeklyArr,
           duration: parseInt(this.state.duration, 10),
           color: this.state.color,
-          freqType: this.state.freq.toLowerCase(),
+          freqType: this.state.freq.toUpperCase(),
           interval: parseInt(this.state.interval, 10),
         }
         : {
@@ -165,7 +156,7 @@ class AddMeal extends Component {
           days: noWeeklyArr,
           duration: parseInt(this.state.duration, 10),
           color: this.state.color,
-          freqType: 'Daily',
+          freqType: 'daily',
           interval: 1,
         }
 
@@ -275,7 +266,6 @@ class AddMeal extends Component {
                      <Dropdown.Item onClick={() => this.setState({ freq: 'Daily' })} href="#/daily">Daily</Dropdown.Item>
                      <Dropdown.Item onClick={() => this.setState({ freq: 'Weekly' })} href="#/weekly">Weekly</Dropdown.Item>
                      <Dropdown.Item onClick={() => this.setState({ freq: 'Monthly' })} href="#/monthly">Monthly</Dropdown.Item>
-                     <Dropdown.Item onClick={() => this.setState({ freq: 'Yearly' })} href="#/yearly">Yearly</Dropdown.Item>
                    </Dropdown.Menu>
                  </Dropdown>
 
