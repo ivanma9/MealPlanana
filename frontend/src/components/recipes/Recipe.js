@@ -99,7 +99,7 @@ export default function Recipe(props) {
               size="small"
               label={tag}
               style={{
-                backgroundColor: 'lawngreen', marginLeft: '1%', marginRight: '1%', marginBottom: '2%',
+                backgroundColor: '#ffe135', color: 'black', marginLeft: '1%', marginRight: '1%', marginBottom: '2%',
               }}
               // TODO: change i to be a unique identifier
               // can use:
