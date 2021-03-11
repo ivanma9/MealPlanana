@@ -29,6 +29,10 @@ const mapStateToProps = (state) => ({
   meals: state.session.meals,
 });
 
+const convertWeekDays = (arr) => {
+  console.log('ARRAY:', arr);
+};
+
 class AddMeal extends Component {
   constructor(props) {
     super(props);
@@ -92,13 +96,7 @@ class AddMeal extends Component {
 
   onSubmit(e) {
     e.preventDefault();
-    // TODO RESET ALL STATE
-
     this.addMeal(this.getMeal());
-    this.setState({
-      startTime: null,
-      color: DEFAULT_COLOR,
-    });
   }
 
   getMeal() {
@@ -109,18 +107,32 @@ class AddMeal extends Component {
       : endD.setMinutes(startD.getMinutes() + this.state.duration);
 
     return (
-      {
-        title: this.state.mealTitle,
-        // recipe: mongoose.Types.ObjectId(this.recipeIDs[0]),
-        recipes: this.recipeIDs,
-        start_date: startD,
-        end_date: endD,
-        days: this.state.weekDays,
-        duration: parseInt(this.state.duration, 10),
-        color: this.state.color,
-        freqType: this.state.freq.toUpperCase(),
-        interval: parseInt(this.state.interval, 10),
-      });
+      this.state.repeat
+        ? {
+          title: this.state.mealTitle,
+          recipes: this.recipeIDs,
+          start_date: startD,
+          end_date: endD,
+          days: convertWeekDays(this.state.weekDays),
+          duration: parseInt(this.state.duration, 10),
+          color: this.state.color,
+          freqType: this.state.freq.toUpperCase(),
+          interval: parseInt(this.state.interval, 10),
+          count: 1,
+        }
+        : {
+          title: this.state.mealTitle,
+          recipes: this.recipeIDs,
+          start_date: startD,
+          end_date: endD,
+          days: convertWeekDays(this.state.weekDays),
+          duration: parseInt(this.state.duration, 10),
+          color: this.state.color,
+          freqType: 'Daily',
+          interval: 1,
+        }
+
+    );
   }
 
   getDaySelectorColor(day) {
