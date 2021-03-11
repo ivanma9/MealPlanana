@@ -135,6 +135,8 @@ class AddMeal extends Component {
       : endD.setMinutes(startD.getMinutes() + this.state.duration);
     const noWeeklyArr = [false, false, false, false, false, false, false];
     noWeeklyArr[startD.getDay()] = true;
+    const durationWithUnits = this.state.timeUnits === 'Hours' ? parseInt(this.state.duration, 10) * 60 : parseInt(this.state.duration, 10);
+
     return (
       this.state.repeat
         ? {
@@ -143,7 +145,7 @@ class AddMeal extends Component {
           start_date: startD,
           end_date: endD,
           days: this.state.freq === 'Weekly' ? convertWeekdays(this.state.weekdays) : noWeeklyArr,
-          duration: parseInt(this.state.duration, 10),
+          duration: durationWithUnits,
           color: this.state.color,
           freqType: this.state.freq.toUpperCase(),
           interval: parseInt(this.state.interval, 10),
@@ -154,7 +156,7 @@ class AddMeal extends Component {
           start_date: startD,
           end_date: endD,
           days: noWeeklyArr,
-          duration: parseInt(this.state.duration, 10),
+          duration: durationWithUnits,
           color: this.state.color,
           freqType: 'daily',
           interval: 1,
@@ -335,7 +337,7 @@ class AddMeal extends Component {
 
                <Dropdown.Menu>
                  <Dropdown.Item onClick={() => this.setState({ timeUnits: 'Minutes' })} href="#/minutes">Minutes</Dropdown.Item>
-                 <Dropdown.Item onClick={() => this.setState({ timeUnits: 'Hours' })} href="#/hours">Hours</Dropdown.Item>
+                 <Dropdown.Item onClick={() => this.setState({ timeUnits: 'Hours', duration: '1' })} href="#/hours">Hours</Dropdown.Item>
                </Dropdown.Menu>
              </Dropdown>
            </div>
