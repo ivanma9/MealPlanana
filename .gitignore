@@ -180,5 +180,5 @@ $RECYCLE.BIN/
 *.lnk
 
 # Config file with private info
-backend/src/config.js
+# backend/src/config.js
 node_modules
