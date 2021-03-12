@@ -25,6 +25,7 @@ export class ViewMeal extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      currentMealIndex: 0,
       deleteDialogOpen: false,
       deleteSuccessful: false,
     };
@@ -81,7 +82,7 @@ export class ViewMeal extends Component {
   }
 
   goToRecipe(recipe){
-    console.log(recipe.title);
+    // TODO: recipe link
   }
 
   displayRecipes(recipeList) {
@@ -105,14 +106,7 @@ export class ViewMeal extends Component {
 
   handleDeleteDialogYes = (e) => {
     this.setState({ deleteDialogOpen: false });
-    let currentMealIndex = -1;
-    const currentMeals = this.props.meals;
-    for (const i in currentMeals) {
-      if (this.props.header === currentMeals[i].title) {
-        currentMealIndex = i;
-        break;
-      }
-    }
+    const currentMealIndex = this.state.currentMealIndex;
     const newMeals = this.props.meals;
     newMeals.splice(currentMealIndex, 1);
     console.log(newMeals);
@@ -125,20 +119,28 @@ export class ViewMeal extends Component {
     this.setState({ deleteDialogOpen: false });
   }
 
+  searchForCurrentMeal() {
+    let currentMealIndex = -1;
+    const currentMeals = this.props.meals;
+    for (const i in currentMeals) {
+      if (this.props.header === currentMeals[i].title) {
+        currentMealIndex = i;
+        break;
+      }
+    }
+    return currentMealIndex;
+  }
+  componentDidMount () {
+    this.setState({ currentMealIndex: this.searchForCurrentMeal()}); 
+  }
+  
   componentWillUnmount() {
     if (
       this.props.deletedRecipes.length !== 0
     ) {
-      // TODO search through this.props.meals using this.props.header to get meal index
-      let currentMealIndex = -1;
-      const currentMeals = this.props.meals;
-      for (const i in currentMeals) {
-        if (this.props.header === currentMeals[i].title) {
-          currentMealIndex = i;
-          break;
-        }
-      }
-      const currentMeal = currentMeals[currentMealIndex];
+      const currentMealIndex = this.state.currentMealIndex;
+
+      const currentMeal = this.props.meals[currentMealIndex];
       const newRecipes = currentMeal.recipes;
       // console.log(newRecipes);
       // console.log(currentMeals[currentMealIndex]);
@@ -253,13 +255,14 @@ export class ViewMeal extends Component {
           </p>
           <br />
           <ListGroup horizontal variant="mine">
-            {this.daysOfWeekListGroup(this.props.mealInfo.rrule.byweekday)}
+            {this.daysOfWeekListGroup(this.props.meals[this.state.currentMealIndex].days)}
           </ListGroup>
         </Container>
         <br />
         <br />
         <Container>
           <div>
+            {console.log(this.state.currentMealIndex)}
             {console.log(this.props.recipeInfo)}
             {console.log(this.props.mealInfo)}
             {this.displayRecipes(this.props.recipeInfo)}

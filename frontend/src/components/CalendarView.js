@@ -54,7 +54,6 @@ class CalendarView extends Component {
   }
 
   handleViewMeal(info) {
-    info.el.style.borderColor = 'red';
     console.log(info);
     console.log(info.event._def.extendedProps.recipes);
     this.setState({
@@ -119,7 +118,7 @@ class CalendarView extends Component {
               deletedRecipes={this.state.deletedRecipes}
               parentCallback={this.handleCallback}
             />
-)}
+          )}
         />
 
         <h2 className="text-center">
