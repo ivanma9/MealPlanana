@@ -1,13 +1,12 @@
 {
+  "name": "server",
   "version": "1.0.0",
-  "description": "MealPlanana is a MERN Stack web app that allows users to share recipes and plan out their meals on a calendar.   It is currently being hosted [here](https://mealplanana.herokuapp.com/).",
-  "main": "./backend/src/index.js",
-  "module": "./backend/src/server.js",
+  "description": "",
+  "main": "index.js",
+  "module": "server.js",
   "scripts": {
-    "start": "cd backend && npm install && node src/index.js",
-    "dev": "nodemon backend/src/index.js",
-    "front": "cd frontend && npm start",
-    "stack": "concurrently --kill-others-on-fail \"npm run dev\" \"npm run front\"",
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "heroku-postbuild": "cd frontend && npm install --only=dev && npm install && npm run build"
   },
   "keywords": [],
@@ -16,7 +15,6 @@
   "dependencies": {
     "aws-sdk": "^2.862.0",
     "bcryptjs": "^2.4.3",
-    "concurrently": "^6.0.0",
     "connect-mongo": "^3.2.0",
     "crypto-js": "^4.0.0",
     "dotenv": "^8.2.0",
@@ -38,14 +36,5 @@
     "eslint-plugin-react": "^7.22.0",
     "eslint-plugin-react-hooks": "^4.2.0",
     "nodemon": "^2.0.7"
-  },
-  "name": "mealplanana",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ivanma9/MealPlanana.git"
-  },
-  "bugs": {
-    "url": "https://github.com/ivanma9/MealPlanana/issues"
-  },
-  "homepage": "https://github.com/ivanma9/MealPlanana#readme"
+  }
 }
