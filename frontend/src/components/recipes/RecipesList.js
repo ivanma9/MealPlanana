@@ -46,6 +46,9 @@ class RecipesList extends Component {
   constructor(props) {
     super(props);
 
+    //* we only set createPressed if appState isn't undefined to prevent errors
+    //* if undefined, defaults to false
+    //* this dictates whether the Snackbar alert pops up on mount
     const createPressed = this.props.location.appState !== undefined
       ? this.props.location.appState.createPressed
       : false;
@@ -114,6 +117,7 @@ class RecipesList extends Component {
     }
     return searchResults.map(
       (currentRecipe) => (
+        //* functions passed as props so Recipe can use them
         <Recipe
           recipe={currentRecipe}
           key={currentRecipe._id}
@@ -261,7 +265,6 @@ class RecipesList extends Component {
       </div>
     );
   }
-  
 }
 
 export default connect(

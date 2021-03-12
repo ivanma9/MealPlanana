@@ -47,6 +47,7 @@ export default function Recipe(props) {
   // }, [props.recipe._id]);
 
   const createMealHandleRecipeSelected = (e) => {
+    //* these checks are set so the user doesn't get linked to the View Recipe page on click
     e.preventDefault();
     e.stopPropagation();
     setSelected(true);

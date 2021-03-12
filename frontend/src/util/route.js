@@ -40,6 +40,7 @@ Protected.propTypes = {
   component: PropTypes.elementType.isRequired,
 };
 
+//* conditional route that takes you to 2 different possible pages depending on if you're logged in
 const Conditional = ({ loggedIn, path, ...rest }) => (
   <Route
     path={path}

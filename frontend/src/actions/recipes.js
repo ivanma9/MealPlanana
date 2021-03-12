@@ -7,6 +7,8 @@ export const ADD_SELECTED_RECIPE_TO_STATE = 'ADD_SELECTED_RECIPE';
 export function addSelectedRecipeToState(id) {
   return (dispatch, getState) => {
     const { recipes } = getState();
+
+    //*  finds the recipe from the list of recipes in the global state by its id
     const recipe = recipes.items.find((x) => x._id === id);
 
     dispatch({
@@ -130,7 +132,7 @@ export const createRecipe = (recipe) => async (dispatch) => {
 
   const imagesFd = new FormData();
   if (recipe.images && recipe.images.length !== 0) {
-    recipe.images.forEach((item) => imagesFd.append('images', item));
+    recipe.images.forEach((item) => imagesFd.append('images', item)); //*  conforming to expected type
   }
 
   const object = {
@@ -266,19 +268,26 @@ export const updateRating = (recipe, newRatingValue, oldRatingValue = null) => a
   const avg = recipe.ratingTotal;
   const numRatings = recipe.numRating;
 
+  //* calculates new average using the old average, number of ratings, old rating (optionally),
+  //*   and new rating
+  //* if it's the user's first time rating, we want to add their rating and calculate the new
+  //*   average
+  //* if user is changing their rating, we first subtract their rating and calculate the new avg,
+  //*   then we add the new rating and calculate the new avg again.
   newAvg = avg;
   newNumRatings = numRatings;
-  if (oldRatingValue !== null) { // if we're updating an existing rating of the user
+  //*  calculate the new avg if we were to remove their rating from the avg
+  //*  only done if user is updating their rating and not adding one
+  if (oldRatingValue !== null) { //*  if we're updating an existing rating of the user
     newNumRatings -= 1;
     newAvg = ((newAvg * numRatings) - oldRatingValue) / newNumRatings;
     console.log(newNumRatings);
     console.log(newAvg);
   }
 
+  //*  this is done regardless. Either using the base avg or the new avg after subtraction
   newNumRatings += 1;
   newAvg += ((newRatingValue - newAvg) / (newNumRatings));
-  console.log(newNumRatings);
-  console.log(newAvg);
 
   const newRecipeRatingData = {
     ratingTotal: newAvg,

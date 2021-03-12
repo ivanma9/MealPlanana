@@ -51,6 +51,7 @@ class ViewRecipe extends Component {
 
   componentDidMount() {
     if (this.props.recipe) {
+      //* searches for recipe's rating to display
       const foundElement = this.props.user.ratings
         .find((rating) => rating.recipe === this.props.recipe._id);
 
@@ -64,6 +65,8 @@ class ViewRecipe extends Component {
   }
 
   componentWillUnmount() {
+    //* if we came back from the Edit page view, we don't want to erase the recipe from the state
+    //*   so that the user can still view it
     if (
       this.props.history.location.appState === undefined
       || !this.props.history.location.appState.editPressed
@@ -105,11 +108,15 @@ class ViewRecipe extends Component {
 
     const onMouseOut = () => this.setState({ activeID: '' });
 
+    //* used to make cards hover
     const checkIfCurrentCard = (currentID) => this.state.activeID === currentID;
 
+    //* if user has rated recipe in the past, we want to say Change Rating instead of Add
     const ratingButtonLabel = this.state.userRating === null ? 'Add Rating' : 'Change Rating';
 
     const handleEditButtonClicked = (e) => {
+      //* only allow the author of the recipe to edit it.
+      //* If they're not the author, show a popup that explains this to the user
       if (!this.props.recipe.author || this.props.user.userId !== this.props.recipe.author.id) {
         this.setState({
           cannotEditPopoverOpen: true,
@@ -150,6 +157,8 @@ class ViewRecipe extends Component {
         userRating: Number(e.target.value),
       });
 
+      //* if a rating exists already update it
+      //* oldRating needed to calculate the new average
       if (this.state.userRating === null) {
         this.props.updateRating(recipe, e.target.value);
       } else {

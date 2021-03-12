@@ -71,7 +71,7 @@ class CreateRecipe extends Component {
   }
 
   // TODO: add checking for correct number of images here
-  handleValidation() {
+  handleValidation() { //* makes sure title of recipe isn't empty
     let formIsValid = true;
 
     const { title } = this.state;
@@ -89,7 +89,7 @@ class CreateRecipe extends Component {
       title: e.target.value,
     });
 
-    if (e.target.value.length === 0) {
+    if (e.target.value.length === 0) { //* checks if title is empty
       this.setState({ titleIsEmpty: true });
     } else {
       this.setState({ titleIsEmpty: false });
@@ -103,6 +103,7 @@ class CreateRecipe extends Component {
     });
   }
 
+  //* doesn't allow duplicate ingredients to be added (case insensitive)
   onBeforeAddIngredient(chip) {
     if (this.state.ingredients.some(
       (ingredient) => ingredient.toLowerCase() === chip.toLowerCase(),
@@ -114,13 +115,13 @@ class CreateRecipe extends Component {
     return true;
   }
 
-  onAddIngredient(chip) {
+  onAddIngredient(chip) { //* appends ingredient
     this.setState((prevState) => ({
       ingredients: [...prevState.ingredients, chip],
     }));
   }
 
-  onDeleteIngredient(chip, index) {
+  onDeleteIngredient(chip, index) { //* removes ingredient at the index specified
     this.setState((prevState) => ({
       ingredients: prevState.ingredients.filter((_, i) => i !== index),
     }));
@@ -133,6 +134,7 @@ class CreateRecipe extends Component {
     });
   }
 
+  //* doesn't allow duplicate ingredients to be added (case insensitive)
   onBeforeAddTag(chip) {
     if (this.state.tags.some(
       (tag) => tag.toLowerCase() === chip.toLowerCase(),
@@ -164,7 +166,7 @@ class CreateRecipe extends Component {
 
   // TODO: check for duplicate images and don't allow
   onChangeImages(pictureFiles) {
-    if (pictureFiles.length > 5) {
+    if (pictureFiles.length > 5) { //* makes sure user doesn't try to upload > 5 pictures
       // do something
     } else {
       this.setState({
@@ -229,7 +231,7 @@ class CreateRecipe extends Component {
         this.props.history.push({
           pathname: '/recipes',
           appState: {
-            createPressed: createSuccessful,
+            createPressed: createSuccessful, //* used for the Snackbar alert on RecipeList page
           },
         });
       });

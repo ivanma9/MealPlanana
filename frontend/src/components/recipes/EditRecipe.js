@@ -81,13 +81,13 @@ class EditRecipe extends Component {
         // images: this.props.recipe.images,
       });
     }
-    window.scrollTo(0, 0);
+    window.scrollTo(0, 0); //* scrolls window to top of the page, instant
   }
 
   // TODO: fix when refresh and want to go back?
   // TODO: fix when you go back to View but then go forward to Edit.
   componentWillUnmount() {
-    if (
+    if ( //* if back button wasn't pressed and edit wasn't pressed, remove the recipe from state
       this.props.history.action !== 'POP'
       || this.state.appState === undefined
       || !this.state.appState.editPressed
@@ -97,7 +97,7 @@ class EditRecipe extends Component {
   }
 
   // TODO: add checking for correct number of images here
-  handleValidation() {
+  handleValidation() { //* makes sure title field isn't empty
     let formIsValid = true;
 
     const { title } = this.state;
@@ -223,8 +223,8 @@ class EditRecipe extends Component {
    *   delete the image with that key and add a new iamge
    * - if an image is deleted, send {action: "DELETE", key: key}
    *
-   * * Note: pictureFiles doesn't properly change if you add an image and remove it before
-   * *       submitting. It keeps the file in the array
+   * Note: pictureFiles doesn't properly change if you add an image and remove it before
+   *       submitting. It keeps the file in the array
    */
   // onChangeImages(pictureFiles, pictureDataURLs) {
   //   console.log(this.state.images); // has _id, key, and location
@@ -328,11 +328,13 @@ class EditRecipe extends Component {
      */
 
     let preview;
+
+    //*  if preview wasn't changed by user, we don't want to send any preview key to backend
     if (this.state.previewChanged === false) {
       preview = undefined;
     } else if (Object.keys(this.state.preview).length !== 0) {
       [preview] = this.state.preview;
-    } else {
+    } else { //*  if preview was changed by being deleted
       preview = null;
     }
 
@@ -358,7 +360,7 @@ class EditRecipe extends Component {
         this.props.history.push({
           pathname: '/recipes/view/',
           appState: {
-            updatePressed: editSuccessful,
+            updatePressed: editSuccessful, //*  used for Snackbar alert on View Recipe page
           },
         });
       });
@@ -385,6 +387,11 @@ class EditRecipe extends Component {
       return <Typography variant="h2" align="center">Please select a recipe to edit</Typography>;
     }
 
+    //* we only want to show the default preview image in specific cases, finicky
+    //* if the preview wasn't changed by the user, we want to show the existing image from the
+    //*   backend
+    //* if it was changed, we don't want to show this so that their newly chosen image can be
+    //*   previewed
     const defaultPreviewImage = () => {
       if (this.state.preview && !this.state.previewChanged) {
         return [this.state.preview.location];
