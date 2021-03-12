@@ -13,13 +13,13 @@ import Modal from './modal/stdModal.component';
 import EditMeal from './AddMeal/add-meal.component';
 
 const daysOfWeekDict = {
-  0: 'Sun', // 'mo',
-  1: 'Mon', // 'tu',
-  2: 'Tue', // 'we',
-  3: 'Wed', // 'th',
-  4: 'Thu', // 'fr',
-  5: 'Fri', // 'sa',
-  6: 'Sat', // 'su',
+  0: 'Sun', // 'sa',
+  1: 'Mon', // 'su',
+  2: 'Tue', // 'mo',
+  3: 'Wed', // 'tu',
+  4: 'Thu', // 'we',
+  5: 'Fri', // 'th',
+  6: 'Sat', // 'fr',
 };
 export class ViewMeal extends Component {
   constructor(props) {
@@ -72,7 +72,7 @@ export class ViewMeal extends Component {
     // array.push(<ListGroup.Item className="text-center" variant={color}>sun</ListGroup.Item>)
     for (const ind in days) {
       let color = 'item';
-      if (days[ind - 1]) {
+      if (days[ind]) {
         color = 'chosen';
       }
       array.push(<ListGroup.Item key="{ind}" className="text-center" variant={color}>{daysOfWeekDict[ind]}</ListGroup.Item>);
@@ -174,7 +174,7 @@ export class ViewMeal extends Component {
               Edit Meal
             </h3>
           )}
-          contentStyle={{ width: 500, height: 'fit-content' }}
+          contentStyle={{ width: 500, height: 600, overflow: 'auto'}}
         >
           <EditMeal buttonTitle="Edit Meal" recipes={this.props.recipeInfo} />
         </Modal>
@@ -208,7 +208,7 @@ export class ViewMeal extends Component {
                     margin: 0em 0.5em;
                     box-shadow: 10px 10px 5px #aaaaaa;
                   }
-                  .btn:hover {
+                  .btn-flat:hover {
                     padding: 1.1rem 1.1rem;
                   }
                   #timeinfo{

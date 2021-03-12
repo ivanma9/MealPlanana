@@ -5,7 +5,6 @@ import {
   Chip,
   IconButton,
   Typography,
-  Popover,
   Icon,
 } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
@@ -16,7 +15,7 @@ import PropTypes from 'prop-types';
 import Rating from '@material-ui/lab/Rating';
 import ReactHtmlParser from 'react-html-parser';
 import { Schema } from 'mongoose';
-import { ReactComponent as Banana } from '../../assets/banana.svg';
+import { ReactComponent as Banana } from '../../assets/bananamini.svg';
 
 export default function Recipe(props) {
   const [isSelected, setSelected] = useState(false);
@@ -71,7 +70,7 @@ export default function Recipe(props) {
           (!props.createMealPromptIsOpen && props.checkIfCurrentCard(props.recipe._id))
           || isSelected
         }
-        onMouseOver={() => props.onMouseOver(props.recipe._id)}
+        onMouseEnter={() => props.onMouseOver(props.recipe._id)}
         onMouseLeave={() => props.onMouseOut()}
         onClick={() => props.addRecipeToState(props.recipe._id)}
         style={{
@@ -114,7 +113,11 @@ export default function Recipe(props) {
             name="hearts"
             value={props.recipe.ratingTotal}
             precision={0.2}
-            icon={<Icon style={{ width: '1.2em', height: 'auto', padding: '4%' }}><Banana /></Icon>}
+            icon={(
+              <Icon style={{ width: '1.2em', height: 'auto', padding: '4%' }}>
+                <Banana />
+              </Icon>
+            )}
             emptyIcon={(
               <Icon style={{
                 width: '1.2em', height: 'auto', padding: '4%', opacity: 0.3,
@@ -122,7 +125,7 @@ export default function Recipe(props) {
               >
                 <Banana />
               </Icon>
-)}
+            )}
             readOnly
             style={{ color: 'yellow', padding: '5%' }}
           />
