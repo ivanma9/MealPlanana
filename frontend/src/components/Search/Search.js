@@ -105,6 +105,7 @@ export default class Search extends Component {
           </div>
           <div style={{ width: '20%', paddingLeft: '2%' }}>
             <Autosuggest
+              renderSuggestion={() => <div />}
               theme={{
                 inputFocused: {
                   width: 400,

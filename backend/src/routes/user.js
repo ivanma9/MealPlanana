@@ -79,8 +79,10 @@ userRoutes.post('/update/', userUploader, async (req, res) => {
       }
 
       await user.save();
-      req.session.user = sessionizeUser(user);
-      res.send({ message: 'Update success' });
+      const sessionUser = sessionizeUser(user);
+
+      req.session.user = sessionUser;
+      res.send(sessionUser);
     } else {
       res.status(404).send('User not found!');
     }

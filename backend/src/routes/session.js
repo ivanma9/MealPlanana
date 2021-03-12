@@ -17,10 +17,10 @@ sessionRoutes.post('', async (req, res) => {
       req.session.user = sessionUser;
       res.send(sessionUser);
     } else {
-      throw new Error('Invalid login credentials');
+      throw new Error();
     }
   } catch (err) {
-    res.status(401).send(parseError(err.message));
+    res.status(401).send({ message: 'Invalid login credentials' });
   }
 });
 
