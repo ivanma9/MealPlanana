@@ -1,6 +1,6 @@
-# MealPlanana
+# 🍌 MealPlanana 🍌
 
-MealPlanana is a MERN Stack web app that allows users to share recipes and plan out their meals on a calendar.  
+_MealPlanana_ is a **MERN Stack** web app that allows users to share recipes and plan out their meals on a calendar.  
 It is currently being hosted [here](https://mealplanana.herokuapp.com/).
 
 # Table of contents
@@ -60,7 +60,7 @@ $ npm i
 
 At this point, you should have all the packages needed to run the program.
 
-However, you will still need to create/edit the file `MealPlanana/backend/src/config.js`. The contents of this file contains [Redux](https://www.smashingmagazine.com/2018/07/redux-designers-guide/) variables as well as the credentials for the _MongoDB Cluster_ and _AWS Bucket_. The file might look something like this:
+However, you will still need to create/edit the file `MealPlanana/backend/src/config.js`. The contents of this file contain [Redux](https://www.smashingmagazine.com/2018/07/redux-designers-guide/) variables as well as the credentials for the **MongoDB Cluster** and **AWS Bucket**. The file might look something like this:
 
 ```js
 export const {
@@ -91,7 +91,7 @@ A workaround would be to create your own [cluster](https://docs.atlas.mongodb.co
 
 Now we are ready to start running!
 
-#### In the backend folder, run
+#### In the backend directory, run
 
 ```shell
 $ npm run dev
@@ -100,23 +100,23 @@ $ npm run dev
 which, according to our `package.json` file, is equivalent to
 
 ```shell
-$ nodemon index.js
+$ nodemon src/index.js
 ```
 
 > (For more info about nodemon, click [here](https://www.npmjs.com/package/nodemon))
 
-#### In the frontend folder, run
+#### In the frontend directory, run
 
 ```shell
 $ npm start
 ```
 
-This should open a page on your default web browser, and after everything loads, the app should be ready to use! Go bananas with it!
+This should open a page on your default web browser, and after everything loads, the app should be ready to use! Go _bananas_ with it!
 
 # Credit
 
-A Winter 2021 CS 97 project, taught by Professor Eggert at UCLA.  
-Made by: Joshua Aymett, Alex Haddad, Joshua Lee, Ivan Ma, and Bryce Stulman
+A Winter 2021 **CS 97** project, taught by Professor Eggert at UCLA.  
+**Made by**: _Joshua Aymett, Alex Haddad, Joshua Lee, Ivan Ma, and Bryce Stulman_
 
 # More info
 
@@ -126,6 +126,6 @@ Interested in learning how to do this yourself? Here are some resources we found
 - [Building a Basic MERN App](https://codingthesmartway.com/the-mern-stack-tutorial-building-a-react-crud-application-from-start-to-finish-part-1/)
 - [Intro to Redux](https://www.youtube.com/watch?v=93p3LxR9xfM)
 - [Group Collaboration Organization Tool](https://trello.com/)
-- And lastly, Medium articles and Stack Overflow posts are your best friend!
+- And lastly, **Medium** articles and **Stack Overflow** posts are your best friend!
 
-Happy Coding!
+_Happy Coding!_
