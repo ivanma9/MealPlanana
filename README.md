@@ -13,7 +13,7 @@ It is currently being hosted [here](https://mealplanana.herokuapp.com/).
 
 # Features
 
-- View recipes + search via recipe title, tag, or author
+- View recipes + search via recipe title, tag, or description
 - Create new recipes
 - Rate recipes
 - Add recipes to a meal + customize meal details
