@@ -31,6 +31,7 @@ const mapDispatchToProps = (dispatch) => ({
   addRecipeToState: (id) => dispatch(addSelectedRecipeToState(id)),
 });
 
+// component to get all of user's recipes
 class MyRecipes extends Component {
   constructor(props) {
     super(props);
@@ -44,12 +45,10 @@ class MyRecipes extends Component {
       activeCardID: '',
     };
   }
-
-  componentDidMount() { // TODO: FILTER HERE
-    // Not sure if we need to fetch again, aren't they already in our state
-    // console.log(this.props.recipes);
+  
+  // fetch recipes when mounting this component
+  componentDidMount() { 
     this.props.fetchRecipes();
-    // console.log(this.props.recipes);
   }
 
   onMouseOver = (currentCardID) => this.setState({ activeCardID: currentCardID });
@@ -58,6 +57,7 @@ class MyRecipes extends Component {
 
   checkIfCurrentCard = (currentID) => this.state.activeCardID === currentID;
 
+  // filter for user's recipes
   myRecipes() {
     return this.props.recipes.filter((item) => {
       if (!this.props.userID) return false;
@@ -76,6 +76,7 @@ class MyRecipes extends Component {
     );
   }
 
+  // render/output
   render() {
     const { error, loading } = this.props;
 
@@ -99,7 +100,6 @@ class MyRecipes extends Component {
           container
           alignItems="flex-start"
           justify="space-evenly"
-          // spacing={3}
         >
           {this.myRecipes()}
           {console.log(this.myRecipes())}

@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { compareSync, hashSync } from 'bcryptjs';
 
+// schema for users!
 const UserSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -14,9 +15,6 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  //   name: {
-  //     type: String,
-  //   },
   meals: {
     type: [{
       title: String,
@@ -49,7 +47,13 @@ const UserSchema = new mongoose.Schema({
       location: String,
     },
   },
-  // favorite_recipes: {
+
+  // THINGS WE COULD IMPLEMENT IN FUTURE
+
+  //   name: {    // actual name instead of using username (customize profile)
+  //     type: String,
+  //   },
+  // favorite_recipes: {  // save certain recipes you like
   //   type: [mongoose.Schema.Types.ObjectId],
   //   ref: 'RecipeSchema'
   // },
@@ -69,14 +73,6 @@ UserSchema.pre('save', function () {
     this.password = hashSync(this.password, 10);
   }
 });
-
-// UserSchema.statics.doesNotExist = async function (field) {
-//   if (this.isNew) {
-//     return await this.where(field).countDocuments() === 0;
-//   }
-
-//   return true;
-// };
 
 UserSchema.methods.comparePasswords = function (password) {
   return compareSync(password, this.password);

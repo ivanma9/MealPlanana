@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 
+// schema for recipes!
 const RecipeSchema = new mongoose.Schema({
   title: {
     type: String,
-    // required: true,
   },
   author: {
     type: {
@@ -14,6 +14,7 @@ const RecipeSchema = new mongoose.Schema({
       username: String,
     },
   },
+  // calculate average rating in frontend
   ratingTotal: { // total score of rating
     type: Number,
     default: 0,
@@ -49,6 +50,7 @@ const RecipeSchema = new mongoose.Schema({
     },
   },
   // THINGS WE COULD IMPLEMENT IN FUTURE
+
   // prepTime: {
   //   type: Number,
   // },
@@ -65,6 +67,7 @@ const RecipeSchema = new mongoose.Schema({
   //     comment: String,
   //   }],
   // },
+
 }, { timestamps: true });
 
 const Recipe = mongoose.model('Recipe', RecipeSchema);

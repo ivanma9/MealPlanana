@@ -102,6 +102,7 @@ userRoutes.post('/update/', userUploader, async (req, res) => {
   }
 });
 
+// delete user
 userRoutes.delete('/delete/', userUploader, async (req, res) => {
   try {
     const { userId } = req.session.user;

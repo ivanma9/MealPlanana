@@ -13,6 +13,7 @@ export const sessionizeUser = (user) => ({
   profile: user.profile,
 });
 
+// helper function to check for error or return object/success message
 export const checkRes = (res, recipeObj, returnObj, message = 'Success!', errMessage = 'No results!') => {
   // if there was an object made/found
   if (recipeObj) {

@@ -34,6 +34,7 @@ recipeRoutes.get('/:id', async (req, res) => {
   }
 });
 
+// add a recipe
 recipeRoutes.post('/add', recipeUploader, async (req, res) => {
   try {
     const update = req.body;
@@ -41,6 +42,7 @@ recipeRoutes.post('/add', recipeUploader, async (req, res) => {
     // only add files/pics if there are any
     if (req.files) {
       const { preview, images } = req.files;
+      // specifically for preview image
       if (preview) {
         console.log('preview image being added');
         update.preview = {
@@ -48,6 +50,7 @@ recipeRoutes.post('/add', recipeUploader, async (req, res) => {
           key: preview[0].key,
         };
       }
+      // specifically for list of images at bottom
       if (images) {
         console.log('image(s) being added');
         const imgUrls = images
@@ -78,10 +81,12 @@ recipeRoutes.post('/add', recipeUploader, async (req, res) => {
   }
 });
 
-// https://stackoverflow.com/questions/22071434/mongodb-update-collection-field-if-new-value-is-not-null
-// https://wanago.io/2020/04/27/typescript-express-put-vs-patch-mongodb-mongoose/
-// typically, patch only updates new fields while put updates the entire document
-// however, the $set operator allows us to specify which fields to update
+// resources:
+//    https://stackoverflow.com/questions/22071434/mongodb-update-collection-field-if-new-value-is-not-null
+//    https://wanago.io/2020/04/27/typescript-express-put-vs-patch-mongodb-mongoose/
+// Note for self: typically, patch only updates new fields, while put updates the entire document
+//                however, the $set operator allows us to specify which fields to update
+// update recipe
 recipeRoutes.put('/update/:id', recipeUploader, async (req, res) => {
   try {
     const { id } = req.params;
@@ -104,6 +109,7 @@ recipeRoutes.put('/update/:id', recipeUploader, async (req, res) => {
         } else {
           update.preview = {};
         }
+        // delete old preview from AWS if it exists
         if (oldPreview) {
           s3bucket.deleteObject(
             { Bucket: AWS_BUCKET_NAME, Key: oldPreview.key },
@@ -116,7 +122,9 @@ recipeRoutes.put('/update/:id', recipeUploader, async (req, res) => {
           );
         }
       }
+      // do things if we are adding/updating 'images'
       if (images) {
+        // in the case we are deleting all images
         if (images.length === 0 || (images.length === 1 && (!images[0] || images[0] === 'null'))) {
           update.images = [];
         } else {
@@ -131,6 +139,7 @@ recipeRoutes.put('/update/:id', recipeUploader, async (req, res) => {
             });
           update.images = imgUrls;
         }
+        // delete old images from aws
         if (oldImages) {
           oldImages.forEach(async (image) => {
             await s3bucket.deleteObject(
@@ -146,7 +155,8 @@ recipeRoutes.put('/update/:id', recipeUploader, async (req, res) => {
         }
       }
     }
-
+    // for ingredients and tags, it would return [''], which was problematic
+    // make ingredients and tag = [] if we wanted to update them by deleting them all
     if (ingredients) {
       if (ingredients.length === 0 || !ingredients[0]) {
         update.ingredients = [];
@@ -183,6 +193,7 @@ recipeRoutes.put('/update/:id', recipeUploader, async (req, res) => {
   }
 });
 
+// delete recipe
 recipeRoutes.delete('/delete/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -228,7 +239,7 @@ recipeRoutes.delete('/delete/:id', async (req, res) => {
   }
 });
 
-// search query in URL
+// search query
 recipeRoutes.post('/search', async (req, res) => {
   try {
     const { query } = req.body;
@@ -241,7 +252,7 @@ recipeRoutes.post('/search', async (req, res) => {
     const { option, search } = query;
     const recipePattern = new RegExp(`${search}`);
 
-    // default search title
+    // search by title
     if (!option || option.toLowerCase() === 'title') {
       const recipe = await Recipe.find({
         title: { $regex: recipePattern, $options: 'i' },

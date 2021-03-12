@@ -24,15 +24,18 @@ export const fileFilter = (req, file, cb) => {
   cb('Error: Images Only!');
 };
 
+// s3bucket object
 export const s3bucket = new AWS.S3({
   accessKeyId: AWS_ACCESS_KEY_ID,
   secretAccessKey: AWS_SECRET_ACCESS_KEY,
   region: AWS_REGION,
 });
 
+// multer object
 export const upload = multer({
   fileFilter,
-  limits: { fileSize: 10000000 },
+  limits: { fileSize: 10000000 }, // 10 MB
+  // connect multer to S3
   storage: multerS3({
     acl: 'public-read',
     s3: s3bucket,
@@ -41,12 +44,13 @@ export const upload = multer({
       cb(null, { fieldName: file.fieldname });
     },
     key(req, file, cb) {
-      // common practice to add Date.now() to make id/key unique
+      // common practice to add Date.now() to make image name unique
       cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
     },
   }),
 });
 
+// upload single or multiple recipe(s) depending on if preview or images
 export const recipeUploader = upload.fields(
   [
     {
@@ -60,4 +64,5 @@ export const recipeUploader = upload.fields(
   ],
 );
 
+// upload profile picture image for user [for future updates/versions]
 export const userUploader = upload.single('profile');
