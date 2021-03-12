@@ -190,26 +190,6 @@ class EditMeal extends Component {
     }));
   }
 
-  editMeal(meal) {
-    let newMeals = this.props.meals;
-    newMeals = newMeals.concat(meal);
-    this.props.updateMeals(newMeals);
-  }
-  
-  viewRecipeList(recipeList){
-    let i = 0;
-    return recipeList.map((recipe) => (
-      <div key={recipe}>
-        <h3>{recipe.title}</h3>
-        <p>
-          {console.log(recipe.title)}
-          {ReactHtmlParser(recipe.description)}
-          {' '}
-          
-        </p>
-      </div>
-    ));
-   }
 
    colorModalRef = React.createRef();
 
@@ -427,9 +407,7 @@ class EditMeal extends Component {
          </form>
          </Container>
 
-         <Container>
-            {this.viewRecipeList(this.props.recipes)}
-         </Container>
+
        </div>
      );
    }

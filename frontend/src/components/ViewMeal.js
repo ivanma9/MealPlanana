@@ -130,6 +130,28 @@ export class ViewMeal extends Component {
     }
     return currentMealIndex;
   }
+
+  editMeal(meal) {
+    let newMeals = this.props.meals;
+    newMeals = newMeals.concat(meal);
+    this.props.updateMeals(newMeals);
+  }
+  
+  viewRecipeList(recipeList){
+    let i = 0;
+    return recipeList.map((recipe) => (
+      <div key={recipe}>
+        <h3>{recipe.title}</h3>
+        <p>
+          {console.log(recipe.title)}
+          {ReactHtmlParser(recipe.description)}
+          {' '}
+          
+        </p>
+      </div>
+    ));
+   }
+
   componentDidMount () {
     this.setState({ currentMealIndex: this.searchForCurrentMeal()}); 
   }
@@ -190,6 +212,9 @@ export class ViewMeal extends Component {
           contentStyle={{ width: 500, height: 600, overflow: 'auto'}}
         >
           <EditMeal buttonTitle="Edit Meal" recipes={this.props.recipeInfo} />
+          <Container>
+            {this.viewRecipeList(this.props.recipes)}
+         </Container>
         </Modal>
 
         <Container className="container-fluid">
@@ -250,7 +275,7 @@ export class ViewMeal extends Component {
             <em>
               {this.militaryToStandardTime((new Date(this.props.mealInfo.rrule.dtstart)).toString().slice(16))}
               {' - '}
-              {this.militaryToStandardTime(new Date(Date.parse(this.props.mealInfo.rrule.until)).toString().slice(16))}
+              {this.militaryToStandardTime(new Date(this.props.mealInfo.rrule.until).toString().slice(16))}
             </em>
           </p>
           <br />
