@@ -50,7 +50,7 @@ function NavBar({ logout }) {
           <Navbar.Toggle />
           <Navbar.Collapse>
             <Nav>
-              <Nav.Link to="/dashboard">
+              <Nav.Link to="/dashboard" as={Link}>
                 <Typography
                   variant="button"
                   style={{
@@ -60,7 +60,7 @@ function NavBar({ logout }) {
                   Dashboard
                 </Typography>
               </Nav.Link>
-              <Nav.Link to="/recipes">
+              <Nav.Link to="/recipes" as={Link}>
                 <Typography
                   variant="button"
                   style={{
@@ -70,7 +70,7 @@ function NavBar({ logout }) {
                   Recipes
                 </Typography>
               </Nav.Link>
-              <Nav.Link to="/recipes/my-recipes">
+              <Nav.Link to="/recipes/my-recipes" as={Link}>
                 <Typography
                   variant="button"
                   style={{
