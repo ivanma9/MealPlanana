@@ -139,17 +139,17 @@ export class ViewMeal extends Component {
   
   viewRecipeList(recipeList){
     let i = 0;
-    return recipeList.map((recipe) => (
-      <div key={recipe}>
-        <h3>{recipe.title}</h3>
-        <p>
-          {console.log(recipe.title)}
-          {ReactHtmlParser(recipe.description)}
-          {' '}
+    // return recipeList.map((recipe) => (
+    //   <div key={recipe}>
+    //     <h3>{recipe.title}</h3>
+    //     <p>
+    //       {console.log(recipe.title)}
+    //       {ReactHtmlParser(recipe.description)}
+    //       {' '}
           
-        </p>
-      </div>
-    ));
+    //     </p>
+    //   </div>
+    // ));
    }
 
   componentDidMount () {
@@ -275,7 +275,8 @@ export class ViewMeal extends Component {
             <em>
               {this.militaryToStandardTime((new Date(this.props.mealInfo.rrule.dtstart)).toString().slice(16))}
               {' - '}
-              {this.militaryToStandardTime(new Date(this.props.mealInfo.rrule.until).toString().slice(16))}
+              {this.militaryToStandardTime(new Date(Date.parse(this.props.mealInfo.rrule.dtstart)
+            + (this.props.meals[this.state.currentMealIndex].duration * 60 * 1000)).toString().slice(16))}            
             </em>
           </p>
           <br />
