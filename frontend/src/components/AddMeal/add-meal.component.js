@@ -16,6 +16,7 @@ import { updateMeals } from '../../actions/session';
 
 const DEFAULT_COLOR = '#007AFF';
 
+// Controls font color based on background color to ensure font readability
 const getFontColor = (backgroundColor) => {
   if (!backgroundColor) return '#FFFFFF';
   const r = parseInt(`0x${backgroundColor[1]}${backgroundColor[2]}`, 16);
@@ -29,6 +30,7 @@ const mapStateToProps = (state) => ({
   meals: state.session.meals,
 });
 
+// Converts weekday numeric array format to boolean indexed array
 const convertWeekdays = (arr) => {
   const convertedArr = [false, false, false, false, false, false, false];
 
@@ -37,6 +39,7 @@ const convertWeekdays = (arr) => {
   });
   return convertedArr;
 };
+
 class AddMeal extends Component {
   constructor(props) {
     super(props);
@@ -44,8 +47,11 @@ class AddMeal extends Component {
     // Get list of selected recipes to list below title
     let recipeTitles = '';
     this.recipeIDs = [];
+
+    // Used for limiting string length
     let maxReached = false;
 
+    // Creates concatenated string of recipe names to display below title
     this.props.recipes.forEach((recipe) => {
       this.recipeIDs.push(recipe._id);
       if (recipe.title) {
@@ -75,7 +81,6 @@ class AddMeal extends Component {
     this.onSubmitInvalid = this.onSubmitInvalid.bind(this);
     this.getMeal = this.getMeal.bind(this);
     this.onChangeRecipeTitle = this.onChangeRecipeTitle.bind(this);
-    this.toggleColorPicker = this.toggleColorPicker.bind(this);
     this.handleSelectColor = this.handleSelectColor.bind(this);
     this.handleRepeatSwitch = this.handleRepeatSwitch.bind(this);
     this.addMeal = this.addMeal.bind(this);
@@ -104,6 +109,7 @@ class AddMeal extends Component {
     this.setState({ mealTitle: e.target.value });
   }
 
+  // Input validation. Only checks for non null values as input components force valid input
   isValidEntry() {
     return (this.state.mealTitle && this.state.mealTitle.length > 0)
     && this.state.startDate
@@ -115,29 +121,35 @@ class AddMeal extends Component {
     && this.state.interval;
   }
 
+  // Submit function for valid input
   onSubmitValid(e) {
     e.preventDefault();
     this.addMeal(this.getMeal());
     this.props.onSubmit();
   }
 
+  // If submit is pressed with invalid input
   onSubmitInvalid(e) {
     e.preventDefault();
     this.setState({ addError: true });
     setTimeout(() => { this.setState({ addError: false }); }, 2500);
   }
 
+  // Builds meal object to add to state
   getMeal() {
     const startD = new Date(this.state.startDate);
     const endD = this.state.repeat ? this.state.repeatUntil : new Date(this.state.startDate);
     this.state.timeUnits === 'Hours'
       ? endD.setHours(startD.getHours() + this.state.duration)
       : endD.setMinutes(startD.getMinutes() + this.state.duration);
+
+    // If weekly repeat is not set, the day is set to whatever day of the week the selected day is
     const noWeeklyArr = [false, false, false, false, false, false, false];
     noWeeklyArr[startD.getDay()] = true;
     const durationWithUnits = this.state.timeUnits === 'Hours' ? parseInt(this.state.duration, 10) * 60 : parseInt(this.state.duration, 10);
 
     return (
+      // Construct objects based on repeat
       this.state.repeat
         ? {
           title: this.state.mealTitle,
@@ -165,6 +177,7 @@ class AddMeal extends Component {
     );
   }
 
+  // Handles day selector color readability
   getDaySelectorColor(day) {
     return {
       color: this.state.weekdays.includes(day) ? this.state.fontColor : '#000000',
@@ -172,22 +185,11 @@ class AddMeal extends Component {
     };
   }
 
+  // Handles adding the meal
   addMeal(meal) {
     let newMeals = this.props.meals;
     newMeals = newMeals.concat(meal);
     this.props.updateMeals(newMeals);
-  }
-
-  toggleColorPicker() {
-    this.setState((state) => ({
-      colorPickerVisible: !state.colorPickerVisible,
-      repeat: state.repeat,
-      weekdays: state.weekdays,
-      freq: state.freq,
-      interval: state.interval,
-      duration: state.duration,
-      timeUnits: state.timeUnits,
-    }));
   }
 
    colorModalRef = React.createRef();

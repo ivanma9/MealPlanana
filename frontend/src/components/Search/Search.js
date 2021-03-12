@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Autosuggest from 'react-autosuggest';
-import { GiMeal } from 'react-icons/gi';
 
+// Search bar function that returns filtered recipe objects based on entered keywords
 export default class Search extends Component {
   constructor(props) {
     super(props);
@@ -13,7 +13,6 @@ export default class Search extends Component {
     this.getTestStr = this.getTestStr.bind(this);
     this.state = {
       selectedKeySet: 'Title',
-      results: [],
       currentSearch: '',
       suggestions: [],
       value: '',
