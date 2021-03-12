@@ -80,12 +80,20 @@ export class ViewMeal extends Component {
     return array;
   }
 
+  goToRecipe(recipe){
+    console.log(recipe.title);
+  }
+
   displayRecipes(recipeList) {
     return recipeList.map((recipe) => (
       <div key={recipe.title}>
         <div className="d-flex">
           <h2>{recipe.title}</h2>
-          <Button onClick={() => console.log("")} className="btn-sm rounded-pill ml-auto" variant="moreinfo"> More info </Button>
+          {/* <Link
+              to="/recipes/view"
+              style={{ color: 'black', textDecoration: 'none', margin: '2rem' }}>
+              <Button onClick={()=> this.goToRecipe(recipe)} className="btn-sm rounded-pill ml-auto" variant="moreinfo"> More info </Button>
+          </Link> */}
         </div> 
         <p>
           {ReactHtmlParser(recipe.description)}
@@ -238,15 +246,14 @@ export class ViewMeal extends Component {
             Time:
             {' '}
             <em>
-              {this.militaryToStandardTime((new Date(this.props.mealInfo.start_date)).toString().slice(16))}
+              {this.militaryToStandardTime((new Date(this.props.mealInfo.rrule.dtstart)).toString().slice(16))}
               {' - '}
-              {this.militaryToStandardTime(new Date(Date.parse(this.props.mealInfo.start_date)
-            + (this.props.mealInfo.duration * 60 * 1000)).toString().slice(16))}
+              {this.militaryToStandardTime(new Date(Date.parse(this.props.mealInfo.rrule.until)).toString().slice(16))}
             </em>
           </p>
           <br />
           <ListGroup horizontal variant="mine">
-            {this.daysOfWeekListGroup(this.props.mealInfo.days)}
+            {this.daysOfWeekListGroup(this.props.mealInfo.rrule.byweekday)}
           </ListGroup>
         </Container>
         <br />
@@ -254,6 +261,7 @@ export class ViewMeal extends Component {
         <Container>
           <div>
             {console.log(this.props.recipeInfo)}
+            {console.log(this.props.mealInfo)}
             {this.displayRecipes(this.props.recipeInfo)}
           </div>
         </Container>

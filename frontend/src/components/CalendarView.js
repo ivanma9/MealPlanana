@@ -67,6 +67,8 @@ class CalendarView extends Component {
 
   searchMeal(mealTitle) {
     for (const meal of this.props.events) {
+      console.log(meal);
+      console.log(meal.title + " : " + mealTitle);
       if (meal.title == mealTitle) {
         return meal;
       }
