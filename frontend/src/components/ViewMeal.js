@@ -83,7 +83,10 @@ export class ViewMeal extends Component {
   displayRecipes(recipeList) {
     return recipeList.map((recipe) => (
       <div key={recipe.title}>
-        <h2>{recipe.title}</h2>
+        <div className="d-flex">
+          <h2>{recipe.title}</h2>
+          <Button onClick={() => console.log("")} className="btn-sm rounded-pill ml-auto" variant="moreinfo"> More info </Button>
+        </div> 
         <p>
           {ReactHtmlParser(recipe.description)}
           {' '}
@@ -213,6 +216,11 @@ export class ViewMeal extends Component {
                   }
                   #timeinfo{
                     font-size: 16px;
+                  }
+                  .btn-moreinfo{
+                    background-color: #ffe135;
+                    border-color: black;
+                    border-width: 0.2em;
                   }
               `}
               </style>

@@ -261,6 +261,7 @@ class RecipesList extends Component {
       </div>
     );
   }
+  
 }
 
 export default connect(
