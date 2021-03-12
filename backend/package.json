@@ -6,7 +6,8 @@
   "module": "./backend/src/server.js",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "heroku-postbuild": "cd frontend && npm install --only=dev && npm install && npm run build"
   },
   "keywords": [],
   "author": "",
