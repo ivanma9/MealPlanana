@@ -42,7 +42,7 @@ class EditRecipe extends Component {
     this.onBeforeAddTag = this.onBeforeAddTag.bind(this);
     this.onDeleteTag = this.onDeleteTag.bind(this);
     this.onChangePreview = this.onChangePreview.bind(this);
-    // this.onChangeRecipeImage = this.onChangeRecipeImage.bind(this);
+    // this.onChangeImages = this.onChangeImages.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
 
     this.state = {
@@ -56,6 +56,9 @@ class EditRecipe extends Component {
 
       titleIsEmpty: false,
       previewChanged: false,
+      // imagesChanged: false,
+      // imagesToDelete: [],
+      // imagesToAdd: [],
       deleteDialogOpen: false,
       ingredientIsDuplicate: false,
       tagIsDuplicate: false,
@@ -75,7 +78,7 @@ class EditRecipe extends Component {
         directions: this.props.recipe.directions,
         tags: this.props.recipe.tags,
         preview: this.props.recipe.preview,
-        // images: this.props.currentRecipe.images,
+        // images: this.props.recipe.images,
       });
     }
     window.scrollTo(0, 0);
@@ -205,6 +208,111 @@ class EditRecipe extends Component {
     }
   }
 
+  /**
+   * when you have 4 default images and delete one,
+   * pictureFiles is empty and pictureDataURLs has 3 links
+   *
+   * so existing pictures are URLs and new ones are Files
+   *
+   * How to handle:
+   *
+   * - use image's keys
+   * - if no images are changed, don't send anything to backend
+   * - if an image is added, only send that new image to backend
+   * - if an image is replaced, send an object of {action: "DELETE", key: key} that says you want to
+   *   delete the image with that key and add a new iamge
+   * - if an image is deleted, send {action: "DELETE", key: key}
+   *
+   * * Note: pictureFiles doesn't properly change if you add an image and remove it before
+   * *       submitting. It keeps the file in the array
+   */
+  // onChangeImages(pictureFiles, pictureDataURLs) {
+  //   console.log(this.state.images); // has _id, key, and location
+  //   console.log(pictureFiles);
+  //   console.log(pictureDataURLs);
+
+  /**
+     * if no images are changed, we have an array up to 5 elements of
+     *   url strings that match the length of the images state array
+     * if picturedataurls is all actual urls and length is less than state images,
+     *   find what location from state images doesn't exist in dataurls.
+     *     Thats the one we want to delete
+     *
+     * -------------------------------------------------------------------------
+     *
+     * if a url from state images locations doesnt exist in pictureDataURLs,
+     *   this means that one was deleted so we remove it from the images state and add
+     *   to the imagesToDelete state
+     *
+     * if a data url exists whose name= doesn't match any of the image file names in imagesToAdd,
+     *   add the actual file from pictureFiles whos name matches the data's name= to imagesToAdd
+     *
+     * if an imagesToAdd image name doesn't exist in a data url's name=,
+     *   this means an added image was now deleted before submitting.
+     *   remove it from imagesToAdd
+     *
+     * if pictureFiles isn't empty,
+     */
+  // if (this.state.images.some((image) => !pictureDataURLs.find((url) => url === image.location))) {
+  //   const imageToDelete = this.state.images.find(
+  //     (image) => !pictureDataURLs.find((url) => url === image.location),
+  //   );
+  //   console.log(imageToDelete);
+  // const test = this.state.images.filter((image) => image.key !== imageToDelete[0].key);
+  // console.log(test);
+  // console.log(this.state);
+  //   this.setState((prevState) => ({
+  //     imagesChanged: true,
+  //     images: prevState.images.filter((image) => image.key !== imageToDelete.key),
+
+  //     // need this bc function gets called twice for some reason
+  //     imagesToDelete: !prevState.imagesToDelete.includes(imageToDelete)
+  //       ? [...prevState.imagesToDelete, imageToDelete]
+  //       : prevState.imagesToDelete,
+  //   }));
+  // }
+
+  // if (
+  //   pictureDataURLs.some(
+  //     (url) => url.startsWith('data:image')
+  //       && !this.state.imagesToAdd.find(
+  //         (imageFile) => imageFile.name === url.substring(
+  //           url.indexOf('name=') + 5,
+  //           url.indexOf('base64') - 1,
+  //         ),
+  //       ),
+  //   )) {
+  //   const imageToAddDataURL = pictureDataURLs.find(
+  //     (url) => url.startsWith('data:image')
+  //       && !this.state.imagesToAdd.find(
+  //         (imageFile) => imageFile.name === url.substring(
+  //           url.indexOf('name=') + 5,
+  //           url.indexOf('base64') - 1,
+  //         ),
+  //       ),
+  //   );
+
+  // const imageNameFromDataURL = imageToAddDataURL.substring(
+  //   imageToAddDataURL.indexOf('name=') + 5,
+  //   imageToAddDataURL.indexOf('base64') - 1,
+  // );
+  // console.log(imageToAddNameFromDataURL);
+
+  // const imageToAdd = pictureFiles.find((image) => image.name === imageNameFromDataURL);
+  // console.log(imageToAdd);
+
+  // this.setState((prevState) => ({
+  //   imagesChanged: true,
+  //   images: [...prevState.images, imageToAdd],
+
+  //   // need this bc function gets called twice for some reason
+  //   imagesToAdd: !prevState.imagesToAdd.includes(imageToAdd)
+  //     ? [...prevState.imagesToAdd, imageToAdd]
+  //     : prevState.imagesToAdd,
+  // }), () => console.log(this.state));
+  // }
+  // }
+
   onSubmit() {
     if (!this.handleValidation()) {
       console.log('Form invalid');
@@ -227,6 +335,11 @@ class EditRecipe extends Component {
     } else {
       preview = null;
     }
+
+    // let images;
+    // if (this.state.imagesChanged === false) {
+    //   images = undefined;
+    // }
 
     const recipe = {
       title: sanitizeHtml(this.state.title),
@@ -278,6 +391,18 @@ class EditRecipe extends Component {
       }
       return undefined;
     };
+
+    // const defaultImages = () => {
+    //   if (this.state.images) {
+    //     // const imageURLs = this.state.images.filter((image) =/> image.location !== undefined).map((image) => image.location);
+
+    //     const imageURLs = this.state.images.map((image) => image.location);
+    //     // console.log(imageURLs);
+    //     console.log(imageURLs);
+    //     return imageURLs;
+    //   }
+    //   return undefined;
+    // };
 
     return (
       <div className="container" style={{ marginTop: 10 }}>
@@ -404,6 +529,22 @@ class EditRecipe extends Component {
           </Form.Group>
 
           <br />
+
+          {/* Images */}
+          {/* <Form.Group controlid="formGroupRecipeImages">
+            <Typography variant="button" component="legend" className="mb-2" style={{ fontSize: 18 }}>Images</Typography>
+            <ImageUploader
+              onChange={this.onChangeImages}
+              withPreview
+              defaultImages={defaultImages()}
+              withIcon
+              buttonText="Choose up to 5 images"
+              withLabel
+              label="Max file size: 10mb | Accepted: jpg, gif, png"
+            />
+          </Form.Group>
+
+          <br /> */}
 
           <br />
 
