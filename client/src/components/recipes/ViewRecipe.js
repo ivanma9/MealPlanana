@@ -5,14 +5,12 @@ import React, { Component } from 'react';
 import SimpleReactLightbox, { SRLWrapper } from 'simple-react-lightbox';
 
 import EditIcon from '@material-ui/icons/Edit';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import MuiAlert from '@material-ui/lab/Alert';
 import Rating from '@material-ui/lab/Rating';
 import ReactHtmlParser from 'react-html-parser';
 import { connect } from 'react-redux';
 import { removeRecipeFromStateOnUnselected, updateRating } from '../../actions/recipes';
 import { ReactComponent as Banana } from '../../assets/banana.svg';
-import { ReactComponent as BananaOutline } from '../../assets/banana-blackoutline.svg';
 import LoadingPage from '../LoadingPage';
 
 const mapStateToProps = (state) => ({

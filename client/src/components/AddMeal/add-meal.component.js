@@ -337,7 +337,7 @@ class AddMeal extends Component {
 
                <Dropdown.Menu>
                  <Dropdown.Item onClick={() => this.setState({ timeUnits: 'Minutes' })} href="#/minutes">Minutes</Dropdown.Item>
-                 <Dropdown.Item onClick={() => this.setState({ timeUnits: 'Hours', duration: '1' })} href="#/hours">Hours</Dropdown.Item>
+                 <Dropdown.Item onClick={() => this.setState({ timeUnits: 'Hours', duration: 1 })} href="#/hours">Hours</Dropdown.Item>
                </Dropdown.Menu>
              </Dropdown>
            </div>

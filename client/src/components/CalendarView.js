@@ -54,7 +54,6 @@ class CalendarView extends Component {
   }
 
   handleViewMeal(info) {
-    info.el.style.borderColor = 'red';
     console.log(info);
     console.log(info.event._def.extendedProps.recipes);
     this.setState({
@@ -66,7 +65,9 @@ class CalendarView extends Component {
   }
 
   searchMeal(mealTitle) {
-    for (const meal of this.props.meals) {
+    for (const meal of this.props.events) {
+      console.log(meal);
+      console.log(meal.title + " : " + mealTitle);
       if (meal.title == mealTitle) {
         return meal;
       }
@@ -98,9 +99,11 @@ class CalendarView extends Component {
     this.setState({ deletePressed: childData });
   }
 
-  render() {
-    // const { username } = this.props;
+  componentDidMount() {
 
+  }
+
+  render() {
     return (
       <div>
         <Modal
@@ -115,7 +118,7 @@ class CalendarView extends Component {
               deletedRecipes={this.state.deletedRecipes}
               parentCallback={this.handleCallback}
             />
-)}
+          )}
         />
 
         <h2 className="text-center">
@@ -124,9 +127,9 @@ class CalendarView extends Component {
           Monkeys Schedule 🙉
         </h2>
 
-        <div>
+        {/* <div>
           {console.log(parseMeals(this.props.meals))}
-        </div>
+        </div> */}
 
         <Container className="text-center">
           <style type="text/css">
@@ -160,7 +163,8 @@ class CalendarView extends Component {
           plugins={[rrulePlugin, dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin]}
           initialView="timeGridDay"
           timeZone="local"
-          events={parseMeals(this.props.meals)}
+          // events={parseMeals(this.props.meals)}
+          events={this.props.events}
           views={{
             timeGridFourDay: {
               type: 'timeGrid',
@@ -197,7 +201,7 @@ class CalendarView extends Component {
         <Snackbar
           autoHideDuration={3000}
           open={this.state.deletePressed}
-          onEnter={()=> this.viewModalRef.current.close()}
+          onEnter={() => this.viewModalRef.current.close()}
           onClose={() => this.setState({ deletePressed: false })}
         >
           <MuiAlert elevation={6} variant="filled" severity="error" onClose={() => { this.setState({ deletePressed: false }); }}> Meal successfully Deleted! </MuiAlert>
@@ -210,10 +214,17 @@ class CalendarView extends Component {
 
 const mapStateToProps = (state) => ({
   username: state.session.username,
-  meals: state.session.meals,
+  events: parseMeals(state.session.meals),
   recipes: state.recipes.items,
 });
 
+/* /
+const mapStateToProps = (state) => ({
+  username: state.session.username,
+  meals: state.session.meals,
+  recipes: state.recipes.items,
+});
+/* */
 export default connect(
   mapStateToProps,
   { updateMeals },

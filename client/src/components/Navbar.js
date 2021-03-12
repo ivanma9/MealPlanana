@@ -6,7 +6,6 @@ import { Typography } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { logout as lg } from '../actions/session';
 import BananaBunch from '../assets/bananas.svg';
-import BananaBunchBlackOutline from '../assets/bananas-blackoutline.svg';
 
 const mapStateToProps = ({ session }) => ({
   session,
@@ -45,48 +44,41 @@ function NavBar({ logout }) {
               Meal Planana
             </Typography>
             <img src={BananaBunch} alt="Logo" style={{ width: '2em', marginBottom: '0.6em' }} />
-            {/* <img src={BananaBunchBlackOutline} alt="Logo" style={{ width: '2em' }} /> */}
           </Link>
         </Navbar.Brand>
         <Navbar expand="lg">
           <Navbar.Toggle />
           <Navbar.Collapse>
             <Nav>
-              <Nav.Link>
-                <Link to="/dashboard" className="nav-link">
-                  <Typography
-                    variant="button"
-                    style={{
-                      fontSize: 25,
-                    }}
-                  >
-                    Dashboard
-                  </Typography>
-                </Link>
+              <Nav.Link to="/dashboard" as={Link}>
+                <Typography
+                  variant="button"
+                  style={{
+                    fontSize: 25,
+                  }}
+                >
+                  Dashboard
+                </Typography>
               </Nav.Link>
-              <Nav.Link>
-                <Link to="/recipes" className="nav-link">
-                  <Typography
-                    variant="button"
-                    style={{
-                      fontSize: 25,
-                    }}
-                  >
-                    Recipes
-                  </Typography>
-                </Link>
+              <Nav.Link to="/recipes" as={Link}>
+                <Typography
+                  variant="button"
+                  style={{
+                    fontSize: 25,
+                  }}
+                >
+                  Recipes
+                </Typography>
               </Nav.Link>
-              <Nav.Link>
-                <Link to="/recipes/my-recipes" className="nav-link">
-                  <Typography
-                    variant="button"
-                    style={{
-                      fontSize: 25,
-                    }}
-                  >
-                    My Recipes
-                  </Typography>
-                </Link>
+              <Nav.Link to="/recipes/my-recipes" as={Link}>
+                <Typography
+                  variant="button"
+                  style={{
+                    fontSize: 25,
+                  }}
+                >
+                  My Recipes
+                </Typography>
               </Nav.Link>
             </Nav>
           </Navbar.Collapse>
