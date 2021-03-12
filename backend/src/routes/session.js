@@ -20,7 +20,7 @@ sessionRoutes.post('', async (req, res) => {
       throw new Error();
     }
   } catch (err) {
-    res.status(401).send({ message: 'Invalid login credentials' });
+    res.status(401).send(JSON.stringify('Invalid login credentials'));
   }
 });
 
