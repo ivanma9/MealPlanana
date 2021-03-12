@@ -1,7 +1,6 @@
 {
-  "name": "backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "MealPlanana is a MERN Stack web app that allows users to share recipes and plan out their meals on a calendar.   It is currently being hosted [here](https://mealplanana.herokuapp.com/).",
   "main": "./backend/src/index.js",
   "module": "./backend/src/server.js",
   "scripts": {
@@ -39,5 +38,14 @@
     "eslint-plugin-react": "^7.22.0",
     "eslint-plugin-react-hooks": "^4.2.0",
     "nodemon": "^2.0.7"
-  }
+  },
+  "name": "mealplanana",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ivanma9/MealPlanana.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ivanma9/MealPlanana/issues"
+  },
+  "homepage": "https://github.com/ivanma9/MealPlanana#readme"
 }
