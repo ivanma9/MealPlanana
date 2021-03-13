@@ -11,6 +11,9 @@ import {
 import { updateMeals } from '../actions/session';
 import Modal from './modal/stdModal.component';
 import EditMeal from './AddMeal/add-meal.component';
+import { addSelectedRecipeToState } from '../actions/recipes';
+import { Link } from 'react-router-dom';
+
 
 const daysOfWeekDict = {
   0: 'Sun', // 'sa',
@@ -90,11 +93,12 @@ export class ViewMeal extends Component {
       <div key={recipe.title}>
         <div className="d-flex">
           <h2>{recipe.title}</h2>
-          {/* <Link
+          <Link
               to="/recipes/view"
               style={{ color: 'black', textDecoration: 'none', margin: '2rem' }}>
-              <Button onClick={()=> this.goToRecipe(recipe)} className="btn-sm rounded-pill ml-auto" variant="moreinfo"> More info </Button>
-          </Link> */}
+              <Button onClick={()=> this.props.addSelectedRecipeToState(recipe._id)} 
+              className="btn-sm rounded-pill ml-auto" variant="moreinfo"> More info </Button>
+          </Link>
         </div> 
         <p>
           {ReactHtmlParser(recipe.description)}
@@ -131,11 +135,11 @@ export class ViewMeal extends Component {
     return currentMealIndex;
   }
 
-  editMeal(meal) {
-    let newMeals = this.props.meals;
-    newMeals = newMeals.concat(meal);
-    this.props.updateMeals(newMeals);
-  }
+  // editMeal(meal) {
+  //   let newMeals = this.props.meals;
+  //   newMeals = newMeals.concat(meal);
+  //   this.props.updateMeals(newMeals);
+  // }
   
   viewRecipeList(recipeList){
     let i = 0;
@@ -320,7 +324,12 @@ const mapStateToProps = (state) => ({
   meals: state.session.meals,
 });
 
+const mapDispatchToProps = (dispatch) => ({
+  updateMeals: () => dispatch(updateMeals()),
+  addSelectedRecipeToState: (id) => dispatch(addSelectedRecipeToState(id)),
+});
+
 export default connect(
   mapStateToProps,
-  { updateMeals },
+  mapDispatchToProps,
 )(ViewMeal);
