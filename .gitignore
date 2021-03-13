@@ -69,6 +69,7 @@
 */.yarn-integrity
 
 # dotenv environment variables file
+.env
 */.env
 */.env.test
 
@@ -177,3 +178,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# Config file with private info
+backend/src/config.js

@@ -1,0 +1,88 @@
+{
+  "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@fullcalendar/core": "^5.5.1",
+    "@fullcalendar/daygrid": "^5.5.0",
+    "@fullcalendar/interaction": "^5.5.0",
+    "@fullcalendar/list": "^5.5.0",
+    "@fullcalendar/react": "^5.5.0",
+    "@fullcalendar/rrule": "^5.5.1",
+    "@fullcalendar/timegrid": "^5.5.1",
+    "@material-ui/core": "^4.11.3",
+    "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.57",
+    "@testing-library/jest-dom": "^5.11.9",
+    "@testing-library/react": "^11.2.5",
+    "@testing-library/user-event": "^12.7.1",
+    "@tinymce/tinymce-react": "^3.10.2",
+    "bootstrap": "^4.6.0",
+    "framer-motion": "^3.6.7",
+    "fullcalendar": "^5.5.1",
+    "material-ui-chip-input": "^2.0.0-beta.2",
+    "moment": "^2.29.1",
+    "mongoose": "^5.11.18",
+    "object-to-formdata": "^4.1.0",
+    "prop-types": "^15.7.2",
+    "react": "^17.0.1",
+    "react-autosuggest": "^10.1.0",
+    "react-bootstrap": "^1.5.0",
+    "react-colorful": "^5.0.0",
+    "react-datepicker": "^3.6.0",
+    "react-dom": "^17.0.1",
+    "react-html-parser": "^2.0.2",
+    "react-icons": "^4.2.0",
+    "react-images-upload": "^1.2.8",
+    "react-numeric-input": "^2.2.3",
+    "react-redux": "^7.2.2",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "4.0.2",
+    "react-spinners": "^0.10.6",
+    "react-switch": "^6.0.0",
+    "react-time-picker": "^4.1.2",
+    "redux": "^4.0.5",
+    "redux-logger": "^3.0.6",
+    "redux-persist": "^6.0.0",
+    "redux-thunk": "^2.3.0",
+    "rrule": "^2.6.8",
+    "sanitize-html": "^2.3.2",
+    "simple-react-lightbox": "^3.6.3",
+    "tinymce-react": "^1.3.2",
+    "web-vitals": "^1.1.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "proxy": "http://localhost:5000",
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "eslint": "^7.19.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-only-warn": "^1.0.2",
+    "eslint-plugin-react": "^7.22.0",
+    "eslint-plugin-react-hooks": "^4.2.0"
+  }
+}
