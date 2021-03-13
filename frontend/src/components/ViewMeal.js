@@ -45,7 +45,7 @@ export class ViewMeal extends Component {
 
   deleteMeal() {
     // TODO: Delete meal endpt
-    this.setState({ deleteDialogOpen: true });
+    this.setState({ deleteDialogOpen: true, deleteSuccessful: true });
   }
 
   militaryToStandardTime(time) {
@@ -109,12 +109,13 @@ export class ViewMeal extends Component {
   }
 
   handleDeleteDialogYes = (e) => {
-    this.setState({ deleteDialogOpen: false });
+    this.setState({ deleteDialogOpen: false});
     const currentMealIndex = this.state.currentMealIndex;
-    const newMeals = this.props.meals;
+    let newMeals = [...this.props.meals];
     newMeals.splice(currentMealIndex, 1);
-    console.log(newMeals);
+
     this.props.updateMeals(newMeals);
+    console.log(newMeals);
 
     this.props.parentCallback(true);
   }
@@ -161,9 +162,13 @@ export class ViewMeal extends Component {
   }
   
   componentWillUnmount() {
+    console.log(this.props.meals);
+    console.log(this.state.deleteSuccessful);
+    console.log(this.props.deletedRecipes);
     if (
-      this.props.deletedRecipes.length !== 0
+      (this.props.deletedRecipes.length !== 0) && (!this.state.deleteSuccessful)
     ) {
+      console.log("deleting recipes");
       const currentMealIndex = this.state.currentMealIndex;
 
       const currentMeal = this.props.meals[currentMealIndex];
@@ -328,7 +333,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  updateMeals: () => dispatch(updateMeals()),
+  updateMeals: (meal) => dispatch(updateMeals(meal)),
   addSelectedRecipeToState: (id) => dispatch(addSelectedRecipeToState(id)),
 });
 

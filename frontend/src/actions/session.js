@@ -46,6 +46,7 @@ export const logout = () => async (dispatch) => {
 export const updateMeals = (meals) => async (dispatch, getState) => {
   const user = JSON.parse(JSON.stringify(getState().session));
   user.meals = meals;
+  console.log(meals);
 
   const response = await apiUtil.updateUser(user);
   const data = await response.json();
