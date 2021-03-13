@@ -285,14 +285,14 @@ export class ViewMeal extends Component {
             <em>
               {this.militaryToStandardTime((new Date(this.props.mealInfo.rrule.dtstart)).toString().slice(16))}
               {' - '}
-              {this.militaryToStandardTime(new Date(Date.parse(this.props.mealInfo.rrule.dtstart)
-            + (this.props.meals[this.state.currentMealIndex].duration * 60 * 1000)).toString().slice(16))}            
+              {this.props.meals[this.state.currentMealIndex]? this.militaryToStandardTime(new Date(Date.parse(this.props.mealInfo.rrule.dtstart)
+            + (this.props.meals[this.state.currentMealIndex].duration * 60 * 1000)).toString().slice(16)) : console.log("deleted")}            
             </em>
           </p>
           <br />
           {/* Days of the week view */}
           <ListGroup horizontal variant="mine">
-            {this.daysOfWeekListGroup(this.props.meals[this.state.currentMealIndex].days)}
+            {this.props.meals[this.state.currentMealIndex]? this.daysOfWeekListGroup(this.props.meals[this.state.currentMealIndex].days) : console.log("deleted")}
           </ListGroup>
         </Container>
         <br />
