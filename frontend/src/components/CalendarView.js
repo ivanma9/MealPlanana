@@ -99,13 +99,10 @@ class CalendarView extends Component {
     this.setState({ deletePressed: childData });
   }
 
-  componentDidMount() {
-
-  }
-
   render() {
     return (
       <div>
+        {/* ViewMeal Modal */}
         <Modal
           ref={this.viewModalRef}
           headerDisabled
@@ -198,6 +195,7 @@ class CalendarView extends Component {
           {' '}
           <b>{moment(this.state.dateState.dateStr).format('MMMM Do YYYY')}</b>
         </p>
+        {/* Confirms if meal was deleted */}
         <Snackbar
           autoHideDuration={3000}
           open={this.state.deletePressed}
@@ -212,6 +210,7 @@ class CalendarView extends Component {
   }
 }
 
+// Redux props
 const mapStateToProps = (state) => ({
   username: state.session.username,
   events: parseMeals(state.session.meals),

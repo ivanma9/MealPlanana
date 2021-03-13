@@ -14,7 +14,7 @@ import EditMeal from './AddMeal/add-meal.component';
 import { addSelectedRecipeToState } from '../actions/recipes';
 import { Link } from 'react-router-dom';
 
-
+//Dictionary to store days of the week array
 const daysOfWeekDict = {
   0: 'Sun', // 'sa',
   1: 'Mon', // 'su',
@@ -205,6 +205,7 @@ export class ViewMeal extends Component {
   render() {
     return (
       <div style={{ marginTop: 10, fontSize: 12 }}>
+        {/* Edit Meal Modal */}
         <Modal
           ref={this.editModalRef}
           header={(
@@ -284,6 +285,7 @@ export class ViewMeal extends Component {
             </em>
           </p>
           <br />
+          {/* Days of the week view */}
           <ListGroup horizontal variant="mine">
             {this.daysOfWeekListGroup(this.props.meals[this.state.currentMealIndex].days)}
           </ListGroup>
@@ -292,12 +294,13 @@ export class ViewMeal extends Component {
         <br />
         <Container>
           <div>
-            {console.log(this.state.currentMealIndex)}
+            {/* {console.log(this.state.currentMealIndex)}
             {console.log(this.props.recipeInfo)}
-            {console.log(this.props.mealInfo)}
+            {console.log(this.props.mealInfo)} */}
             {this.displayRecipes(this.props.recipeInfo)}
           </div>
         </Container>
+        {/* Confirmation to delete meal */}
         <Dialog
           open={this.state.deleteDialogOpen}
           onClose={() => this.setState({
