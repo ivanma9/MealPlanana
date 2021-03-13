@@ -22,7 +22,7 @@ const renderApp = (preloadedState) => {
   );
 
   // FOR TESTING, remove before production
-  window.getState = store.getState;
+  // window.getState = store.getState;
 };
 
 (async () => renderApp(await checkLoggedIn()))();
